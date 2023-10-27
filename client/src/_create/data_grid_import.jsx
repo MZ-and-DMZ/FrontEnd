@@ -25,19 +25,6 @@ const columns = [
     field: 'id',
   },
   {
-    field: 'positionName',
-    headerName: 'Position Name',
-    flex: 1,
-    editable: true,
-  },
-  {
-    field: 'policies',
-    headerName: 'AWS권한/GCP역할',
-    align: 'left',
-    headerAlign: 'left',
-    width: 200,
-  },
-  {
     field: 'csp',
     type: 'singleSelect',
     headerName: 'Cloud',
@@ -58,19 +45,32 @@ const columns = [
     ),
   },
   {
-    field: 'action',
-    headerName: ' ',
-    align: 'right',
-    width: 60,
-    sortable: false,
-    filterable: false,
-    disableColumnMenu: true,
-    renderCell: (params) => (
-      <IconButton onClick={() => console.info('ID', params.row.id)}>
-        <Iconify icon="eva:more-vertical-fill" />
-      </IconButton>
-    ),
+    field: 'positionName',
+    headerName: 'Position Name',
+    flex: 1,
+    editable: true,
   },
+  {
+    field: 'policies',
+    headerName: 'AWS권한/GCP역할',
+    align: 'left',
+    headerAlign: 'left',
+    width: 200,
+  },
+  // {
+  //   field: 'action',
+  //   headerName: ' ',
+  //   align: 'right',
+  //   width: 60,
+  //   sortable: false,
+  //   filterable: false,
+  //   disableColumnMenu: true,
+  //   renderCell: (params) => (
+  //     <IconButton onClick={() => console.info('ID', params.row.id)}>
+  //       <Iconify icon="eva:more-vertical-fill" />
+  //     </IconButton>
+  //   ),
+  // },
 ];
 
 // ----------------------------------------------------------------------
@@ -107,7 +107,7 @@ export default function DataGridCustom({ data }) {
     columns.filter((column) => !hiddenFields.includes(column.field)).map((column) => column.field);
 
   const selected = data.filter((row) => selectedRows.includes(row.id));
-  const positionSelected = useSelector((state) => state.positionSelected.value);
+  const positionSelected = useSelector((state) => state.positionSelected);
   const dispatch = useDispatch();
   // console.info('SELECTED ROWS', selected);
   let checkboxSelected = null;

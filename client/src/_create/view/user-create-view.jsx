@@ -12,7 +12,9 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { paths } from 'src/routes/paths';
 
-import { _mock } from 'src/_mock';
+import { _roles, _mock } from 'src/_mock';
+
+import { useTable } from 'src/components/table';
 
 import { useSettingsContext } from 'src/components/settings';
 
@@ -24,6 +26,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import DataGridCustom from '../data_grid_import';
 import DataGridView from '../data_grid_view';
 import UserNewEditForm from '../user-new-edit-form';
+import UserTableToolbar from '../user-table-toolbar';
 
 // ----------------------------------------------------------------------
 async function GetPositions() {
@@ -73,11 +76,38 @@ const _dataGrid = [...Array(positionData.position_list.length)].map((_, index) =
   // 데이터도 나눠서 저장되어있으면 좋겠음. 그러면 aws, gcp 따로 나눠서 저장해야함.
 }));
 
+const defaultFilters = {
+  positionName: '',
+  policies: [],
+  status: 'all',
+};
+
+// const defaultFilters = {
+//   name: '',
+//   role: [],
+//   status: 'all',
+// };
+
+const _roles2 = positionData.position_list.map((item) => item.positionName);
+console.info('_roles2', _roles2);
 export default function UserCreateView() {
   // const [filters, setFilters] = useState(defaultFilters);
-
   const _checked = null;
   const settings = useSettingsContext();
+  const [filters, setFilters] = useState(defaultFilters);
+
+  const table = useTable();
+
+  const handleFilters = useCallback(
+    (positionName, value) => {
+      table.onResetPage();
+      setFilters((prevState) => ({
+        ...prevState,
+        [positionName]: value,
+      }));
+    },
+    [table]
+  );
 
   // const handleFilters = useCallback(
   //   (name, value) => {
@@ -122,20 +152,16 @@ export default function UserCreateView() {
         }}
       />
 
-      <UserNewEditForm />
-      <></>
       <Card sx={{ p: 3 }}>
         <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <UserNewEditForm />
+          </Grid>
           <Grid item xs={6}>
             <Card>
-              {/* <UserTableToolbar
-              filters={filters}
-              onFilters={handleFilters}
-              //
-              roleOptions={_roles}
-            /> */}
-
               <CardHeader title="직무" sx={{ mb: 2 }} />
+              {/* 필터링 위해서 */}
+              <UserTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles2} />
               <Box sx={{ height: 720 }}>
                 <DataGridView data={_dataGrid} />
               </Box>
