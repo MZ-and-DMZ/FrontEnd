@@ -51,6 +51,8 @@ export default store;
 
 보면 `configureStore`를 하고 `reducer` 안에 넣는다. 굳이 `reducer` 안에 넣는 이유는, debeger같은 툴들 또한 store에서 사용하기 때문에 reducer 말고 다른 요소들이 추가될 수도 있기 때문이다.
 
+---
+
 ### 4. Slice 파일 만들기, redux-toolkit의 장점
 
 먼저 ~~Slice.js 파일을 보기 전에, store를 통해서 어떤 변수에 어떤 함수로 전달이 되는지 보고 가자.
