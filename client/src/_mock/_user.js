@@ -1,13 +1,13 @@
-import { countries } from 'src/assets/data';
-import { _mock } from './_mock';
+import { countries } from "src/assets/data";
+import { _mock } from "./_mock";
 
 // ----------------------------------------------------------------------
 
-export const USER_STATUS_OPTIONS = [
-  { value: 'active', label: 'Active' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'banned', label: 'Banned' },
-  { value: 'rejected', label: 'Rejected' },
+export const USER_CSP_OPTIONS = [
+  { value: "AWS", label: "AWS" },
+  { value: "GCP", label: "GCP" },
+  // { value: 'banned', label: 'Banned' },
+  // { value: 'rejected', label: 'Rejected' },
 ];
 
 export const _userAbout = {
@@ -21,7 +21,7 @@ export const _userAbout = {
   totalFollowers: _mock.number.nativeL(1),
   totalFollowing: _mock.number.nativeL(2),
   quote:
-    'Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..',
+    "Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..",
   socialLinks: {
     facebook: `https://www.facebook.com/caitlyn.kerluke`,
     instagram: `https://www.instagram.com/caitlyn.kerluke`,
@@ -69,7 +69,7 @@ export const _userFeeds = [...Array(3)].map((_, index) => ({
         name: _mock.fullName(index + 5),
       },
       createdAt: _mock.time(2),
-      message: 'Praesent venenatis metus at',
+      message: "Praesent venenatis metus at",
     },
     {
       id: _mock.id(9),
@@ -80,7 +80,7 @@ export const _userFeeds = [...Array(3)].map((_, index) => ({
       },
       createdAt: _mock.time(3),
       message:
-        'Etiam rhoncus. Nullam vel sem. Pellentesque libero tortor, tincidunt et, tincidunt eget, semper nec, quam. Sed lectus.',
+        "Etiam rhoncus. Nullam vel sem. Pellentesque libero tortor, tincidunt et, tincidunt eget, semper nec, quam. Sed lectus.",
     },
   ],
 }));
@@ -96,12 +96,12 @@ export const _userCards = [...Array(21)].map((_, index) => ({
   totalFollowing: _mock.number.nativeL(index + 1),
 }));
 
-export const _userPayment = [...Array(3)].map((_, index) => ({
-  id: _mock.id(index),
-  cardNumber: ['**** **** **** 1234', '**** **** **** 5678', '**** **** **** 7878'][index],
-  cardType: ['mastercard', 'visa', 'visa'][index],
-  primary: index === 1,
-}));
+// export const _userPayment = [...Array(3)].map((_, index) => ({
+//   id: _mock.id(index),
+//   cardNumber: ['**** **** **** 1234', '**** **** **** 5678', '**** **** **** 7878'][index],
+//   cardType: ['mastercard', 'visa', 'visa'][index],
+//   primary: index === 1,
+// }));
 
 export const _userAddressBook = [...Array(4)].map((_, index) => ({
   id: _mock.id(index),
@@ -109,7 +109,7 @@ export const _userAddressBook = [...Array(4)].map((_, index) => ({
   name: _mock.fullName(index),
   phoneNumber: _mock.phoneNumber(index),
   fullAddress: _mock.fullAddress(index),
-  addressType: (index === 0 && 'Home') || 'Office',
+  addressType: (index === 0 && "Home") || "Office",
 }));
 
 export const _userInvoices = [...Array(10)].map((_, index) => ({
@@ -121,17 +121,17 @@ export const _userInvoices = [...Array(10)].map((_, index) => ({
 
 export const _userPlans = [
   {
-    subscription: 'basic',
+    subscription: "basic",
     price: 0,
     primary: false,
   },
   {
-    subscription: 'starter',
+    subscription: "starter",
     price: 4.99,
     primary: true,
   },
   {
-    subscription: 'premium',
+    subscription: "premium",
     price: 9.99,
     primary: false,
   },
@@ -139,7 +139,9 @@ export const _userPlans = [
 
 async function UserData() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/boch/get/userlist`);
+    const response = await fetch(
+      `${process.env.REACT_APP_MOCK_API}/boch/get/userlist`
+    );
     // const response = await fetch('http://localhost:5000/boch/get/userlist');
     const data = await response.json();
     return data;
@@ -150,25 +152,69 @@ async function UserData() {
 
 const userData = await UserData();
 
-// export const _userList = [...Array(userData.user_list.length < 20 ? userData.user_list.length : 20)].map((_, index) => ({
-export const _userList = [...Array(20)].map((_, index) => ({
-  // id: userData.user_list[index]._id.$oid,
-  id: _mock.id(index),
-  zipCode: '85807',
-  state: 'Virginia',
-  city: 'Rancho Cordova',
-  role: userData.user_list[index].attachedPosition,
-  email: _mock.email(index),
-  address: '908 Jack Locks',
-  name: userData.user_list[index].userName,
-  isVerified: _mock.boolean(index),
-  company: _mock.companyName(index),
-  country: countries[index + 1].label,
-  avatarUrl: _mock.image.avatar(index),
-  phoneNumber: _mock.phoneNumber(index),
-  status:
-    (index % 2 && 'pending') || (index % 3 && 'banned') || (index % 4 && 'rejected') || 'active',
-}));
+// {
+//   "user_list": [
+//     {
+//       "_id": { "$oid": "652e00a8a3a5baaf3e710e3b" },
+//       "userName": "alice",
+//       "description": "frontend developer A",
+//       "awsAccount": "frontend_dev_A",
+//       "gcpAccount": "alice@gmail.com",
+//       "attachedPosition": ["Frontend"],
+//       "attachedGroup": ["frontend_team"],
+//       "updatetime": "2023-09-21T04:46:40.000+00:00"
+//     },
+//     {
+//       "_id": { "$oid": "652e00a8a3a5baaf3e710e3c" },
+//       "userName": "bob",
+//       "description": "frontend developer B",
+//       "awsAccount": "frontend_dev_B",
+//       "gcpAccount": "bob@gmail.com",
+//       "attachedPosition": ["Frontend"],
+//       "attachedGroup": ["frontend_team"],
+//       "updatetime": "2023-09-22T04:46:40.000+00:00"
+//     },
+//   ]
+// }
+
+export const _userList = [...Array(userData.user_list.length)].map(
+  (_, index) => ({
+    // id: userData.user_list[index]._id.$oid,
+    id: userData.user_list[index]._id.$oid,
+    userName: userData.user_list[index].userName,
+    description: userData.user_list[index].description,
+    awsAccount: userData.user_list[index].awsAccount,
+    gcpAccount: userData.user_list[index].gcpAccount,
+    attachedPosition: userData.user_list[index].attachedPosition,
+    attachedGroup: userData.user_list[index].attachedGroup,
+    updatetime: userData.user_list[index].updatetime,
+    csp:
+      userData.user_list[index].awsAccount && "aws"
+        ? userData.user_list[index].gcpAccount && "gcp"
+          ? "aws,gcp"
+          : "aws"
+        : userData.user_list[index].gcpAccount && "gcp"
+        ? "gcp"
+        : "none",
+    zipCode: "85807",
+    state: "Virginia",
+    city: "Rancho Cordova",
+    role: userData.user_list[index].attachedPosition,
+    email: _mock.email(index),
+    address: "908 Jack Locks",
+    name: userData.user_list[index].userName,
+    isVerified: _mock.boolean(index),
+    company: _mock.companyName(index),
+    country: countries[index + 1].label,
+    avatarUrl: _mock.image.avatar(index),
+    phoneNumber: _mock.phoneNumber(index),
+    status:
+      (index % 2 && "aws") ||
+      (index % 3 && "gcp") ||
+      (index % 4 && "aws,gcp") ||
+      "active",
+  })
+);
 // export const _userList = [...Array(20)].map((_, index) => ({
 //   id: _mock.id(index),
 //   zipCode: '85807',
