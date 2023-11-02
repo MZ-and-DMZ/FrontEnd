@@ -49,8 +49,8 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS]
 const TABLE_HEAD = [
   { id: 'positionName', label: '직무' },
   // { id: 'phoneNumber', label: 'Phone Number', width: 180 },
-  { id: 'aws', label: 'AWS', width: 500 },
-  { id: 'gcp', label: 'GCP', width: 300 },
+  { id: 'isCustom', label: 'isCustom', width: 500 },
+  { id: 'description', label: 'Description', width: 300 },
   // { id: 'status', label: 'Status', width: 100 },
   { id: '', width: 88 },
 ];
@@ -62,31 +62,6 @@ const defaultFilters = {
 };
 
 // ----------------------------------------------------------------------
-
-function GetData() {
-  const [positionData, setPositionData] = useState([]);
-  useEffect(() => {
-    // fetch('http://localhost:5000/api/users', {
-    fetch('http://54.180.76.116:8080/boch/get/positionlist', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPositionData(data);
-        console.log(data);
-      });
-  }, []);
-  return (
-    <div>
-      <p>hello</p>
-      <p>positionData</p>
-      <p>{positionData.values.toString}</p>
-    </div>
-  );
-}
 
 export default function PositionListView() {
   const table = useTable();
@@ -168,23 +143,9 @@ export default function PositionListView() {
     setFilters(defaultFilters);
   }, []);
 
-  const [message, setMessage] = useState('hellooo');
-
-  const [positionData, setPositionData] = useState([]);
-  useEffect(() => {
-    // fetch('http://localhost:5000/api/users', {
-    fetch('http://54.180.76.116:8080/boch/get/positionlist', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPositionData(data);
-        console.log(data);
-      });
-  }, []);
+  console.info('Table', tableData);
+  console.info('table', table);
+  console.info('dataFiltered', dataFiltered);
 
   return (
     <>

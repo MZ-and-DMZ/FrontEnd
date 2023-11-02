@@ -16,41 +16,21 @@ import { useRouter } from 'src/routes/hooks';
 
 import { USER_CSP_OPTIONS } from 'src/_mock';
 
+import UserCreateView from 'src/_create/view/user-create-view';
+
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField, RHFSelect } from 'src/components/hook-form';
 
-export default function PositionNewEditForm({ currentPosition, step }) {
+export default function PositionNewEditForm({ currentPosition }) {
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
-  let validationSchema;
-  let fieldsToRender;
-
-  if (step === 0) {
-    validationSchema = Yup.object().shape({
-      company: Yup.string().required('Company is required'),
-      role: Yup.string().required('Role is required'),
-      status: Yup.string(),
-      isVerified: Yup.boolean(),
-    });
-
-    fieldsToRender = (
-      <>
-        <RHFTextField name="name" label="직무 이름" />
-        <RHFSelect name="csp" label="CSP">
-          {USER_CSP_OPTIONS.map((csp) => (
-            <MenuItem key={csp.value} value={csp.value}>
-              {csp.label}
-            </MenuItem>
-          ))}
-        </RHFSelect>
-        <RHFTextField name="position id" label="직무 ID" />
-        <RHFTextField name="position description" label="직무 설명" />
-      </>
-    );
-  } else if (step === 1) {
-    <h1>Add chart</h1>;
-  }
+  const validationSchema = Yup.object().shape({
+    company: Yup.string().required('Company is required'),
+    role: Yup.string().required('Role is required'),
+    status: Yup.string(),
+    isVerified: Yup.boolean(),
+  });
 
   const NewPositionSchema = validationSchema;
 
@@ -117,7 +97,16 @@ export default function PositionNewEditForm({ currentPosition, step }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              {fieldsToRender}
+              <RHFTextField name="name" label="직무 이름" />
+              <RHFSelect name="csp" label="CSP">
+                {USER_CSP_OPTIONS.map((csp) => (
+                  <MenuItem key={csp.value} value={csp.value}>
+                    {csp.label}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
+              <RHFTextField name="position id" label="직무 ID" />
+              <RHFTextField name="position description" label="직무 설명" />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
@@ -134,5 +123,4 @@ export default function PositionNewEditForm({ currentPosition, step }) {
 
 PositionNewEditForm.propTypes = {
   currentPosition: PropTypes.object,
-  step: PropTypes.number.isRequired,
 };

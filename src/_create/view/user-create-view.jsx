@@ -1,41 +1,41 @@
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
-import Container from "@mui/material/Container";
-import CardHeader from "@mui/material/CardHeader";
-import TableContainer from "@mui/material/TableContainer";
-import Button from "@mui/material/Button";
-import LoadingButton from "@mui/lab/LoadingButton";
-import Stack from "@mui/material/Stack";
-import { useState, useCallback, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+import CardHeader from '@mui/material/CardHeader';
+import TableContainer from '@mui/material/TableContainer';
+import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Stack from '@mui/material/Stack';
+import { useState, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { _positionList, _roles, _mock } from "src/_mock";
+import { _positionList, _roles, _mock } from 'src/_mock';
 
-import { useTable } from "src/components/table";
-import { useSettingsContext } from "src/components/settings";
+import { useTable } from 'src/components/table';
+import { useSettingsContext } from 'src/components/settings';
 
-import { EDIT_ROWS } from "src/redux/reducer/positionSelectedSlice";
+import { EDIT_ROWS } from 'src/redux/reducer/positionSelectedSlice';
 
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 // import { GetPositions } from './getPositions';
-import DataGridView from "../data_grid_view";
-import DataGridCustom from "../data_grid_import";
-import UserNewEditForm from "../user-new-edit-form";
-import UserTableToolbar from "../user-table-toolbar";
+import DataGridView from '../data_grid_view';
+import DataGridCustom from '../data_grid_import';
+import UserNewEditForm from '../user-new-edit-form';
+import UserTableToolbar from '../user-table-toolbar';
 
 // ----------------------------------------------------------------------
 
 const positionData = _positionList;
-console.info("positionData", positionData);
+console.info('positionData', positionData);
 
 const defaultFilters = {
-  positionName: "",
+  positionName: '',
   policies: [],
-  status: "all",
+  status: 'all',
 };
 
 // const defaultFilters = {
@@ -43,9 +43,9 @@ const defaultFilters = {
 //   role: [],
 //   status: 'all',
 // };
-console.info("positionData", positionData);
+console.info('positionData', positionData);
 const _roles2 = _positionList.map((item) => item.positionName);
-console.info("_roles2", _roles2);
+console.info('_roles2', _roles2);
 export default function UserCreateView() {
   // const [filters, setFilters] = useState(defaultFilters);
   const _checked = null;
@@ -62,7 +62,7 @@ export default function UserCreateView() {
         [positionName]: value,
       }));
     },
-    [table],
+    [table]
   );
 
   // const handleFilters = useCallback(
@@ -89,19 +89,19 @@ export default function UserCreateView() {
 
   // const formatSelected = {
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
         heading="Create a new user"
         links={[
           {
-            name: "Dashboard",
+            name: 'Dashboard',
             href: paths.dashboard.root,
           },
           {
-            name: "User",
+            name: 'User',
             href: paths.dashboard.user.root,
           },
-          { name: "New user" },
+          { name: 'New user' },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
@@ -117,11 +117,7 @@ export default function UserCreateView() {
             <Card>
               <CardHeader title="직무" sx={{ mb: 2 }} />
               {/* 필터링 위해서 */}
-              <UserTableToolbar
-                filters={filters}
-                onFilters={handleFilters}
-                roleOptions={_roles2}
-              />
+              <UserTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles2} />
               <Box sx={{ height: 720 }}>
                 <DataGridView data={_positionList} />
               </Box>
@@ -130,11 +126,7 @@ export default function UserCreateView() {
           <Grid item xs={6}>
             <Card>
               <CardHeader title="추가한 권한/역할" sx={{ mb: 2 }} />
-              <UserTableToolbar
-                filters={filters}
-                onFilters={handleFilters}
-                roleOptions={_roles2}
-              />
+              <UserTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles2} />
               <Box sx={{ height: 720 }}>
                 {/* Change _dataGrid */}
                 <DataGridCustom data={_dataGrid2} />

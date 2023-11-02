@@ -18,8 +18,6 @@ async function PositionData() {
   }
 }
 
-const positionData = await PositionData();
-
 export const POSITION_CSP_OPTIONS = [
   { value: 'AWS', label: 'AWS' },
   { value: 'GCP', label: 'GCP' },
@@ -153,6 +151,7 @@ export const _positionPlans = [
     primary: false,
   },
 ];
+const positionData = await PositionData();
 
 // export const _positionList = [...Array(userData.user_list.length < 20 ? userData.user_list.length : 20)].map((_, index) => ({
 export const _positionList = [...Array(positionData.position_list.length)].map((_, index) => ({
