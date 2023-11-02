@@ -5,7 +5,7 @@ import { paths } from 'src/routes/paths';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-import PositionNewEditForm from '../position-new-edit-form3';
+import PositionNewEditForm from '../position-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +31,6 @@ export default function PositionCreateStepper() {
           mb: { xs: 3, md: 5 },
         }}
       />
-
     </Container>
   );
 }
