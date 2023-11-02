@@ -1,5 +1,4 @@
 import { countries } from 'src/assets/data';
-import { UserData } from './userData';
 import { _mock } from './_mock';
 
 // ----------------------------------------------------------------------
@@ -138,41 +137,89 @@ export const _userPlans = [
   },
 ];
 
+
+async function UserData() {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_MOCK_API}/boch/get/userlist`,
+    );
+    // const response = await fetch('http://localhost:5000/boch/get/userlist');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const userData = await UserData();
 
-// export const _userList = [...Array(userData.user_list.length < 20 ? userData.user_list.length : 20)].map((_, index) => ({
-export const _userList = [...Array(20)].map((_, index) => ({
-  // id: userData.user_list[index]._id.$oid,
-  id: _mock.id(index),
-  zipCode: '85807',
-  state: 'Virginia',
-  city: 'Rancho Cordova',
-  role: userData.user_list[index].attachedPosition,
-  email: _mock.email(index),
-  address: '908 Jack Locks',
-  name: userData.user_list[index].userName,
-  isVerified: _mock.boolean(index),
-  company: _mock.companyName(index),
-  // country: countries[index + 1].label,
-  // avatarUrl: _mock.image.avatar(index),
-  // phoneNumber: _mock.phoneNumber(index),
-  status:
-    (index % 2 && 'GCP') || (index % 3 && 'AWS,GCP') || (index % 4 && 'AWS') || 'active',
-}));
-// export const _userList = [...Array(20)].map((_, index) => ({
-//   id: _mock.id(index),
-//   zipCode: '85807',
-//   state: 'Virginia',
-//   city: 'Rancho Cordova',
-//   role: _mock.role(index),
-//   email: _mock.email(index),
-//   address: '908 Jack Locks',
-//   name: _mock.fullName(index),
-//   isVerified: _mock.boolean(index),
-//   company: _mock.companyName(index),
-//   country: countries[index + 1].label,
-//   avatarUrl: _mock.image.avatar(index),
-//   phoneNumber: _mock.phoneNumber(index),
-//   status:
-//     (index % 2 && 'pending') || (index % 3 && 'banned') || (index % 4 && 'rejected') || 'active',
-// }));
+// {
+//   "user_list": [
+//     {
+//       "_id": { "$oid": "652e00a8a3a5baaf3e710e3b" },
+//       "userName": "alice",
+//       "description": "frontend developer A",
+//       "awsAccount": "frontend_dev_A",
+//       "gcpAccount": "alice@gmail.com",
+//       "attachedPosition": ["Frontend"],
+//       "attachedGroup": ["frontend_team"],
+//       "updatetime": "2023-09-21T04:46:40.000+00:00"
+//     },
+//     {
+//       "_id": { "$oid": "652e00a8a3a5baaf3e710e3c" },
+//       "userName": "bob",
+//       "description": "frontend developer B",
+//       "awsAccount": "frontend_dev_B",
+//       "gcpAccount": "bob@gmail.com",
+//       "attachedPosition": ["Frontend"],
+//       "attachedGroup": ["frontend_team"],
+//       "updatetime": "2023-09-22T04:46:40.000+00:00"
+//     },
+//   ]
+// }
+
+export const _userList = [...Array(userData.user_list.length)].map(
+  (_, index) => ({
+    // id: userData.user_list[index]._id.$oid,
+    id: userData.user_list[index]._id.$oid,
+    userName: userData.user_list[index].userName,
+    description: userData.user_list[index].description,
+    awsAccount: userData.user_list[index].awsAccount,
+    gcpAccount: userData.user_list[index].gcpAccount,
+    attachedPosition: userData.user_list[index].attachedPosition,
+    attachedGroup: userData.user_list[index].attachedGroup,
+    updatetime: userData.user_list[index].updatetime,
+    csp:
+      (userData.user_list[index].awsAccount &&
+        userData.user_list[index].gcpAccount &&
+        "aws,gcp") ||
+      (userData.user_list[index].awsAccount && "aws") ||
+      (userData.user_list[index].gcpAccount && "gcp") ||
+      "none",
+
+    // userData.user_list[index].awsAccount && "aws"
+    //   ? userData.user_list[index].gcpAccount && "gcp"
+    //     ? "aws,gcp"
+    //     : "aws"
+    //   : userData.user_list[index].gcpAccount && "gcp"
+    //   ? "gcp"
+    //   : "none",
+    zipCode: "85807",
+    state: "Virginia",
+    city: "Rancho Cordova",
+    role: "example role",
+    email: "example@data.com",
+    address: "908 Jack Locks",
+    name: "example name",
+    isVerified: true,
+    company: "example company",
+    country: "example country",
+    avatarUrl: _mock.image.avatar(index % 20),
+    phoneNumber: "example phone number",
+    status:
+      (index % 2 && "aws") ||
+      (index % 3 && "gcp") ||
+      (index % 4 && "aws,gcp") ||
+      "active",
+  }),
+);

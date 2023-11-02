@@ -1,8 +1,24 @@
 import { countries } from 'src/assets/data';
-import { PositionData } from './positionData';
 import { _mock } from './_mock';
 
 // ----------------------------------------------------------------------
+
+async function PositionData() {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/boch/get/positionlist`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const positionData = await PositionData();
 
 export const POSITION_CSP_OPTIONS = [
   { value: 'AWS', label: 'AWS' },
@@ -138,26 +154,14 @@ export const _positionPlans = [
   },
 ];
 
-const positionData = await PositionData();
-
 // export const _positionList = [...Array(userData.user_list.length < 20 ? userData.user_list.length : 20)].map((_, index) => ({
-export const _positionList = [...Array(20)].map((_, index) => ({
-  // id: userData.user_list[index]._id.$oid,
-  id: _mock.id(index),
-  // zipCode: '85807',
-  // state: 'Virginia',
-  // city: 'Rancho Cordova',
-  role: positionData.position_list[index].attachedPosition,
-  email: _mock.email(index),
-  address: '908 Jack Locks',
-  name: positionData.position_list[index].positionName,
-  isVerified: _mock.boolean(index),
-  company: _mock.companyName(index),
-  country: countries[index + 1].label,
-  avatarUrl: _mock.image.avatar(index),
-  phoneNumber: _mock.phoneNumber(index),
-  status:
-    (index % 2 && 'GCP') || (index % 3 && 'AWS,GCP') || (index % 4 && 'AWS') || 'active',
+export const _positionList = [...Array(positionData.position_list.length)].map((_, index) => ({
+  id: positionData.position_list[index]._id.$oid,
+  positionName: positionData.position_list[index].positionName,
+  isCustom: positionData.position_list[index].isCustom,
+  description: positionData.position_list[index].description,
+  csp: positionData.position_list[index].csp,
+  policies: positionData.position_list[index].policies.map((policy) => Object.keys(policy)[0]),
 }));
 // export const _positionList = [...Array(20)].map((_, index) => ({
 //   id: _mock.id(index),

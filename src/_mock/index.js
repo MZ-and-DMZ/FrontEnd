@@ -14,6 +14,4 @@ export * from './_invoice';
 export * from './_product';
 // export * from './_overview';
 export * from './_calendar';
-export * from './userData';
-export * from './positionData';
 export * from './_position';
