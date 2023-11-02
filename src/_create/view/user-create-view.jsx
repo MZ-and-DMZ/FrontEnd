@@ -7,20 +7,39 @@ import TableContainer from '@mui/material/TableContainer';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Stack from '@mui/material/Stack';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { paths } from 'src/routes/paths';
 
-import { _mock } from 'src/_mock';
+import { _roles, _mock } from 'src/_mock';
+
+import { useTable } from 'src/components/table';
 
 import { useSettingsContext } from 'src/components/settings';
+
+import { EDIT_ROWS } from 'src/redux/reducer/positionSelectedSlice';
+
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-import { GetPositions } from './getPositions';
-import DataGridCustom from '../data_grid_custom';
+// import { GetPositions } from './getPositions';
+import DataGridCustom from '../data_grid_import';
+import DataGridView from '../data_grid_view';
 import UserNewEditForm from '../user-new-edit-form';
+import UserTableToolbar from '../user-table-toolbar';
 
 // ----------------------------------------------------------------------
+async function GetPositions() {
+  try {
+    // const response = await fetch('http://54.180.76.116:8080/boch/get/positionlist');
+    // const response = await fetch('http://localhost:5000/boch/get/positionlist');
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/boch/get/positionlist`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const positionData = await GetPositions();
 
@@ -42,7 +61,7 @@ const positionData = await GetPositions();
 //     performance: _mock.number.percent(index),
 //   };
 // });
-const _dataGrid = [...Array(20)].map((_, index) => ({
+const _dataGrid = [...Array(positionData.position_list.length)].map((_, index) => ({
   id: positionData.position_list[index]._id.$oid,
   positionName: positionData.position_list[index].positionName,
   isCustom: positionData.position_list[index].isCustom,
@@ -57,10 +76,38 @@ const _dataGrid = [...Array(20)].map((_, index) => ({
   // 데이터도 나눠서 저장되어있으면 좋겠음. 그러면 aws, gcp 따로 나눠서 저장해야함.
 }));
 
+const defaultFilters = {
+  positionName: '',
+  policies: [],
+  status: 'all',
+};
+
+// const defaultFilters = {
+//   name: '',
+//   role: [],
+//   status: 'all',
+// };
+
+const _roles2 = positionData.position_list.map((item) => item.positionName);
+console.info('_roles2', _roles2);
 export default function UserCreateView() {
   // const [filters, setFilters] = useState(defaultFilters);
-
+  const _checked = null;
   const settings = useSettingsContext();
+  const [filters, setFilters] = useState(defaultFilters);
+
+  const table = useTable();
+
+  const handleFilters = useCallback(
+    (positionName, value) => {
+      table.onResetPage();
+      setFilters((prevState) => ({
+        ...prevState,
+        [positionName]: value,
+      }));
+    },
+    [table]
+  );
 
   // const handleFilters = useCallback(
   //   (name, value) => {
@@ -72,7 +119,19 @@ export default function UserCreateView() {
   //   },
   //   [table]
   // );
+  let positionSelected = null;
+  positionSelected = useSelector((state) => state.positionSelected);
+  const dispatch = useDispatch();
+  const _dataGrid2 = [...Array(positionSelected.position_list.length)].map((_, index) => ({
+    id: positionSelected.position_list[index].id,
+    positionName: positionSelected.position_list[index].positionName,
+    isCustom: positionSelected.position_list[index].isCustom,
+    description: positionSelected.position_list[index].description,
+    csp: positionSelected.position_list[index].csp,
+    policies: positionSelected.position_list[index].policies,
+  }));
 
+  // const formatSelected = {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
@@ -93,22 +152,18 @@ export default function UserCreateView() {
         }}
       />
 
-      <UserNewEditForm />
-      <></>
       <Card sx={{ p: 3 }}>
         <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <UserNewEditForm />
+          </Grid>
           <Grid item xs={6}>
             <Card>
-              {/* <UserTableToolbar
-              filters={filters}
-              onFilters={handleFilters}
-              //
-              roleOptions={_roles}
-            /> */}
-
               <CardHeader title="직무" sx={{ mb: 2 }} />
+              {/* 필터링 위해서 */}
+              <UserTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles2} />
               <Box sx={{ height: 720 }}>
-                <DataGridCustom data={_dataGrid} />
+                <DataGridView data={_dataGrid} />
               </Box>
             </Card>
           </Grid>
@@ -116,7 +171,9 @@ export default function UserCreateView() {
             <Card>
               <CardHeader title="추가한 권한/역할" sx={{ mb: 2 }} />
               <Box sx={{ height: 720 }}>
-                <DataGridCustom data={_dataGrid} />
+                {/* Change _dataGrid */}
+                <DataGridCustom data={_dataGrid2} />
+                {/* <DataGridCustom data={_dataGrid} /> */}
               </Box>
             </Card>
           </Grid>

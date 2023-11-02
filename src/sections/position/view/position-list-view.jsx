@@ -19,7 +19,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _roles, _userList, USER_STATUS_OPTIONS } from 'src/_mock';
+import { _roles, _positionList, POSITION_CSP_OPTIONS } from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -38,20 +38,20 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import UserTableRow from '../user-table-row';
-import UserTableToolbar from '../user-table-toolbar';
-import UserTableFiltersResult from '../user-table-filters-result';
+import PositionTableRow from '../position-table-row';
+import PositionTableToolbar from '../position-table-toolbar';
+import PositionTableFiltersResult from '../position-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
-  { id: 'phoneNumber', label: 'Phone Number', width: 180 },
-  { id: 'company', label: 'Company', width: 220 },
-  { id: 'role', label: 'Role', width: 180 },
-  { id: 'status', label: 'Status', width: 100 },
+  { id: 'positionName', label: '직무' },
+  // { id: 'phoneNumber', label: 'Phone Number', width: 180 },
+  { id: 'aws', label: 'AWS', width: 500 },
+  { id: 'gcp', label: 'GCP', width: 300 },
+  // { id: 'status', label: 'Status', width: 100 },
   { id: '', width: 88 },
 ];
 
@@ -63,32 +63,32 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-// function GetData() {
-//   const [usersData, setUsersData] = useState([]);
-//   useEffect(() => {
-//     fetch(`${process.env.REACT_API}/boch/get/userlist`, {
-//       // fetch('http://54.180.76.116:8080/boch/get/userlist', {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     })
-//       .then((res) => res.json())
-//       .then((data) => {
-//         setUsersData(data);
-//         console.log(data);
-//       });
-//   }, []);
-//   return (
-//     <div>
-//       <p>hello</p>
-//       <p>usersData</p>
-//       <p>{usersData.values.toString}</p>
-//     </div>
-//   );
-// }
+function GetData() {
+  const [positionData, setPositionData] = useState([]);
+  useEffect(() => {
+    // fetch('http://localhost:5000/api/users', {
+    fetch('http://54.180.76.116:8080/boch/get/positionlist', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setPositionData(data);
+        console.log(data);
+      });
+  }, []);
+  return (
+    <div>
+      <p>hello</p>
+      <p>positionData</p>
+      <p>{positionData.values.toString}</p>
+    </div>
+  );
+}
 
-export default function UserListView() {
+export default function PositionListView() {
   const table = useTable();
 
   const settings = useSettingsContext();
@@ -97,7 +97,7 @@ export default function UserListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState(_positionList);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -152,7 +152,7 @@ export default function UserListView() {
 
   const handleEditRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.user.edit(id));
+      router.push(paths.dashboard.position.edit(id));
     },
     [router]
   );
@@ -170,10 +170,10 @@ export default function UserListView() {
 
   const [message, setMessage] = useState('hellooo');
 
-  const [usersData, setUsersData] = useState([]);
+  const [positionData, setPositionData] = useState([]);
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_MOCK_API}/boch/get/userlist`, {
-      // fetch('http://54.180.76.116:8080/boch/get/userlist', {
+    // fetch('http://localhost:5000/api/users', {
+    fetch('http://54.180.76.116:8080/boch/get/positionlist', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ export default function UserListView() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setUsersData(data);
+        setPositionData(data);
         console.log(data);
       });
   }, []);
@@ -190,20 +190,20 @@ export default function UserListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="List"
+          heading="직무"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'User', href: paths.dashboard.user.root },
-            { name: 'List' },
+            { name: '직무', href: paths.dashboard.position.root },
+            { name: '목록' },
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.user.new}
+              href={paths.dashboard.position.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              New User
+              New Position
             </Button>
           }
           sx={{
@@ -238,23 +238,23 @@ export default function UserListView() {
                       'default'
                     }
                   >
-                    {tab.value === 'all' && _userList.length}
+                    {tab.value === 'all' && _positionList.length}
                     {tab.value === 'active' &&
-                      _userList.filter((user) => user.status === 'active').length}
+                      _positionList.filter((position) => position.status === 'active').length}
 
                     {tab.value === 'pending' &&
-                      _userList.filter((user) => user.status === 'pending').length}
+                      _positionList.filter((position) => position.status === 'pending').length}
                     {tab.value === 'banned' &&
-                      _userList.filter((user) => user.status === 'banned').length}
+                      _positionList.filter((position) => position.status === 'banned').length}
                     {tab.value === 'rejected' &&
-                      _userList.filter((user) => user.status === 'rejected').length}
+                      _positionList.filter((position) => position.status === 'rejected').length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
 
-          <UserTableToolbar
+          <PositionTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
@@ -262,7 +262,7 @@ export default function UserListView() {
           />
 
           {canReset && (
-            <UserTableFiltersResult
+            <PositionTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               //
@@ -322,7 +322,7 @@ export default function UserListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <UserTableRow
+                      <PositionTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
@@ -408,7 +408,7 @@ function applyFilter({ inputData, comparator, filters }) {
   }
 
   if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+    inputData = inputData.filter((user) => user.includes(user.role));
   }
 
   return inputData;

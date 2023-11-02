@@ -40,6 +40,11 @@ const UserListPage = lazy(() => import('src/pages/dashboard/user/list'));
 // const UserAccountPage = lazy(() => import('src/pages/dashboard/user/account'));
 const UserCreatePage = lazy(() => import('src/pages/dashboard/user/new'));
 const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
+
+// POSITION
+const PositionListPage = lazy(() => import('src/pages/dashboard/position/list'));
+const PositionCreatePage = lazy(() => import('src/pages/dashboard/position/new'));
+const PositionEditPage = lazy(() => import('src/pages/dashboard/position/edit'));
 /*
 // BLOG
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
@@ -102,6 +107,18 @@ export const dashboardRoutes = [
           { path: 'list', element: <UserListPage /> },
           { path: 'new', element: <UserCreatePage /> },
           { path: ':id/edit', element: <UserEditPage /> },
+          // { path: 'account', element: <UserAccountPage /> },
+        ],
+      },
+      {
+        path: 'position',
+        children: [
+          { element: <PositionListPage />, index: true },
+          // { path: 'profile', element: <UserProfilePage /> },
+          // { path: 'cards', element: <UserCardsPage /> },
+          { path: 'list', element: <PositionListPage /> },
+          { path: 'new', element: <PositionCreatePage /> },
+          { path: ':id/edit', element: <PositionEditPage /> },
           // { path: 'account', element: <UserAccountPage /> },
         ],
       },

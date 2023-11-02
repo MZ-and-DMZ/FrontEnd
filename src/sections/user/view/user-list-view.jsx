@@ -47,11 +47,11 @@ import UserTableFiltersResult from '../user-table-filters-result';
 const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'position name', label: 'Position Name' },
-  // { id: 'phoneNumber', label: 'Phone Number', width: 180 },
-  // { id: 'company', label: 'Company', width: 220 },
-  { id: 'role', label: 'Role', width: 600 },
-  { id: 'csp', label: 'CSP', width: 200 },
+  { id: 'name', label: 'Name' },
+  { id: 'csp', label: 'CSP', width: 180 },
+  { id: 'group', label: '그룹', width: 220 },
+  { id: 'position', label: '직무', width: 600 },
+  { id: 'description', label: '설명', width: 200 },
   { id: '', width: 88 },
 ];
 
@@ -147,11 +147,11 @@ export default function UserListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="List"
+          heading="사용자"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'User', href: paths.dashboard.user.root },
-            { name: 'List' },
+            { name: '사용자', href: paths.dashboard.user.root },
+            { name: '목록' },
           ]}
           action={
             <Button

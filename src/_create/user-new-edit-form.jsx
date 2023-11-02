@@ -48,8 +48,8 @@ export default function UserNewEditForm({ currentUser }) {
     // state: Yup.string().required('State is required'),
     // city: Yup.string().required('City is required'),
     role: Yup.string().required('Role is required'),
-    zipCode: Yup.string().required('Zip code is required'),
-    avatarUrl: Yup.mixed().nullable().required('Avatar is required'),
+    // zipCode: Yup.string().required('Zip code is required'),
+    // avatarUrl: Yup.mixed().nullable().required('Avatar is required'),
     // not required
     status: Yup.string(),
     isVerified: Yup.boolean(),
@@ -211,63 +211,63 @@ export default function UserNewEditForm({ currentUser }) {
         )}
       </Card> */}
 
-      <Card sx={{ p: 3 }}>
-        <Box
-          rowGap={3}
-          columnGap={2}
-          display="grid"
-          gridTemplateColumns={{
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
+      {/* <Card sx={{ p: 3 }}> */}
+      <Box
+        rowGap={3}
+        columnGap={2}
+        display="grid"
+        gridTemplateColumns={{
+          xs: 'repeat(1, 1fr)',
+          sm: 'repeat(2, 1fr)',
+        }}
+      >
+        <RHFTextField name="name" label="Role Name" />
+        <RHFTextField name="email" label="Role ID" />
+
+        <RHFAutocomplete
+          name="country"
+          label="Cloud"
+          options={countries.map((country) => country.label)}
+          getOptionLabel={(option) => option}
+          isOptionEqualToValue={(option, value) => option === value}
+          renderOption={(props, option) => {
+            const { code, label, phone } = countries.filter(
+              (country) => country.label === option
+            )[0];
+
+            if (!label) {
+              return null;
+            }
+
+            return (
+              <li {...props} key={label}>
+                <Iconify
+                  key={label}
+                  icon={`circle-flags:${code.toLowerCase()}`}
+                  width={28}
+                  sx={{ mr: 1 }}
+                />
+                {label} ({code}) +{phone}
+              </li>
+            );
           }}
-        >
-          <RHFTextField name="name" label="Role Name" />
-          <RHFTextField name="email" label="Role ID" />
-          <RHFTextField name="phoneNumber" label="Description" />
+        />
+        <RHFTextField name="phoneNumber" label="Description" />
 
-          <RHFAutocomplete
-            name="country"
-            label="Cloud"
-            options={countries.map((country) => country.label)}
-            getOptionLabel={(option) => option}
-            isOptionEqualToValue={(option, value) => option === value}
-            renderOption={(props, option) => {
-              const { code, label, phone } = countries.filter(
-                (country) => country.label === option
-              )[0];
-
-              if (!label) {
-                return null;
-              }
-
-              return (
-                <li {...props} key={label}>
-                  <Iconify
-                    key={label}
-                    icon={`circle-flags:${code.toLowerCase()}`}
-                    width={28}
-                    sx={{ mr: 1 }}
-                  />
-                  {label} ({code}) +{phone}
-                </li>
-              );
-            }}
-          />
-
-          {/* <RHFTextField name="state" label="State/Region" /> */}
-          {/* <RHFTextField name="city" label="City" />
+        {/* <RHFTextField name="state" label="State/Region" /> */}
+        {/* <RHFTextField name="city" label="City" />
               <RHFTextField name="address" label="Address" />
-              <RHFTextField name="zipCode" label="Zip/Code" /> */}
-          <RHFTextField name="company" label="Company" />
-          <RHFTextField name="role" label="Role" />
-        </Box>
+            <RHFTextField name="zipCode" label="Zip/Code" /> */}
+        {/* <RHFTextField name="company" label="Company" />
+          <RHFTextField name="role" label="Role" /> */}
+      </Box>
 
-        <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            {!currentUser ? 'Create User' : 'Save Changes'}
-          </LoadingButton>
-        </Stack>
-      </Card>
+      {/* <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          {!currentUser ? 'Create User' : 'Save Changes'}
+        </LoadingButton>
+      </Stack> */}
+      {/* </Card> */}
     </FormProvider>
   );
 }

@@ -23,10 +23,10 @@ import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/comp
 
 // ----------------------------------------------------------------------
 
-export default function UserQuickEditForm({ currentUser, open, onClose }) {
+export default function PositionQuickEditForm({ currentPosition, open, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
 
-  const NewUserSchema = Yup.object().shape({
+  const NewPositionSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     phoneNumber: Yup.string().required('Phone number is required'),
@@ -40,23 +40,23 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
-      email: currentUser?.email || '',
-      phoneNumber: currentUser?.phoneNumber || '',
-      address: currentUser?.address || '',
-      country: currentUser?.country || '',
-      state: currentUser?.state || '',
-      city: currentUser?.city || '',
-      zipCode: currentUser?.zipCode || '',
-      csp: currentUser?.csp,
-      company: currentUser?.company || '',
-      role: currentUser?.role || '',
+      name: currentPosition?.name || '',
+      email: currentPosition?.email || '',
+      phoneNumber: currentPosition?.phoneNumber || '',
+      address: currentPosition?.address || '',
+      country: currentPosition?.country || '',
+      state: currentPosition?.state || '',
+      city: currentPosition?.city || '',
+      zipCode: currentPosition?.zipCode || '',
+      csp: currentPosition?.csp,
+      company: currentPosition?.company || '',
+      role: currentPosition?.role || '',
     }),
-    [currentUser]
+    [currentPosition]
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
+    resolver: yupResolver(NewPositionSchema),
     defaultValues,
   });
 
@@ -117,7 +117,7 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
 
             <RHFTextField name="name" label="Full Name" />
             <RHFTextField name="email" label="Email Address" />
-            {/* <RHFTextField name="phoneNumber" label="Phone Number" /> */}
+            <RHFTextField name="phoneNumber" label="Phone Number" />
 
             <RHFAutocomplete
               name="country"
@@ -147,10 +147,10 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
               }}
             />
 
-            {/* <RHFTextField name="state" label="State/Region" />
+            <RHFTextField name="state" label="State/Region" />
             <RHFTextField name="city" label="City" />
             <RHFTextField name="address" label="Address" />
-            <RHFTextField name="zipCode" label="Zip/Code" /> */}
+            <RHFTextField name="zipCode" label="Zip/Code" />
             <RHFTextField name="company" label="Company" />
             <RHFTextField name="role" label="Role" />
           </Box>
@@ -170,8 +170,8 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
   );
 }
 
-UserQuickEditForm.propTypes = {
-  currentUser: PropTypes.object,
+PositionQuickEditForm.propTypes = {
+  currentPosition: PropTypes.object,
   onClose: PropTypes.func,
   open: PropTypes.bool,
 };

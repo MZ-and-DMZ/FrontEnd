@@ -1,17 +1,17 @@
 import { countries } from 'src/assets/data';
-import { UserData } from './userData';
+import { PositionData } from './positionData';
 import { _mock } from './_mock';
 
 // ----------------------------------------------------------------------
 
-export const USER_CSP_OPTIONS = [
+export const POSITION_CSP_OPTIONS = [
   { value: 'AWS', label: 'AWS' },
   { value: 'GCP', label: 'GCP' },
   // { value: 'banned', label: 'Banned' },
   // { value: 'rejected', label: 'Rejected' },
 ];
 
-export const _userAbout = {
+export const _positionAbout = {
   id: _mock.id(1),
   role: _mock.role(1),
   email: _mock.email(1),
@@ -31,28 +31,28 @@ export const _userAbout = {
   },
 };
 
-export const _userFollowers = [...Array(18)].map((_, index) => ({
+export const _positionFollowers = [...Array(18)].map((_, index) => ({
   id: _mock.id(index),
   name: _mock.fullName(index),
   country: countries[index + 1].label,
   avatarUrl: _mock.image.avatar(index),
 }));
 
-export const _userFriends = [...Array(18)].map((_, index) => ({
+export const _positionFriends = [...Array(18)].map((_, index) => ({
   id: _mock.id(index),
   role: _mock.role(index),
   name: _mock.fullName(index),
   avatarUrl: _mock.image.avatar(index),
 }));
 
-export const _userGallery = [...Array(12)].map((_, index) => ({
+export const _positionGallery = [...Array(12)].map((_, index) => ({
   id: _mock.id(index),
   postedAt: _mock.time(index),
   title: _mock.postTitle(index),
   imageUrl: _mock.image.cover(index),
 }));
 
-export const _userFeeds = [...Array(3)].map((_, index) => ({
+export const _positionFeeds = [...Array(3)].map((_, index) => ({
   id: _mock.id(index),
   createdAt: _mock.time(index),
   media: _mock.image.travel(index + 1),
@@ -86,7 +86,7 @@ export const _userFeeds = [...Array(3)].map((_, index) => ({
   ],
 }));
 
-export const _userCards = [...Array(21)].map((_, index) => ({
+export const _positionCards = [...Array(21)].map((_, index) => ({
   id: _mock.id(index),
   role: _mock.role(index),
   name: _mock.fullName(index),
@@ -97,14 +97,14 @@ export const _userCards = [...Array(21)].map((_, index) => ({
   totalFollowing: _mock.number.nativeL(index + 1),
 }));
 
-// export const _userPayment = [...Array(3)].map((_, index) => ({
+// export const _positionPayment = [...Array(3)].map((_, index) => ({
 //   id: _mock.id(index),
 //   cardNumber: ['**** **** **** 1234', '**** **** **** 5678', '**** **** **** 7878'][index],
 //   cardType: ['mastercard', 'visa', 'visa'][index],
 //   primary: index === 1,
 // }));
 
-export const _userAddressBook = [...Array(4)].map((_, index) => ({
+export const _positionAddressBook = [...Array(4)].map((_, index) => ({
   id: _mock.id(index),
   primary: index === 0,
   name: _mock.fullName(index),
@@ -113,14 +113,14 @@ export const _userAddressBook = [...Array(4)].map((_, index) => ({
   addressType: (index === 0 && 'Home') || 'Office',
 }));
 
-export const _userInvoices = [...Array(10)].map((_, index) => ({
+export const _positionInvoices = [...Array(10)].map((_, index) => ({
   id: _mock.id(index),
   invoiceNumber: `INV-199${index}`,
   createdAt: _mock.time(index),
   price: _mock.number.price(index),
 }));
 
-export const _userPlans = [
+export const _positionPlans = [
   {
     subscription: 'basic',
     price: 0,
@@ -138,28 +138,28 @@ export const _userPlans = [
   },
 ];
 
-const userData = await UserData();
+const positionData = await PositionData();
 
-// export const _userList = [...Array(userData.user_list.length < 20 ? userData.user_list.length : 20)].map((_, index) => ({
-export const _userList = [...Array(20)].map((_, index) => ({
+// export const _positionList = [...Array(userData.user_list.length < 20 ? userData.user_list.length : 20)].map((_, index) => ({
+export const _positionList = [...Array(20)].map((_, index) => ({
   // id: userData.user_list[index]._id.$oid,
   id: _mock.id(index),
-  zipCode: '85807',
-  state: 'Virginia',
-  city: 'Rancho Cordova',
-  role: userData.user_list[index].attachedPosition,
+  // zipCode: '85807',
+  // state: 'Virginia',
+  // city: 'Rancho Cordova',
+  role: positionData.position_list[index].attachedPosition,
   email: _mock.email(index),
   address: '908 Jack Locks',
-  name: userData.user_list[index].userName,
+  name: positionData.position_list[index].positionName,
   isVerified: _mock.boolean(index),
   company: _mock.companyName(index),
-  // country: countries[index + 1].label,
-  // avatarUrl: _mock.image.avatar(index),
-  // phoneNumber: _mock.phoneNumber(index),
+  country: countries[index + 1].label,
+  avatarUrl: _mock.image.avatar(index),
+  phoneNumber: _mock.phoneNumber(index),
   status:
     (index % 2 && 'GCP') || (index % 3 && 'AWS,GCP') || (index % 4 && 'AWS') || 'active',
 }));
-// export const _userList = [...Array(20)].map((_, index) => ({
+// export const _positionList = [...Array(20)].map((_, index) => ({
 //   id: _mock.id(index),
 //   zipCode: '85807',
 //   state: 'Virginia',
