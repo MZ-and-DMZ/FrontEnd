@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 
-export default function PositionNewEditFormTable({ currentPosition }) {
+export default function PositionNewEditFormTree({ currentPosition }) {
   return (
     <div>
-      <h1>PositionNewEditFormTable</h1>
+      <h1>PositionNewEditFormTree</h1>
     </div>
   );
 }
 
-PositionNewEditFormTable.propTypes = {
+PositionNewEditFormTree.propTypes = {
   currentPosition: PropTypes.object,
 };
