@@ -1,4 +1,5 @@
 import { countries } from "src/assets/data";
+
 import { _mock } from "./_mock";
 
 // ----------------------------------------------------------------------
@@ -140,7 +141,7 @@ export const _userPlans = [
 async function UserData() {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_MOCK_API}/boch/get/userlist`
+      `${process.env.REACT_APP_MOCK_API}/boch/get/userlist`,
     );
     // const response = await fetch('http://localhost:5000/boch/get/userlist');
     const data = await response.json();
@@ -189,31 +190,38 @@ export const _userList = [...Array(userData.user_list.length)].map(
     attachedGroup: userData.user_list[index].attachedGroup,
     updatetime: userData.user_list[index].updatetime,
     csp:
-      userData.user_list[index].awsAccount && "aws"
-        ? userData.user_list[index].gcpAccount && "gcp"
-          ? "aws,gcp"
-          : "aws"
-        : userData.user_list[index].gcpAccount && "gcp"
-        ? "gcp"
-        : "none",
+      (userData.user_list[index].awsAccount &&
+        userData.user_list[index].gcpAccount &&
+        "aws,gcp") ||
+      (userData.user_list[index].awsAccount && "aws") ||
+      (userData.user_list[index].gcpAccount && "gcp") ||
+      "none",
+
+    // userData.user_list[index].awsAccount && "aws"
+    //   ? userData.user_list[index].gcpAccount && "gcp"
+    //     ? "aws,gcp"
+    //     : "aws"
+    //   : userData.user_list[index].gcpAccount && "gcp"
+    //   ? "gcp"
+    //   : "none",
     zipCode: "85807",
     state: "Virginia",
     city: "Rancho Cordova",
-    role: userData.user_list[index].attachedPosition,
-    email: _mock.email(index),
+    role: "example role",
+    email: "example@data.com",
     address: "908 Jack Locks",
-    name: userData.user_list[index].userName,
-    isVerified: _mock.boolean(index),
-    company: _mock.companyName(index),
-    country: countries[index + 1].label,
-    avatarUrl: _mock.image.avatar(index),
-    phoneNumber: _mock.phoneNumber(index),
+    name: "example name",
+    isVerified: true,
+    company: "example company",
+    country: "example country",
+    avatarUrl: _mock.image.avatar(index % 20),
+    phoneNumber: "example phone number",
     status:
       (index % 2 && "aws") ||
       (index % 3 && "gcp") ||
       (index % 4 && "aws,gcp") ||
       "active",
-  })
+  }),
 );
 // export const _userList = [...Array(20)].map((_, index) => ({
 //   id: _mock.id(index),

@@ -15,7 +15,6 @@ import { paths } from "src/routes/paths";
 import { _positionList, _roles, _mock } from "src/_mock";
 
 import { useTable } from "src/components/table";
-
 import { useSettingsContext } from "src/components/settings";
 
 import { EDIT_ROWS } from "src/redux/reducer/positionSelectedSlice";
@@ -23,8 +22,8 @@ import { EDIT_ROWS } from "src/redux/reducer/positionSelectedSlice";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
 // import { GetPositions } from './getPositions';
-import DataGridCustom from "../data_grid_import";
 import DataGridView from "../data_grid_view";
+import DataGridCustom from "../data_grid_import";
 import UserNewEditForm from "../user-new-edit-form";
 import UserTableToolbar from "../user-table-toolbar";
 
@@ -63,7 +62,7 @@ export default function UserCreateView() {
         [positionName]: value,
       }));
     },
-    [table]
+    [table],
   );
 
   // const handleFilters = useCallback(
@@ -131,6 +130,11 @@ export default function UserCreateView() {
           <Grid item xs={6}>
             <Card>
               <CardHeader title="추가한 권한/역할" sx={{ mb: 2 }} />
+              <UserTableToolbar
+                filters={filters}
+                onFilters={handleFilters}
+                roleOptions={_roles2}
+              />
               <Box sx={{ height: 720 }}>
                 {/* Change _dataGrid */}
                 <DataGridCustom data={_dataGrid2} />

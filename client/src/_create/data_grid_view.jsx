@@ -139,7 +139,7 @@ export default function DataGridView({ data }) {
         // console.info('newSelectionModel', newSelectionModel);
 
         checkboxSelected = data.filter((row) =>
-          newSelectionModel.includes(row.id)
+          newSelectionModel.includes(row.id),
         );
         // console.info('selected2', checkboxSelected);
         dispatch(ADD_ROWS(checkboxSelected));

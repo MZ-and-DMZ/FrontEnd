@@ -12,7 +12,19 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
-app.get("/api/users", (req, res) => {
+app.get("/boch/get/userlist", (req, res) => {
+  res.sendFile(path.join(__dirname, "_data/userList.json"));
+});
+
+app.get("/boch/get/grouplist", (req, res) => {
+  res.sendFile(path.join(__dirname, "apiList.json"));
+});
+
+app.get("/boch/get/positionlist", (req, res) => {
+  res.sendFile(path.join(__dirname, "_data/positionList.json"));
+});
+
+app.get("/boch/get/permissionlist", (req, res) => {
   res.sendFile(path.join(__dirname, "apiList.json"));
 });
 
