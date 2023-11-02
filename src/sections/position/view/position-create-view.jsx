@@ -5,11 +5,11 @@ import { paths } from 'src/routes/paths';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-import PositionNewEditForm from '../position-new-edit-form';
+// import PositionNewEditForm from '../position-new-edit-form';
 
 // ----------------------------------------------------------------------
 
-export default function PositionCreateView() {
+export default function PositionCreateStepper() {
   const settings = useSettingsContext();
 
   return (
@@ -31,8 +31,6 @@ export default function PositionCreateView() {
           mb: { xs: 3, md: 5 },
         }}
       />
-
-      <PositionNewEditForm />
     </Container>
   );
 }
