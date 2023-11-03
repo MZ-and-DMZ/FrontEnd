@@ -21,7 +21,7 @@ export default function PositionTableToolbar({
   filters,
   onFilters,
   //
-  roleOptions,
+  positionNameOptions,
 }) {
   const popover = usePopover();
 
@@ -32,12 +32,10 @@ export default function PositionTableToolbar({
     [onFilters]
   );
 
-  const handleFilterRole = useCallback(
+  const handleFilterPositionName = useCallback(
     (event) => {
       onFilters(
-        'role',
-        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
-      );
+        'positionName', event.target.value);
     },
     [onFilters]
   );
@@ -62,13 +60,13 @@ export default function PositionTableToolbar({
             width: { xs: 1, md: 200 },
           }}
         >
-          <InputLabel>Role</InputLabel>
+          <InputLabel>Position Name</InputLabel>
 
           <Select
             multiple
-            value={filters.role}
-            onChange={handleFilterRole}
-            input={<OutlinedInput label="Role" />}
+            value={filters.positionName}
+            onChange={handleFilterPositionName}
+            input={<OutlinedInput label="Position Name" />}
             renderValue={(selected) => selected.map((value) => value).join(', ')}
             MenuProps={{
               PaperProps: {
@@ -76,9 +74,9 @@ export default function PositionTableToolbar({
               },
             }}
           >
-            {roleOptions.map((option) => (
+            {positionNameOptions.map((option) => (
               <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.role.includes(option)} />
+                <Checkbox disableRipple size="small" checked={filters.positionName.includes(option)} />
                 {option}
               </MenuItem>
             ))}
@@ -146,5 +144,5 @@ export default function PositionTableToolbar({
 PositionTableToolbar.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
-  roleOptions: PropTypes.array,
+  positionNameOptions: PropTypes.array,
 };

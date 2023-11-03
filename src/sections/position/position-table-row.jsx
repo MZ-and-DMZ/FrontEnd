@@ -21,7 +21,7 @@ import PositionQuickEditForm from './position-quick-edit-form';
 // ----------------------------------------------------------------------
 
 export default function PositionTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, csp, email, role } = row;
+  const { name, csp, custom, policies } = row;
 
   const confirm = useBoolean();
 
@@ -41,7 +41,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
 
           <ListItemText
             primary={name}
-            secondary={email}
+            // secondary={custom}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               component: 'span',
@@ -53,8 +53,6 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
         {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell> */}
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
 
         <TableCell>
           <Label
@@ -69,6 +67,10 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
             {csp}
           </Label>
         </TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{custom}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{policies}</TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <Tooltip title="Quick Edit" placement="top" arrow>

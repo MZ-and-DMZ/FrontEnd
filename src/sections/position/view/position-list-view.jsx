@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -19,7 +19,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _roles, _positionList, POSITION_CSP_OPTIONS } from 'src/_mock';
+import { _positionList, POSITION_CSP_OPTIONS } from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -48,16 +48,16 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS]
 
 const TABLE_HEAD = [
   { id: 'positionName', label: '직무' },
-  // { id: 'phoneNumber', label: 'Phone Number', width: 180 },
-  { id: 'isCustom', label: 'isCustom', width: 500 },
-  { id: 'description', label: 'Description', width: 300 },
+  { id: 'csp', label: 'CSP', width: 180 },
+  { id: 'isCustom', label: '커스텀 여부', width: 500 },
+  { id: 'policies', label: '정책/역할', width: 300 },
   // { id: 'status', label: 'Status', width: 100 },
   { id: '', width: 88 },
 ];
 
 const defaultFilters = {
   name: '',
-  role: [],
+  positionName: [],
   status: 'all',
 };
 
@@ -219,7 +219,7 @@ export default function PositionListView() {
             filters={filters}
             onFilters={handleFilters}
             //
-            roleOptions={_roles}
+            positionNameOptions={_positionList.map((position) => position.positionName)}
           />
 
           {canReset && (
@@ -270,12 +270,7 @@ export default function PositionListView() {
                     )
                   }
                 />
-                {/* ----------------------------------------------------- */}
-                {/* ----------------------------------------------------- */}
-                {/* ----------------------------------------------------- */}
-                {/* ----------------------------------------------------- */}
-                {/* ----------------------------------------------------- */}
-                {/* ----------------------------------------------------- */}
+
                 <TableBody>
                   {dataFiltered
                     .slice(
@@ -285,7 +280,11 @@ export default function PositionListView() {
                     .map((row) => (
                       <PositionTableRow
                         key={row.id}
-                        row={row}
+                        row={{
+                          name: row.positionName,
+                          custom: row.isCustom ? "Custom" : "Built-In",
+                          policies: row.policies.join(', '),
+                        }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
@@ -346,7 +345,7 @@ export default function PositionListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, role } = filters;
+  const { name, status,positionName } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -368,9 +367,12 @@ function applyFilter({ inputData, comparator, filters }) {
     inputData = inputData.filter((user) => user.status === status);
   }
 
-  if (role.length) {
-    inputData = inputData.filter((user) => user.includes(user.role));
-  }
+if (positionName && typeof positionName === 'string') {
+  inputData = inputData.filter(
+    (user) => user.positionName.toLowerCase().indexOf(positionName.toLowerCase()) !== -1
+  );
+}
+
 
   return inputData;
 }

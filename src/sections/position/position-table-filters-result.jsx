@@ -23,9 +23,9 @@ export default function PositionTableFiltersResult({
     onFilters('status', 'all');
   };
 
-  const handleRemoveRole = (inputValue) => {
-    const newValue = filters.role.filter((item) => item !== inputValue);
-    onFilters('role', newValue);
+  const handleRemovePositionName = (inputValue) => {
+    const newValue = filters.positionName.filter((item) => item !== inputValue);
+    onFilters('positionName', newValue);
   };
 
   return (
@@ -44,10 +44,10 @@ export default function PositionTableFiltersResult({
           </Block>
         )}
 
-        {!!filters.role.length && (
-          <Block label="Role:">
-            {filters.role.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveRole(item)} />
+        {!!filters.positionName.length && (
+          <Block label="Position Name:">
+            {filters.positionName.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemovePositionName(item)} />
             ))}
           </Block>
         )}
