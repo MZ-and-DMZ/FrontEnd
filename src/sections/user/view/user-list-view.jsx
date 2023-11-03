@@ -271,7 +271,12 @@ export default function UserListView() {
                     .map((row) => (
                       <UserTableRow
                         key={row.id}
-                        row={row}
+                        row={{
+                          name: row.userName,
+                          group: row.attachedGroup,
+                          position: row.attachedPosition.join(', '),
+                          description: row.description,
+                        }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}

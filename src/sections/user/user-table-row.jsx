@@ -21,7 +21,7 @@ import UserQuickEditForm from './user-quick-edit-form';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, csp, email, role } = row;
+  const { name, group, position, description, csp } = row;
 
   const confirm = useBoolean();
 
@@ -41,7 +41,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
           <ListItemText
             primary={name}
-            secondary={email}
+            // secondary={email}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               component: 'span',
@@ -49,12 +49,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
             }}
           />
         </TableCell>
-
-        {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell> */}
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
 
         <TableCell>
           <Label
@@ -69,6 +63,14 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
             {csp}
           </Label>
         </TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{group}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{position}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{description}</TableCell>
+
+        
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <Tooltip title="Quick Edit" placement="top" arrow>
