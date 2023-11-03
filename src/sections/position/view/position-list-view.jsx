@@ -44,21 +44,20 @@ import PositionTableFiltersResult from '../position-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
+const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
 
 const TABLE_HEAD = [
   { id: 'positionName', label: '직무' },
   { id: 'csp', label: 'CSP', width: 180 },
   { id: 'isCustom', label: '커스텀 여부', width: 500 },
   { id: 'policies', label: '정책/역할', width: 300 },
-  // { id: 'status', label: 'Status', width: 100 },
   { id: '', width: 88 },
 ];
 
 const defaultFilters = {
   name: '',
   positionName: [],
-  status: 'all',
+  csp: 'all',
 };
 
 // ----------------------------------------------------------------------
@@ -132,9 +131,9 @@ export default function PositionListView() {
     [router]
   );
 
-  const handleFilterStatus = useCallback(
+  const handleFilterCSP = useCallback(
     (event, newValue) => {
-      handleFilters('status', newValue);
+      handleFilters('csp', newValue);
     },
     [handleFilters]
   );
@@ -174,14 +173,14 @@ export default function PositionListView() {
 
         <Card>
           <Tabs
-            value={filters.status}
-            onChange={handleFilterStatus}
+            value={filters.csp}
+            onChange={handleFilterCSP}
             sx={{
               px: 2.5,
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
-            {STATUS_OPTIONS.map((tab) => (
+            {CSP_OPTIONS.map((tab) => (
               <Tab
                 key={tab.value}
                 iconPosition="end"
@@ -190,25 +189,23 @@ export default function PositionListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                      ((tab.value === 'all' || tab.value === filters.csp) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'active' && 'success') ||
-                      (tab.value === 'pending' && 'warning') ||
-                      (tab.value === 'banned' && 'error') ||
+                      (tab.value === 'aws' && 'success') ||
+                      (tab.value === 'gcp' && 'warning') ||
+                      (tab.value === 'BOch' && 'info') ||
                       'default'
                     }
                   >
                     {tab.value === 'all' && _positionList.length}
-                    {tab.value === 'active' &&
-                      _positionList.filter((position) => position.status === 'active').length}
+                    {tab.value === 'aws' &&
+                      _positionList.filter((position) => position.csp === 'aws').length}
 
-                    {tab.value === 'pending' &&
-                      _positionList.filter((position) => position.status === 'pending').length}
-                    {tab.value === 'banned' &&
-                      _positionList.filter((position) => position.status === 'banned').length}
-                    {tab.value === 'rejected' &&
-                      _positionList.filter((position) => position.status === 'rejected').length}
+                    {tab.value === 'gcp' &&
+                      _positionList.filter((position) => position.csp === 'gcp').length}
+                    {tab.value === 'BOch' &&
+                      _positionList.filter((position) => position.csp === 'BOch').length}
                   </Label>
                 }
               />
@@ -282,6 +279,7 @@ export default function PositionListView() {
                         key={row.id}
                         row={{
                           name: row.positionName,
+                          csp: row.csp.toUpperCase(),
                           custom: row.isCustom ? "Custom" : "Built-In",
                           policies: row.policies.join(', '),
                         }}
@@ -345,7 +343,7 @@ export default function PositionListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status,positionName } = filters;
+  const { name, csp, positionName } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -363,8 +361,8 @@ function applyFilter({ inputData, comparator, filters }) {
     );
   }
 
-  if (status !== 'all') {
-    inputData = inputData.filter((user) => user.status === status);
+  if (csp !== 'all') {
+    inputData = inputData.filter((user) => user.csp === csp);
   }
 
 if (positionName && typeof positionName === 'string') {

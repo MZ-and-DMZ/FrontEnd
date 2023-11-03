@@ -56,7 +56,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
             color={
               (csp === 'AWS' && 'success') ||
               (csp === 'GCP' && 'warning') ||
-              (csp === 'AWS, GCP' && 'error') ||
+              (csp === 'AWS,GCP' && 'info') ||
               'default'
             }
           >

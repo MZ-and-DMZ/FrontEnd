@@ -191,7 +191,7 @@ export default function UserListView() {
                     color={
                       (tab.value === 'AWS' && 'success') ||
                       (tab.value === 'GCP' && 'warning') ||
-                      // (tab.value === 'banned' && 'error') ||
+                      (tab.value === 'AWS,GCP' && 'info') ||
                       'default'
                     }
                   >
@@ -200,6 +200,8 @@ export default function UserListView() {
                       _userList.filter((user) => user.csp === 'AWS').length}
                     {tab.value === 'GCP' &&
                       _userList.filter((user) => user.csp === 'GCP').length}
+                    {tab.value === 'AWS,GCP' &&
+                      _userList.filter((user) => user.csp === 'AWS,GCP').length}
                   </Label>
                 }
               />
@@ -273,6 +275,7 @@ export default function UserListView() {
                         key={row.id}
                         row={{
                           name: row.userName,
+                          csp: row.csp,
                           group: row.attachedGroup,
                           position: row.attachedPosition.join(', '),
                           description: row.description,
