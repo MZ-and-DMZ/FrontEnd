@@ -15,6 +15,8 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import awsPolicyMap from 'src/_mock';
+
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
@@ -124,10 +126,13 @@ const renderSecondary = (
               key={index}  
               direction="row"
               alignItems="center"
-              sx={{
+                sx={{
                 p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
                 '&:not(:last-of-type)': {
                   borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
+                },
+                '&:hover': {
+                  background: 'rgba(0, 0, 0, 0.1)',
                 },
               }}
             >
@@ -144,6 +149,8 @@ const renderSecondary = (
                 }}
               />
               
+
+
             </Stack>
           ))}
 

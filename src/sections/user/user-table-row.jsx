@@ -29,9 +29,13 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
   const popover = usePopover();
 
+  const handleTableRowClick = () => {
+    quickEdit.onTrue(); // TableRow를 클릭하면 UserQuickEditForm 열기
+  };
+
   return (
     <>
-      <TableRow hover selected={selected}>
+      <TableRow hover selected={selected} onClick={handleTableRowClick}>
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>

@@ -22,7 +22,6 @@ const userData = await UserData();
 
 export const _userList = [...Array(userData.user_list.length)].map(
   (_, index) => ({
-    // id: userData.user_list[index]._id.$oid,
     id: userData.user_list[index]._id.$oid,
     userName: userData.user_list[index].userName,
     description: userData.user_list[index].description,
