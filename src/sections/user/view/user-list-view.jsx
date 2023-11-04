@@ -50,8 +50,8 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name' },
   { id: 'csp', label: 'CSP', width: 180 },
   { id: 'group', label: '그룹', width: 220 },
-  { id: 'position', label: '직무', width: 600 },
-  { id: 'description', label: '설명', width: 200 },
+  { id: 'position', label: '직무', width: 500 },
+  { id: 'description', label: '설명', width: 400 },
   { id: '', width: 88 },
 ];
 

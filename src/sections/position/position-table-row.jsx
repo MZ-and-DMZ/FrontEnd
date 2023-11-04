@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types';
 
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Collapse from '@mui/material/Collapse';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -25,13 +29,14 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
 
   const confirm = useBoolean();
 
+  const collapse = useBoolean();
+
   const quickEdit = useBoolean();
 
   const popover = usePopover();
 
-  return (
-    <>
-      <TableRow hover selected={selected}>
+  const renderPrimary = (
+          <TableRow hover selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
@@ -70,20 +75,111 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{custom}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{policies}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{policies.split(",").slice(0, 3).join(", ")}</TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Quick Edit" placement="top" arrow>
-            <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
-              <Iconify icon="solar:pen-bold" />
-            </IconButton>
-          </Tooltip>
+        <IconButton
+          color={collapse.value ? 'inherit' : 'default'}
+          onClick={collapse.onToggle}
+          sx={{
+            ...(collapse.value && {
+              bgcolor: 'action.hover',
+            }),
+          }}
+        >
+          <Iconify icon="eva:arrow-ios-downward-fill" />
+        </IconButton>
+        
+        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+        <Iconify icon="eva:more-vertical-fill" />
+        </IconButton>
 
-          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
+      </TableCell>
+
+      
+
+      <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        
+        {/* <Tooltip title="Quick Edit" placement="top" arrow>
+          <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
+            <Iconify icon="solar:pen-bold" />
           </IconButton>
-        </TableCell>
+        </Tooltip> */}
+      </TableCell>
       </TableRow>
+    );
+
+const renderSecondary = (
+  <TableRow>
+      <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
+        <Collapse
+          in={collapse.value}
+          timeout="auto"
+          unmountOnExit
+          sx={{ bgcolor: 'background.neutral' }}
+        >
+          <Stack component={Paper} sx={{ m: 1.5 }}>
+            {policies.split(',').map((policy, index) => (
+            <Stack
+              key={index}  
+              direction="row"
+              alignItems="center"
+              sx={{
+                p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
+                '&:not(:last-of-type)': {
+                  borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
+                },
+              }}
+            >
+
+              <ListItemText
+                primary={policy}  // 현재 policy를 보여줍니다.
+                primaryTypographyProps={{
+                  typography: 'body2',
+                }}
+                secondaryTypographyProps={{
+                  component: 'span',
+                  color: 'text.disabled',
+                  mt: 0.5,
+                }}
+              />
+              
+            </Stack>
+          ))}
+
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{
+              p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
+                '&:not(:last-of-type)': {
+                  borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
+                },
+                  background: 'rgba(0, 0, 0, 0.1)', // 마지막 스택을 강조하는 스타일
+                  borderRadius: theme => theme.shape.borderRadius,
+                  textAlign: 'center',
+                }
+              }
+            >
+            <ListItemText
+              primary={`${name} 직무에 할당된 정책 수: ${policies.split(',').length}개`}
+              primaryTypographyProps={{
+                typography: 'body2',
+              }}
+            />
+          </Stack>
+          
+          </Stack>
+        </Collapse>
+      </TableCell>
+    </TableRow>
+  );
+
+  return (
+    <>
+      {renderPrimary}
+
+      {renderSecondary}
 
       <PositionQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
 
@@ -129,7 +225,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
     </>
   );
 }
-
+      
 PositionTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
