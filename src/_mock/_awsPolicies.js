@@ -15,7 +15,7 @@ async function AwsPolicyData() {
 
 const awsPolicyData = await AwsPolicyData();
 
-function getAwsPolicyDescription(policyName) {
+export default function getAwsPolicyDescription(policyName) {
   const awsPolicies = awsPolicyData.aws_policy_list;
   const foundPolicy = awsPolicies.find(policy => policy.PolicyName === policyName);
   return foundPolicy ? foundPolicy.Description : 'Description not found';
