@@ -1,6 +1,6 @@
 async function PositionData() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/boch/get/positionlist`, {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/positions/list`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -22,9 +22,9 @@ export const POSITION_CSP_OPTIONS = [
 const positionData = await PositionData();
 
 export const _positionList = [...Array(positionData.position_list.length)].map((_, index) => ({
-  id: positionData.position_list[index]._id.$oid,
+  id: positionData.position_list[index].positionName,
   positionName: positionData.position_list[index].positionName,
-  isCustom: positionData.position_list[index].isCustom,
+  // isCustom: positionData.position_list[index].isCustom,
   description: positionData.position_list[index].description,
   csp: positionData.position_list[index].csp,
   policies: positionData.position_list[index].policies.map((policy) => Object.keys(policy)[0]),
