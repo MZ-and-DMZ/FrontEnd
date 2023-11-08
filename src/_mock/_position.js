@@ -51,7 +51,7 @@ const positionData = await PositionData();
 export const _positionList = [...Array(positionData.position_list.length)].map((_, index) => ({
   id: positionData.position_list[index].positionName,
   positionName: positionData.position_list[index].positionName,
-  isCustom: positionData.position_list[index].isCustom,
+  // isCustom: positionData.position_list[index].isCustom,
   description: positionData.position_list[index].description,
   csp: positionData.position_list[index].csp,
   policies: positionData.position_list[index].policies.map((policy) => Object.keys(policy)[0]),

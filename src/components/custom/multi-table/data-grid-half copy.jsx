@@ -75,7 +75,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function DataGridImport({ data, columns, action }) {
+export default function DataGridHalf({ data, columns, action }) {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const [columnVisibilityModel, setColumnVisibilityModel] = useState({
@@ -166,7 +166,7 @@ export default function DataGridImport({ data, columns, action }) {
   );
 }
 
-DataGridImport.propTypes = {
+DataGridHalf.propTypes = {
   data: PropTypes.array,
   columns: PropTypes.array,
   action: PropTypes.string,

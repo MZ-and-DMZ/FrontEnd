@@ -1,74 +1,38 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-// const _dataGrid = [...Array(20)].map((_, index) => ({
-//   id: positionData.position_list[index]._id.$oid,
-//   positionName: positionData.position_list[index].positionName,
-//   isCustom: positionData.position_list[index].isCustom,
-//   description: positionData.position_list[index].description,
-//   csp: positionData.position_list[index].csp,
-//   policies: positionData.position_list[index].policies,
-// })
-const initialState = [
-  // {
-  //   id: '000000000000000000000000',
-  //   positionName: 'example 1',
-  //   isCustom: true,
-  //   description: 'empty',
-  //   csp: 'gcp',
-  //   policies: ['AmazonEC2FullAccess', 'roles/iam-role-ec2-readonly'],
-  // },
-  // {
-  //   id: '000000000000000000000001',
-  //   positionName: 'example 2',
-  //   isCustom: true,
-  //   description: 'empty',
-  //   csp: 'aws',
-  //   policies: ['AmazonEC2FullAccess'],
-  // },
-];
-
-// const selectedSlice = createSlice({
-//   name: 'mange',
-//   initialState,
-//   reducers: {
-//     ADD_ROWS: (state, action) => {
-//       state.name.push(action.payload);
-//     },
-//     DELETE_ROWS: (state, action) => {
-//       const newName = state.id.filter((id) => id !== action.payload.id);
-//       state.name = newName;
-//     },
-//   },
-// });
+const initialState = [];
 
 const positionSelectedSlice = createSlice({
-  name: "positionSelected",
+  name: 'positionSelected',
   initialState,
   reducers: {
-    // ADD_ROWS: (state, action) => {
-    //   state.position_list.push(action.payload);
-    // },
     ADD_ROWS: (state, action) => {
-      // if state에 이미 존재하면 action.payload를 추가하지 않음
-      const addRows = action.payload.filter(
-        (row) => !state.some((r) => r.id === row.id),
-      );
-      state.push(...addRows);
+      const newRows = action.payload;
+      const existingIds = new Set(state.map((row) => row.id));
+      return [...state, ...newRows.filter((row) => !existingIds.has(row.id))];
     },
     DELETE_ROWS: (state, action) => {
-      const removeRows = action.payload.map((row) => row.id);
-      state = state.filter((row) => !removeRows.includes(row.id));
+      const idsToRemove = action.payload.map((row) => row.id);
+      return state.filter((row) => !idsToRemove.includes(row.id));
     },
-    // MODIFY_ROWS: (state, action) => {
-    //   const idsToModify = action.payload; // payload로 수정할 id 배열을 받음
-    //   state.position_list = state.position_list.filter((row) => !idsToModify.includes(row.id));
-    // },
     EDIT_ROWS: (state, action) => {
-      state = action.payload;
+      const updatedRow = action.payload;
+      const id = updatedRow.id;
+
+      // 유효한 id를 가진 행만 업데이트
+      if (id) {
+        const existingIndex = state.findIndex((row) => row.id === id);
+        if (existingIndex !== -1) {
+          state.splice(existingIndex, 1, updatedRow);
+          return [...state]; // 새로운 배열을 반환하여 불변성 유지
+        }
+        return [...state, updatedRow]; // 새로운 배열을 반환하여 불변성 유지
+      }
+      // id가 없는 행은 그냥 현재 상태를 반환
+      return state;
     },
   },
 });
 
-export const { ADD_ROWS, EDIT_ROWS, DELETE_ROWS } =
-  positionSelectedSlice.actions;
+export const { ADD_ROWS, EDIT_ROWS, DELETE_ROWS } = positionSelectedSlice.actions;
 export default positionSelectedSlice.reducer;
