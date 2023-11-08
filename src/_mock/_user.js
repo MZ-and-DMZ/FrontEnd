@@ -41,27 +41,6 @@ export const _userList = [...Array(userData.user_list.length)].map((_, index) =>
     'none',
 }));
 
-export const _userList = [...Array(userData.user_list.length)].map(
-  (_, index) => ({
-    id: userData.user_list[index].userName,
-    userName: userData.user_list[index].userName,
-    description: userData.user_list[index].description,
-    awsAccount: userData.user_list[index].awsAccount,
-    gcpAccount: userData.user_list[index].gcpAccount,
-    attachedPosition: userData.user_list[index].attachedPosition,
-    attachedGroup: userData.user_list[index].attachedGroup,
-    department: userData.user_list[index].department,
-    duty: userData.user_list[index].duty,
-    updatetime: userData.user_list[index].updatetime,
-    csp:
-      (userData.user_list[index].awsAccount &&
-        userData.user_list[index].gcpAccount &&
-        "AWS,GCP") ||
-      (userData.user_list[index].awsAccount && "AWS") ||
-      (userData.user_list[index].gcpAccount && "GCP") ||
-      "none",
-  }),
-);
 
 export async function createUser(data) {
   try {
