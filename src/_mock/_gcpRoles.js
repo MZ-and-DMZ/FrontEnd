@@ -15,7 +15,7 @@ async function GcpRoleData() {
 
 const gcpRoleData = await GcpRoleData();
 
-function getGcpRoleDescription(roleName) {
+export default function getGcpRoleDescription(roleName) {
   const gcpRoles = gcpRoleData.gcp_role_list;
   const foundRole = gcpRoles.find(role => role.RoleName === roleName);
   return foundRole ? foundRole.Description : 'Description not found';
@@ -28,4 +28,5 @@ export const _gcpRoleList = [...Array(gcpRoleData.gcp_role_list.length)].map((_,
   description: gcpRoleData.gcp_role_list[index].description,
   includedPermissions: gcpRoleData.gcp_role_list[index].includedPermissions.map((permission) => Object.keys(permission)[0]),
   stage: gcpRoleData.gcp_role_list[index].stage,
+  etag: gcpRoleData.gcp_role_list[index].etag,
 }));

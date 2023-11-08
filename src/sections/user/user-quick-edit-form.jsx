@@ -43,6 +43,8 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
       company: currentUser?.company || '',
       role: currentUser?.role || '',
       updatetime: currentUser?.updatetime || '',
+      duty: currentUser?.duty || '',
+      department: currentUser?.department || '',
     }),
     [currentUser]
   );
@@ -110,6 +112,8 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
             <RHFTextField name="name" label="Full Name" />
             <RHFTextField name="gcpAccount" label="AWS 계정 정보" />
             <RHFTextField name="awsAccount" label="GCP 계정 정보" />
+            <RHFTextField name="department" label="부서" />
+            <RHFTextField name="duty" label="직책" />
             <RHFTextField name="description" label="설명" />
             <RHFTextField name="role" label="Role" />
             <RHFTextField name="attachedGroup" label="소속된 그룹" />

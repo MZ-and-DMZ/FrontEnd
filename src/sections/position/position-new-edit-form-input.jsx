@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { USER_CSP_OPTIONS } from 'src/_mock';
+import { createPosition, POSITION_CSP_OPTIONS } from 'src/_mock';
 
 import UserCreateView from 'src/_create/view/user-create-view';
 
@@ -22,6 +22,7 @@ import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField, RHFSelect } from 'src/components/hook-form';
 
 export default function PositionNewEditForm({ currentPosition }) {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -58,15 +59,31 @@ export default function PositionNewEditForm({ currentPosition }) {
     formState: { isSubmitting },
   } = methods;
 
+  // const onSubmit = handleSubmit(async (data) => {
+  //   try {
+  //     await new Promise((resolve) => setTimeout(resolve, 500));
+  //     reset();
+  //     enqueueSnackbar(currentPosition ? 'Update success!' : 'Create success!');
+  //     router.push(paths.dashboard.position.list);
+  //     console.info('DATA', data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // });
+
   const onSubmit = handleSubmit(async (data) => {
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const responseData = await createPosition(data);
+
       reset();
       enqueueSnackbar(currentPosition ? 'Update success!' : 'Create success!');
       router.push(paths.dashboard.position.list);
-      console.info('DATA', data);
+      console.info('DATA', responseData);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   });
 
@@ -100,7 +117,7 @@ export default function PositionNewEditForm({ currentPosition }) {
             >
               <RHFTextField name="name" label="직무 이름" />
               <RHFSelect name="csp" label="CSP">
-                {USER_CSP_OPTIONS.map((csp) => (
+                {POSITION_CSP_OPTIONS.map((csp) => (
                   <MenuItem key={csp.value} value={csp.value}>
                     {csp.label}
                   </MenuItem>
