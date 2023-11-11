@@ -6,12 +6,13 @@ import Grid from '@mui/material/Grid';
 import CardHeader from '@mui/material/CardHeader';
 import { useState, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
 import { _positionList, _roles, _mock } from 'src/_mock';
 
 import Label from 'src/components/label';
 import { useTable } from 'src/components/table';
 import DataGridHalf from 'src/components/custom/multi-table/data-grid-half';
+
+import { INIT_ROWS } from 'src/redux/reducer/positionSelectedSlice';
 
 import UserTableToolbar from './user-table-toolbar';
 
@@ -23,11 +24,11 @@ const columns = [
   {
     field: 'csp',
     type: 'singleSelect',
-    headerName: 'Cloud',
-    valueOptions: ['aws', 'gcp'],
+    headerName: '',
+    valueOptions: ['aws', 'gcp', 'aws, gcp'],
     align: 'center',
     headerAlign: 'center',
-    width: 120,
+    width: 40,
     renderCell: (params) => (
       <Label
         variant="soft"
@@ -51,7 +52,7 @@ const columns = [
     headerName: 'AWS권한/GCP역할',
     align: 'left',
     headerAlign: 'left',
-    width: 200,
+    width: 250,
   },
 ];
 
@@ -70,6 +71,7 @@ const defaultFilters = {
 
 export default function PositionMultiTable({ currentUser }) {
   const [filters, setFilters] = useState(defaultFilters);
+  const dispatch = useDispatch();
 
   const table = useTable();
 
@@ -94,17 +96,28 @@ export default function PositionMultiTable({ currentUser }) {
   //   },
   //   [table]
   // );
-  let positionSelected = null;
-  positionSelected = useSelector((state) => state.positionSelected);
-  // const dispatch = useDispatch();
-  const _reduxList = [...Array(positionSelected.length)].map((_, index) => ({
-    id: positionSelected[index].id,
-    positionName: positionSelected[index].positionName,
-    isCustom: positionSelected[index].isCustom,
-    description: positionSelected[index].description,
-    csp: positionSelected[index].csp,
-    policies: positionSelected[index].policies,
-  }));
+  useEffect(() => {
+    if (currentUser) {
+      const _userPosition = currentUser.attachedPosition.map((positionName) =>
+        _positionList.find((position) => position.positionName === positionName)
+      );
+      dispatch(INIT_ROWS(_userPosition));
+    } else {
+      dispatch(INIT_ROWS([]));
+    }
+  }, [currentUser, dispatch]);
+
+  let _reduxList = null;
+  _reduxList = useSelector((state) => state.positionSelected);
+
+  // const _reduxList = [...Array(positionSelected.length)].map((_, index) => ({
+  //   id: positionSelected[index].id,
+  //   positionName: positionSelected[index].positionName,
+  //   isCustom: positionSelected[index].isCustom,
+  //   description: positionSelected[index].description,
+  //   csp: positionSelected[index].csp,
+  //   policies: positionSelected[index].policies,
+  // }));
 
   return (
     <Grid container spacing={2}>
@@ -113,7 +126,7 @@ export default function PositionMultiTable({ currentUser }) {
         <Card>
           <CardHeader title="직무" sx={{ mb: 2 }} />
           {/* 필터링 위해서 */}
-          <UserTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles2} />
+          {/* <UserTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles2} /> */}
           <Box sx={{ height: 720 }}>
             <DataGridHalf data={_positionList} columns={columns} action="add" />
           </Box>
@@ -122,11 +135,11 @@ export default function PositionMultiTable({ currentUser }) {
       <Grid item xs={6}>
         <Card>
           <CardHeader title="추가한 권한/역할" sx={{ mb: 2 }} />
-          <UserTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles2} />
+          {/* <UserTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles2} /> */}
           <Box sx={{ height: 720 }}>
             {/* Change _dataGrid */}
             <DataGridHalf data={_reduxList} columns={columns} action="delete" />
-            {console.info('_reduxList', _reduxList)}
+            {/* {console.info('_reduxList', _reduxList)} */}
             {/* <DataGridCustom data={_dataGrid} /> */}
           </Box>
         </Card>

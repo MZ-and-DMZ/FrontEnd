@@ -1,8 +1,7 @@
 import { Helmet } from 'react-helmet-async';
+import { UserEditView } from 'src/_user/view';
 
 import { useParams } from 'src/routes/hooks';
-
-import { UserEditView } from 'src/sections/user/view';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +17,7 @@ export default function UserEditPage() {
       </Helmet>
 
       <UserEditView id={`${id}`} />
+      {console.log('in page', id)}
     </>
   );
 }

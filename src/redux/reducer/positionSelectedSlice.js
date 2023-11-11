@@ -1,11 +1,81 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [];
+const userNameSlice = createSlice({
+  name: 'userName',
+  initialState: '',
+  reducers: {
+    INPUT_USERNAME: (state, action) => {
+      let newState = null;
+      newState = state;
+      newState.userName = null;
+      newState.userName = action.payload;
+      return newState;
+    },
+  },
+});
+
+const descriptionSlice = createSlice({
+  name: 'description',
+  initialState: '',
+  reducers: {
+    INPUT_DESCRIPTION: (state, action) => {
+      let newState = null;
+      newState = state;
+      newState.description = null;
+      newState.description = action.payload;
+
+      return newState;
+    },
+  },
+});
+
+const awsAccountSlice = createSlice({
+  name: 'awsAccount',
+  initialState: '',
+  reducers: {
+    INPUT_AWSACCOUNT: (state, action) => {
+      let newState = null;
+      newState = state;
+      newState.awsAccount = null;
+      newState.awsAccount = action.payload;
+      return newState;
+    },
+  },
+});
+
+const gcpAccountSlice = createSlice({
+  name: 'gcpAccount',
+  initialState: '',
+  reducers: {
+    INPUT_GCPCACCOUNT: (state, action) => {
+      let newState = null;
+      newState = state;
+      newState.gcpAccount = null;
+      newState.gcpAccount = action.payload;
+      return newState;
+    },
+  },
+});
+
+const cspSlice = createSlice({
+  name: 'csp',
+  initialState: '',
+  reducers: {
+    INPUT_CSP: (state, action) => {
+      let newState = null;
+      newState = state;
+      newState.csp = null;
+      newState.csp = action.payload;
+      return newState;
+    },
+  },
+});
 
 const positionSelectedSlice = createSlice({
   name: 'positionSelected',
-  initialState,
+  initialState: [],
   reducers: {
+    INIT_ROWS: (state, action) => action.payload,
     ADD_ROWS: (state, action) => {
       const newRows = action.payload;
       const existingIds = new Set(state.map((row) => row.id));
@@ -34,5 +104,18 @@ const positionSelectedSlice = createSlice({
   },
 });
 
-export const { ADD_ROWS, EDIT_ROWS, DELETE_ROWS } = positionSelectedSlice.actions;
-export default positionSelectedSlice.reducer;
+export const { INIT_ROWS, ADD_ROWS, EDIT_ROWS, DELETE_ROWS } = positionSelectedSlice.actions;
+export const { INPUT_USERNAME } = userNameSlice.actions;
+export const { INPUT_DESCRIPTION } = descriptionSlice.actions;
+export const { INPUT_AWSACCOUNT } = awsAccountSlice.actions;
+export const { INPUT_GCPCACCOUNT } = gcpAccountSlice.actions;
+export const { INPUT_CSP } = cspSlice.actions;
+
+export default {
+  positionSelected: positionSelectedSlice.reducer,
+  userName: userNameSlice.reducer,
+  description: descriptionSlice.reducer,
+  awsAccount: awsAccountSlice.reducer,
+  gcpAccount: gcpAccountSlice.reducer,
+  csp: cspSlice.reducer,
+};

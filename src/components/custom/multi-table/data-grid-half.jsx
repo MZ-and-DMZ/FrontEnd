@@ -50,6 +50,8 @@ export default function DataGridHalf({ data, columns, action }) {
     <DataGrid
       rows={data}
       columns={columns}
+      // getRowHeight={() => 'auto'}
+      rowHeight={35}
       isCellEditable={(params) => false}
       sx={{
         '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
