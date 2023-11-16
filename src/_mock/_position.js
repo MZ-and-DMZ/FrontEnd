@@ -39,7 +39,6 @@ export async function createPosition(data) {
   }
 }
 
-
 export const POSITION_CSP_OPTIONS = [
   { value: 'aws', label: 'AWS' },
   { value: 'gcp', label: 'GCP' },
@@ -56,3 +55,18 @@ export const _positionList = [...Array(positionData.position_list.length)].map((
   csp: positionData.position_list[index].csp,
   policies: positionData.position_list[index].policies.map((policy) => Object.keys(policy)[0]),
 }));
+
+export async function PositionMenuData() {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/actioncrud`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}

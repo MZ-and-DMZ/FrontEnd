@@ -7,9 +7,12 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { _positionList } from 'src/_mock';
 import { useEffect, useState } from 'react';
 import { Button, Step, StepLabel, Stepper, Typography } from '@mui/material';
+
+import { MailView } from 'src/sections/mail/view';
 import PositionNewEditFormInput from '../position-new-edit-form-input';
-import PositionNewEditFormTree from '../position-new-edit-form-tree';
+// import PositionNewEditFormTree from '../position-new-edit-form-tree';
 import PositionNewEditFormTable from '../position-new-edit-form-table';
+import SecondCreateForm from '../position-new-edit-form-tree';
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +54,7 @@ export default function PositionCreateView() {
         setStepPage(<PositionNewEditFormInput />);
         break;
       case 1:
-        setStepPage(<PositionNewEditFormTree />);
+        setStepPage(<SecondCreateForm />);
         break;
       case 2:
         setStepPage(<PositionNewEditFormTable />);
