@@ -43,7 +43,7 @@ export function editUserData(currentUser, _reduxList) {
   console.info('jsondata', jsondata);
   console.log('editUserData userName', currentUser.userName);
   // fetch(`${process.env.REACT_APP_MOCK_API}/users/update/${editedUser.userName}`, {
-  fetch(`http://54.180.76.116:8080/users/update/${currentUser.userName}`, {
+  fetch(`${process.env.REACT_APP_MOCK_API}/users/update/${currentUser.userName}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
