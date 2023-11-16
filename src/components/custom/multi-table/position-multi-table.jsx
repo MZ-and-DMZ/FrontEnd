@@ -12,9 +12,12 @@ import Label from 'src/components/label';
 import { useTable } from 'src/components/table';
 import DataGridHalf from 'src/components/custom/multi-table/data-grid-half';
 
-import { INIT_ROWS } from 'src/redux/reducer/positionSelectedSlice';
+import { INIT_ROWS } from 'src/redux/reducer/attachedPositionSlice';
 
 import UserTableToolbar from './user-table-toolbar';
+
+import { _gcpRoleList } from 'src/_mock/_gcpRoles';
+import { _awsPolicyList } from 'src/_mock/_awsPolicies';
 
 // ----------------------------------------------------------------------
 const columns = [
@@ -56,7 +59,8 @@ const columns = [
   },
 ];
 
-const _roles2 = _positionList.map((item) => item.positionName);
+const _rolesList = [..._gcpRoleList, ..._awsPolicyList]; // 두 리스트를 합침
+// const _roles2 = _positionList.map((item) => item.positionName);
 
 const defaultFilters = {
   positionName: '',
@@ -69,6 +73,19 @@ const defaultFilters = {
 // currentUser 값이 true면 edit이므로 기존에 선택된 권한/역할을 백엔드에서 가져와야됨
 // 아직 미구현
 
+/**
+ * 함수 설명
+ * @param {Object} currentUser - 현재 사용자 정보 객체
+ * @param {string} currentUser.id - 사용자 ID (문자열)
+ * @param {string} currentUser.userName - 사용자 이름
+ * @param {string} currentUser.description - 사용자 설명
+ * @param {string} currentUser.awsAccount - AWS 계정 정보
+ * @param {string} currentUser.gcpAccount - GCP 계정 정보
+ * @param {List} currentUser.attachedPosition - 연결된 포지션 List
+ * @param {List} currentUser.attachedGroup - 연결된 그룹 List
+ * @param {string} currentUser.updatetime - 정보 업데이트 시간
+ * @param {string} currentUser.csp - CSP 정보 (문자열)
+ */
 export default function PositionMultiTable({ currentUser }) {
   const [filters, setFilters] = useState(defaultFilters);
   const dispatch = useDispatch();

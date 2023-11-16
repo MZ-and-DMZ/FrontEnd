@@ -32,34 +32,71 @@ export const _userList = [...Array(userData.user_list.length)].map((_, index) =>
     'none',
 }));
 
-export function sendUserData(editedUser, _ruduxList) {
+export function editUserData(currentUser, _reduxList) {
   const jsondata = JSON.stringify({
-    description: editedUser.description,
-    awsAccount: editedUser.awsAccount,
-    gcpAccount: '',
-    attachedPosition: _ruduxList.map((item) => item.positionName),
-    attachedGroup: editedUser.attachedGroup,
+    description: _reduxList.description,
+    awsAccount: _reduxList.awsAccount,
+    gcpAccount: _reduxList.gcpAccount,
+    attachedPosition: _reduxList.attachedPosition,
+    attachedGroup: _reduxList.attachedGroup,
   });
   console.info('jsondata', jsondata);
-  console.log(editedUser.userName);
+  console.log('editUserData userName', currentUser.userName);
   // fetch(`${process.env.REACT_APP_MOCK_API}/users/update/${editedUser.userName}`, {
-  fetch(`http://54.180.76.116:8080/users/update/${editedUser.userName}`, {
+  fetch(`http://54.180.76.116:8080/users/update/${currentUser.userName}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      department: 'string',
-      duty: 'string',
-      description: editedUser.description,
-      awsAccount: editedUser.awsAccount,
-      gcpAccount: '',
-      attachedPosition: _ruduxList.map((item) => item.positionName),
-      attachedGroup: editedUser.attachedGroup,
+      department: _reduxList.department,
+      duty: _reduxList.duty,
+      description: _reduxList.description,
+      awsAccount: _reduxList.awsAccount,
+      gcpAccount: _reduxList.gcpAccount,
+      attachedPosition: _reduxList.attachedPosition,
+      attachedGroup: _reduxList.attachedGroup,
     }),
   })
     .then((res) => res.json())
     .then((res) => console.log('Success:', res));
 
-  console.log(_ruduxList.map((item) => item.positionName));
+  console.log(_reduxList.map((item) => item.positionName));
+}
+
+export function createUserData(_reduxList) {
+  const jsondata = JSON.stringify({
+    userName: _reduxList.userName,
+    description: _reduxList.description,
+    awsAccount: _reduxList.awsAccount,
+    gcpAccount: _reduxList.gcpAccount,
+    attachedPosition: _reduxList.attachedPosition,
+    attachedGroup: [],
+    duty: _reduxList.duty,
+    department: _reduxList.department,
+  });
+  console.info(
+    'reduxPositionList',
+    _reduxList.attachedPosition.map((item) => item.positionName)
+  );
+  console.info('reduxList', _reduxList);
+  // fetch(`${process.env.REACT_APP_MOCK_API}/users/create`, {
+  fetch(`http://54.180.76.116:8080/users/create`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userName: _reduxList.userName,
+      description: _reduxList.description,
+      awsAccount: _reduxList.awsAccount,
+      gcpAccount: _reduxList.gcpAccount,
+      attachedPosition: _reduxList.attachedPosition.map((item) => item.positionName),
+      attachedGroup: [],
+      duty: _reduxList.duty,
+      department: _reduxList.department,
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => console.log('Success:', res));
 }

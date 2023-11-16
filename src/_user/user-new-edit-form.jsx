@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -32,16 +32,30 @@ import FormProvider, {
   RHFUploadAvatar,
   RHFAutocomplete,
 } from 'src/components/hook-form';
-import {
-  INPUT_AWSACCOUNT,
-  INPUT_CSP,
-  INPUT_DESCRIPTION,
-  INPUT_GCPCACCOUNT,
-  INPUT_USERNAME,
-} from 'src/redux/reducer/positionSelectedSlice';
-
+import { INPUT_AWSACCOUNT } from 'src/redux/reducer/awsAccountSlice';
+import { INPUT_CSP } from 'src/redux/reducer/cspSlice';
+import { INPUT_DESCRIPTION } from 'src/redux/reducer/descriptionSlice';
+import { INPUT_GCPACCOUNT } from 'src/redux/reducer/gcpAccountSlice';
+import { INPUT_USERNAME } from 'src/redux/reducer/userNameSlice';
+import { INPUT_ATTACHEDGROUP } from 'src/redux/reducer/attachedGroupSlice';
+import { INPUT_DUTY } from 'src/redux/reducer/dutySlice';
+import { INPUT_DEPARTMENT } from 'src/redux/reducer/departmentSlice';
+import { ADD_ROWS } from 'src/redux/reducer/attachedPositionSlice';
 // ----------------------------------------------------------------------
 
+/**
+ * 함수 설명
+ * @param {Object} currentUser - 현재 사용자 정보 객체
+ * @param {string} currentUser.id - 사용자 ID (문자열)
+ * @param {string} currentUser.userName - 사용자 이름
+ * @param {string} currentUser.description - 사용자 설명
+ * @param {string} currentUser.awsAccount - AWS 계정 정보
+ * @param {string} currentUser.gcpAccount - GCP 계정 정보
+ * @param {List} currentUser.attachedPosition - 연결된 포지션 List
+ * @param {List} currentUser.attachedGroup - 연결된 그룹 List
+ * @param {string} currentUser.updatetime - 정보 업데이트 시간
+ * @param {string} currentUser.csp - CSP 정보 (문자열)
+ */
 export default function UserNewEditForm({ currentUser }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -60,22 +74,43 @@ export default function UserNewEditForm({ currentUser }) {
       description: currentUser?.description || '',
       awsAccount: currentUser?.awsAccount || '',
       gcpAccount: currentUser?.gcpAccount || '',
+      duty: currentUser?.duty || '',
+      department: currentUser?.department || '',
+      csp: currentUser?.csp || '',
     }),
     [currentUser]
   );
 
   // if (currentUser) {
+  //   console.log('has currentUser', currentUser);
   //   dispatch(INPUT_DESCRIPTION(currentUser.description));
   //   dispatch(INPUT_USERNAME(currentUser.userName));
   //   dispatch(INPUT_CSP(currentUser.csp));
-  //   dispatch(INPUT_AWSACCOUNT(currentUser.awsEmail));
-  //   dispatch(INPUT_GCPCACCOUNT(currentUser.gcpEmail));
-  // } else {
-  //   dispatch(INPUT_DESCRIPTION(''));
-  //   dispatch(INPUT_USERNAME(''));
-  //   dispatch(INPUT_CSP(''));
-  //   dispatch(INPUT_AWSACCOUNT(''));
-  //   dispatch(INPUT_GCPCACCOUNT(''));
+  //   dispatch(INPUT_AWSACCOUNT(currentUser.awsAccount));
+  //   dispatch(INPUT_GCPACCOUNT(currentUser.gcpAccount));
+  //   dispatch(INPUT_DUTY(currentUser.duty));
+  //   dispatch(INPUT_DEPARTMENT(currentUser.department));
+  // }
+  useEffect(() => {
+    if (currentUser) {
+      console.log('has currentUser', currentUser);
+      dispatch(INPUT_DESCRIPTION(currentUser.description ? currentUser.description : ''));
+      dispatch(INPUT_USERNAME(currentUser.userName ? currentUser.userName : ''));
+      dispatch(INPUT_CSP(currentUser.csp ? currentUser.csp : ''));
+      dispatch(INPUT_AWSACCOUNT(currentUser.awsAccount ? currentUser.awsAccount : ''));
+      dispatch(INPUT_GCPACCOUNT(currentUser.gcpAccount ? currentUser.gcpAccount : ''));
+      dispatch(INPUT_DUTY(currentUser.duty ? currentUser.duty : ''));
+      dispatch(INPUT_DEPARTMENT(currentUser.department ? currentUser.department : ''));
+    }
+  }, [currentUser, dispatch]);
+
+  // else {
+  //   console.log("hasn't currentUser");
+  //   // dispatch(INPUT_DESCRIPTION('description'));
+  //   // dispatch(INPUT_USERNAME('user name'));
+  //   // dispatch(INPUT_CSP('csp'));
+  //   // dispatch(INPUT_AWSACCOUNT('aws account'));
+  //   // dispatch(INPUT_GCPACCOUNT('gcp account'));
   // }
 
   const methods = useForm({
@@ -124,10 +159,10 @@ export default function UserNewEditForm({ currentUser }) {
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={2}>
-        <Grid item xs={3}>
+        <Grid xs={3}>
           <RHFTextField name="userName" label="User Name" />
         </Grid>
-        <Grid item xs={1}>
+        <Grid xs={1}>
           <RHFAutocomplete
             name="csp"
             label="Cloud"
@@ -136,29 +171,22 @@ export default function UserNewEditForm({ currentUser }) {
             isOptionEqualToValue={(option, value) => option === value}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid xs={4}>
           <RHFTextField name="awsAccount" label="AWS Account" />
         </Grid>
-        <Grid item xs={4}>
+        <Grid xs={4}>
           <RHFTextField name="gcpAccount" label="GCP Account" />
         </Grid>
-        <Grid item xs={2}>
+        <Grid xs={2}>
           <RHFTextField name="duty" label="Duty" />
         </Grid>
-        <Grid item xs={2}>
+        <Grid xs={2}>
           <RHFTextField name="department" label="Department" />
         </Grid>
-        <Grid item xs={8}>
+        <Grid xs={8}>
           <RHFTextField name="description" label="Description" />
         </Grid>
       </Grid>
-
-      {/* <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-          {!currentUser ? 'Create User' : 'Save Changes'}
-        </LoadingButton>
-      </Stack> */}
-      {/* </Card> */}
     </FormProvider>
   );
 }

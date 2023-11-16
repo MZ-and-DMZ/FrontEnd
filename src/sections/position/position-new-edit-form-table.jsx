@@ -1,13 +1,19 @@
 import { Card } from '@mui/material';
 import PropTypes from 'prop-types';
 
-import PositionMultiTable from 'src/_user/position-multi-table';
+import UserMultiTable from 'src/_user/user-multi-table';
 import UserNewEditForm from 'src/_user/user-new-edit-form';
 
+// ----------------------------------------------------------------------
+
+/**
+ *
+ * @param {List} currentPosition - Positon Name List
+ */
 export default function PositionNewEditFormTable({ currentPosition }) {
   return (
     <Card sx={{ p: 3 }}>
-      <PositionMultiTable currentUser={currentPosition} />
+      <UserMultiTable currentUser={currentPosition} />
     </Card>
   );
 }

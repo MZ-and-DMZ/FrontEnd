@@ -1,6 +1,7 @@
 import isEqual from 'lodash/isEqual';
 import { useState, useCallback } from 'react';
 
+import { Box } from '@mui/system';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -86,7 +87,7 @@ export default function PositionListView() {
     table.page * table.rowsPerPage + table.rowsPerPage
   );
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table.dense ? 32 : 40;
 
   const canReset = !isEqual(defaultFilters, filters);
 
@@ -142,9 +143,9 @@ export default function PositionListView() {
     setFilters(defaultFilters);
   }, []);
 
-  console.info('Table', tableData);
-  console.info('table', table);
-  console.info('dataFiltered', dataFiltered);
+  // console.info('Table', tableData);
+  // console.info('table', table);
+  // console.info('dataFiltered', dataFiltered);
 
   return (
     <>
@@ -157,14 +158,25 @@ export default function PositionListView() {
             { name: '목록' },
           ]}
           action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.position.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              New Position
-            </Button>
+            <>
+              <Button
+                component={RouterLink}
+                href={paths.dashboard.position.new}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+                sx={{ mr: 1 }}
+              >
+                convert
+              </Button>
+              <Button
+                component={RouterLink}
+                href={paths.dashboard.position.new}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+              >
+                New Position
+              </Button>
+            </>
           }
           sx={{
             mb: { xs: 3, md: 5 },
@@ -280,7 +292,7 @@ export default function PositionListView() {
                         row={{
                           name: row.positionName,
                           csp: row.csp.toUpperCase(),
-                          custom: row.isCustom ? "Custom" : "Built-In",
+                          custom: row.isCustom ? 'Custom' : 'Built-In',
                           policies: row.policies.join(', '),
                         }}
                         selected={table.selected.includes(row.id)}
@@ -365,12 +377,11 @@ function applyFilter({ inputData, comparator, filters }) {
     inputData = inputData.filter((user) => user.csp === csp);
   }
 
-if (positionName && typeof positionName === 'string') {
-  inputData = inputData.filter(
-    (user) => user.positionName.toLowerCase().indexOf(positionName.toLowerCase()) !== -1
-  );
-}
-
+  if (positionName && typeof positionName === 'string') {
+    inputData = inputData.filter(
+      (user) => user.positionName.toLowerCase().indexOf(positionName.toLowerCase()) !== -1
+    );
+  }
 
   return inputData;
 }

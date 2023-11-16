@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { paths } from 'src/routes/paths';
 
-import { _positionList, _roles, _mock } from 'src/_mock';
+import { _positionList, _roles, _mock, editUserData } from 'src/_mock';
 
 import Label from 'src/components/label';
 import { useTable } from 'src/components/table';
@@ -22,7 +22,8 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 // import { GetPositions } from './getPositions';
 import UserNewEditForm from '../user-new-edit-form';
 import UserTableToolbar from '../user-table-toolbar';
-import PositionMultiTable from '../position-multi-table';
+import UserMultiTable from '../user-multi-table';
+import { SendDataButton } from '../send-data-button';
 
 // ----------------------------------------------------------------------
 
@@ -51,23 +52,25 @@ export default function UserCreateView() {
 
       <Card sx={{ p: 3, m: 2 }}>
         <UserNewEditForm />
-        <PositionMultiTable />
+        <UserMultiTable />
         {/* <Stack alignItems="flex-end" sx={{ mt: 3 }}>
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
         
             {!currentUser ? 'Create User' : 'Save Changes'}
           </LoadingButton>
         </Stack> */}
+        <SendDataButton />
       </Card>
       {/* <Button
         variant="contained"
         color="primary"
         // send data to backend
         // data={_dataGrid}
-        onClick={() => {
-          console.info('_dataGrid', _dataGrid);
-          // dispatch(ADD_ROWS(_dataGrid));
-        }
+        // onClick={() => {
+        //   console.info('_dataGrid', _dataGrid);
+        //   sendUserData()
+        //   // dispatch(ADD_ROWS(_dataGrid));
+        // }}
         sx={{ mt: 3, mr: 3 }}
       >
         Create

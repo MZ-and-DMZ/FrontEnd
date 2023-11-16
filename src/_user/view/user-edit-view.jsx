@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { paths } from 'src/routes/paths';
 
-import { _positionList, _userList, _roles, _mock, sendUserData } from 'src/_mock';
+import { _positionList, _userList, _roles, _mock, editUserData } from 'src/_mock';
 
 import Label from 'src/components/label';
 import { useTable } from 'src/components/table';
@@ -24,10 +24,15 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 // import { GetPositions } from './getPositions';
 import UserNewEditForm from '../user-new-edit-form';
 import UserTableToolbar from '../user-table-toolbar';
-import PositionMultiTable from '../position-multi-table';
+import UserMultiTable from '../user-multi-table';
+import { SendDataButton } from '../send-data-button';
 
 // ----------------------------------------------------------------------
 
+/**
+ *
+ * @param {string} id - 띄어쓰기가 없는 id
+ */
 export default function UserEditView({ id }) {
   const settings = useSettingsContext();
 
@@ -38,12 +43,6 @@ export default function UserEditView({ id }) {
   // );
   // console.log('in id', id);
   // console.log('type', typeof id);
-  let _reduxList = null;
-  _reduxList = useSelector((state) => state.positionSelected);
-
-  let _redux = null;
-  _redux = useSelector((state) => state.userName);
-  console.info('_reduxName', _redux);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -69,18 +68,19 @@ export default function UserEditView({ id }) {
       <Card sx={{ p: 3 }}>
         {/* 두개가 메인 */}
         <UserNewEditForm currentUser={currentUser} />
-        <PositionMultiTable currentUser={currentUser} />
+        <UserMultiTable currentUser={currentUser} />
 
         {/* 나중에 버튼도 바꿀 수 있음 */}
         <CardContent sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
+          <SendDataButton currentUser={currentUser} />
+          {/* <Button
             variant="contained"
             color="primary"
             // send data to backend
             // data={_dataGrid}
             onClick={() => {
               console.info('_dataGrid', _reduxList);
-              sendUserData(currentUser, _reduxList);
+              editUserData(currentUser, _reduxList);
               console.log('currentUser', currentUser);
               // sendUserData(_redux, _reduxList);
               // dispatch(ADD_ROWS(_dataGrid));
@@ -89,7 +89,7 @@ export default function UserEditView({ id }) {
             sx={{ mt: 3, mr: 3 }}
           >
             Edit
-          </Button>
+          </Button> */}
         </CardContent>
       </Card>
     </Container>

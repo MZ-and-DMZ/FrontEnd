@@ -4,10 +4,13 @@ import { Controller, useFormContext } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
+import { INPUT_CSP } from 'src/redux/reducer/cspSlice';
+import { useDispatch } from 'react-redux';
 // ----------------------------------------------------------------------
 
 export default function RHFAutocomplete({ name, label, placeholder, helperText, ...other }) {
   const { control, setValue } = useFormContext();
+  const dispatch = useDispatch();
 
   return (
     <Controller
@@ -16,7 +19,10 @@ export default function RHFAutocomplete({ name, label, placeholder, helperText, 
       render={({ field, fieldState: { error } }) => (
         <Autocomplete
           {...field}
-          onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
+          onChange={(event, newValue) => {
+            setValue(name, newValue, { shouldValidate: true });
+            if (name === 'csp') dispatch(INPUT_CSP(newValue));
+          }}
           renderInput={(params) => (
             <TextField
               label={label}
