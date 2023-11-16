@@ -196,7 +196,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
     } else {
       console.info('selected', selected);
       console.info('selected row', row);
-      dispatch(SELECT_ROW({}));
+      // dispatch(SELECT_ROW({}));
     }
   }, [selected, row, dispatch]);
 
