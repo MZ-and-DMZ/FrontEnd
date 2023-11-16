@@ -26,8 +26,12 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    awsAccount: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    gcpAccount: Yup.string().required('Company is required').email('Email must be a valid email address'),
+    awsAccount: Yup.string()
+      .required('Email is required')
+      .email('Email must be a valid email address'),
+    gcpAccount: Yup.string()
+      .required('Company is required')
+      .email('Email must be a valid email address'),
     attachedPosition: Yup.string().required('City is required'),
     role: Yup.string().required('Role is required'),
   });

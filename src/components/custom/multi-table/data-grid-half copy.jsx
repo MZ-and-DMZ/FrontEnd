@@ -13,69 +13,69 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { fPercent } from 'src/utils/format-number';
 
-import { DELETE_ROWS, EDIT_ROWS } from 'src/redux/reducer/attachedPositionSlice';
+import { ADD_ROWS, DELETE_ROWS, EDIT_ROWS } from 'src/redux/reducer/attachedPositionSlice';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-const columns = [
-  {
-    field: 'id',
-  },
-  {
-    field: 'csp',
-    type: 'singleSelect',
-    headerName: 'Cloud',
-    valueOptions: ['aws', 'gcp'],
-    align: 'center',
-    headerAlign: 'center',
-    width: 120,
-    renderCell: (params) => (
-      <Label
-        variant="soft"
-        color={
-          (params.row.csp === '' && 'error') || (params.row.csp === 'aws' && 'warning') || 'success'
-        }
-        sx={{ mx: 'auto' }}
-      >
-        {params.row.csp}
-      </Label>
-    ),
-  },
-  {
-    field: 'positionName',
-    headerName: 'Position Name',
-    flex: 1,
-    editable: true,
-  },
-  {
-    field: 'policies',
-    headerName: 'AWS권한/GCP역할',
-    align: 'left',
-    headerAlign: 'left',
-    width: 200,
-  },
-  // {
-  //   field: 'action',
-  //   headerName: ' ',
-  //   align: 'right',
-  //   width: 60,
-  //   sortable: false,
-  //   filterable: false,
-  //   disableColumnMenu: true,
-  //   renderCell: (params) => (
-  //     <IconButton onClick={() => console.info('ID', params.row.id)}>
-  //       <Iconify icon="eva:more-vertical-fill" />
-  //     </IconButton>
-  //   ),
-  // },
-];
+// const columns = [
+//   {
+//     field: 'id',
+//   },
+//   {
+//     field: 'csp',
+//     type: 'singleSelect',
+//     headerName: 'Cloud',
+//     valueOptions: ['aws', 'gcp'],
+//     align: 'center',
+//     headerAlign: 'center',
+//     width: 120,
+//     renderCell: (params) => (
+//       <Label
+//         variant="soft"
+//         color={
+//           (params.row.csp === '' && 'error') || (params.row.csp === 'aws' && 'warning') || 'success'
+//         }
+//         sx={{ mx: 'auto' }}
+//       >
+//         {params.row.csp}
+//       </Label>
+//     ),
+//   },
+//   {
+//     field: 'positionName',
+//     headerName: 'Position Name',
+//     flex: 1,
+//     editable: true,
+//   },
+//   {
+//     field: 'policies',
+//     headerName: 'AWS권한/GCP역할',
+//     align: 'left',
+//     headerAlign: 'left',
+//     width: 200,
+//   },
+//   // {
+//   //   field: 'action',
+//   //   headerName: ' ',
+//   //   align: 'right',
+//   //   width: 60,
+//   //   sortable: false,
+//   //   filterable: false,
+//   //   disableColumnMenu: true,
+//   //   renderCell: (params) => (
+//   //     <IconButton onClick={() => console.info('ID', params.row.id)}>
+//   //       <Iconify icon="eva:more-vertical-fill" />
+//   //     </IconButton>
+//   //   ),
+//   // },
+// ];
 
 // ----------------------------------------------------------------------
 
-export default function DataGridCustom({ data }) {
+export default function DataGridHalf({ data, columns, action }) {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const [columnVisibilityModel, setColumnVisibilityModel] = useState({
@@ -128,7 +128,28 @@ export default function DataGridCustom({ data }) {
         setSelectedRows(newSelectionModel);
         checkboxSelected = data.filter((row) => newSelectionModel.includes(row.id));
         // console.info('selected2', checkboxSelected);
-        dispatch(DELETE_ROWS(checkboxSelected));
+        if (action === 'delete') {
+          dispatch(DELETE_ROWS(checkboxSelected));
+        } else if (action === 'edit') {
+          dispatch(EDIT_ROWS(checkboxSelected));
+        } else if (action === 'add') {
+          dispatch(ADD_ROWS(checkboxSelected));
+        }
+        // switch (action) {
+        //   case 'delete':
+        //     dispatch(DELETE_ROWS(checkboxSelected));
+        //     break;
+        //   case 'edit':
+        //     dispatch(EDIT_ROWS(checkboxSelected));
+        //     break;
+        //   case 'add':
+        //     dispatch(ADD_ROWS(checkboxSelected));
+        //     break;
+        //   default:
+        //     break;
+        // }
+        // dispatch(DELETE_ROWS(checkboxSelected));
+        // dispatch(EDIT_ROWS(checkboxSelected));
       }}
       columnVisibilityModel={columnVisibilityModel}
       onColumnVisibilityModelChange={handleChangeColumnVisibilityModel}
@@ -145,8 +166,10 @@ export default function DataGridCustom({ data }) {
   );
 }
 
-DataGridCustom.propTypes = {
+DataGridHalf.propTypes = {
   data: PropTypes.array,
+  columns: PropTypes.array,
+  action: PropTypes.string,
 };
 
 // ----------------------------------------------------------------------

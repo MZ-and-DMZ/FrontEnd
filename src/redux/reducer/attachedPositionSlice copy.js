@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 // const _dataGrid = [...Array(20)].map((_, index) => ({
 //   id: positionData.position_list[index]._id.$oid,
@@ -27,22 +27,8 @@ const initialState = [
   // },
 ];
 
-// const selectedSlice = createSlice({
-//   name: 'mange',
-//   initialState,
-//   reducers: {
-//     ADD_ROWS: (state, action) => {
-//       state.name.push(action.payload);
-//     },
-//     DELETE_ROWS: (state, action) => {
-//       const newName = state.id.filter((id) => id !== action.payload.id);
-//       state.name = newName;
-//     },
-//   },
-// });
-
 const positionSelectedSlice = createSlice({
-  name: "positionSelected",
+  name: 'positionSelected',
   initialState,
   reducers: {
     // ADD_ROWS: (state, action) => {
@@ -50,25 +36,35 @@ const positionSelectedSlice = createSlice({
     // },
     ADD_ROWS: (state, action) => {
       // if state에 이미 존재하면 action.payload를 추가하지 않음
-      const addRows = action.payload.filter(
-        (row) => !state.some((r) => r.id === row.id),
-      );
-      state.push(...addRows);
+      const addRows = action.payload.filter((row) => !state.some((r) => r.id === row.id));
+      return [...state, addRows];
     },
     DELETE_ROWS: (state, action) => {
       const removeRows = action.payload.map((row) => row.id);
       state = state.filter((row) => !removeRows.includes(row.id));
+      console.log('state');
     },
     // MODIFY_ROWS: (state, action) => {
     //   const idsToModify = action.payload; // payload로 수정할 id 배열을 받음
     //   state.position_list = state.position_list.filter((row) => !idsToModify.includes(row.id));
     // },
     EDIT_ROWS: (state, action) => {
-      state = action.payload;
+      const rowdata = action.payload;
+      const id = rowdata.id;
+
+      // 이미 존재하는지 확인
+      const existingIndex = state.findIndex((row) => row.id === id);
+
+      if (existingIndex !== -1) {
+        // 이미 존재하는 경우, 새로운 상태 객체를 반환하여 해당 행을 제거
+        state = state.filter((row) => row.id !== id);
+      } else {
+        // 존재하지 않는 경우, id 속성을 추가하고 현재 상태와 새로운 행을 합친 새로운 상태 객체 반환
+        state = [...state, { id, ...rowdata }];
+      }
     },
   },
 });
 
-export const { ADD_ROWS, EDIT_ROWS, DELETE_ROWS } =
-  positionSelectedSlice.actions;
+export const { ADD_ROWS, EDIT_ROWS, DELETE_ROWS } = positionSelectedSlice.actions;
 export default positionSelectedSlice.reducer;

@@ -24,15 +24,15 @@ export async function createPosition(data) {
         positionName: data.name,
         description: data['position description'],
         csp: data.csp,
-        policies: [], 
+        policies: [],
       }),
     });
 
     if (response.ok) {
       const responseData = await response.json();
       return responseData;
-    } 
-      throw new Error('Failed to create position');
+    }
+    throw new Error('Failed to create position');
   } catch (error) {
     console.error(error);
     throw error;
@@ -48,9 +48,9 @@ export const POSITION_CSP_OPTIONS = [
 const positionData = await PositionData();
 
 export const _positionList = [...Array(positionData.position_list.length)].map((_, index) => ({
-  id: positionData.position_list[index].positionName,
+  id: index,
   positionName: positionData.position_list[index].positionName,
-  isCustom: positionData.position_list[index].isCustom,
+  // isCustom: positionData.position_list[index].isCustom,
   description: positionData.position_list[index].description,
   csp: positionData.position_list[index].csp,
   policies: positionData.position_list[index].policies.map((policy) => Object.keys(policy)[0]),
