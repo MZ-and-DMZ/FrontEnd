@@ -9,11 +9,31 @@
 // export default store;
 
 import { configureStore } from '@reduxjs/toolkit';
-import positionSelectedReducer from '../reducer/positionSelectedSlice';
+
+import userNameReducer from '../reducer/userNameSlice';
+import descriptionReducer from '../reducer/descriptionSlice';
+import awsAccountReducer from '../reducer/awsAccountSlice';
+import gcpAccountReducer from '../reducer/gcpAccountSlice';
+import cspReducer from '../reducer/cspSlice';
+import departmentReducer from '../reducer/departmentSlice';
+import dutyReducer from '../reducer/dutySlice';
+import attachedPositionReducer from '../reducer/attachedPositionSlice';
+import attachedGroupReducer from '../reducer/attachedGroupSlice';
+
+import positionSelectedReducer from '../reducer/position/positionSelectedRowSlice';
 
 const store = configureStore({
   reducer: {
-    positionSelected: positionSelectedReducer,
+    userName: userNameReducer,
+    description: descriptionReducer,
+    awsAccount: awsAccountReducer,
+    gcpAccount: gcpAccountReducer,
+    csp: cspReducer,
+    department: departmentReducer,
+    duty: dutyReducer,
+    attachedGroup: attachedGroupReducer,
+    attachedPosition: attachedPositionReducer,
+    positionSelectedRow: positionSelectedReducer,
   },
 });
 

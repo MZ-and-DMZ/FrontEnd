@@ -1,20 +1,6 @@
-export const USER_CSP_OPTIONS = [
-  { value: 'AWS,GCP', label: 'AWS,GCP' },
-  { value: 'AWS', label: 'AWS' },
-  { value: 'GCP', label: 'GCP' },
-
-  // { value: 'rejected', label: 'Rejected' },
-];
-
 async function UserData() {
   try {
-
     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/users/list`);
-
-    const response = await fetch(
-      `${process.env.REACT_APP_MOCK_API}/users/list`,
-    );
-
     const data = await response.json();
     return data;
   } catch (error) {
@@ -24,9 +10,14 @@ async function UserData() {
 
 const userData = await UserData();
 
-
+export const USER_CSP_OPTIONS = [
+  { value: 'AWS,GCP', label: 'AWS,GCP' },
+  { value: 'AWS', label: 'AWS' },
+  { value: 'GCP', label: 'GCP' },
+];
 export const _userList = [...Array(userData.user_list.length)].map((_, index) => ({
-  id: userData.user_list[index].userName,
+  id: `${index}`,
+  // id: index,
   userName: userData.user_list[index].userName,
   description: userData.user_list[index].description,
   awsAccount: userData.user_list[index].awsAccount,
@@ -41,30 +32,71 @@ export const _userList = [...Array(userData.user_list.length)].map((_, index) =>
     'none',
 }));
 
+export function editUserData(currentUser, _reduxList) {
+  const jsondata = JSON.stringify({
+    description: _reduxList.description,
+    awsAccount: _reduxList.awsAccount,
+    gcpAccount: _reduxList.gcpAccount,
+    attachedPosition: _reduxList.attachedPosition,
+    attachedGroup: _reduxList.attachedGroup,
+  });
+  console.info('jsondata', jsondata);
+  console.log('editUserData userName', currentUser.userName);
+  // fetch(`${process.env.REACT_APP_MOCK_API}/users/update/${editedUser.userName}`, {
+  fetch(`${process.env.REACT_APP_MOCK_API}/users/update/${currentUser.userName}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      department: _reduxList.department,
+      duty: _reduxList.duty,
+      description: _reduxList.description,
+      awsAccount: _reduxList.awsAccount,
+      gcpAccount: _reduxList.gcpAccount,
+      attachedPosition: _reduxList.attachedPosition,
+      attachedGroup: _reduxList.attachedGroup,
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => console.log('Success:', res));
 
-export async function createUser(data) {
-  try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/users/create`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userName: data.name,
-        description: data['position description'],
-        csp: data.csp,
-        policies: [], 
-      }),
-    });
-
-    if (response.ok) {
-      const responseData = await response.json();
-      return responseData;
-    } 
-      throw new Error('Failed to create position');
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  console.log(_reduxList.map((item) => item.positionName));
 }
 
+export function createUserData(_reduxList) {
+  const jsondata = JSON.stringify({
+    userName: _reduxList.userName,
+    description: _reduxList.description,
+    awsAccount: _reduxList.awsAccount,
+    gcpAccount: _reduxList.gcpAccount,
+    attachedPosition: _reduxList.attachedPosition,
+    attachedGroup: [],
+    duty: _reduxList.duty,
+    department: _reduxList.department,
+  });
+  console.info(
+    'reduxPositionList',
+    _reduxList.attachedPosition.map((item) => item.positionName)
+  );
+  console.info('reduxList', _reduxList);
+  // fetch(`${process.env.REACT_APP_MOCK_API}/users/create`, {
+  fetch(`http://54.180.76.116:8080/users/create`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userName: _reduxList.userName,
+      description: _reduxList.description,
+      awsAccount: _reduxList.awsAccount,
+      gcpAccount: _reduxList.gcpAccount,
+      attachedPosition: _reduxList.attachedPosition.map((item) => item.positionName),
+      attachedGroup: [],
+      duty: _reduxList.duty,
+      department: _reduxList.department,
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => console.log('Success:', res));
+}

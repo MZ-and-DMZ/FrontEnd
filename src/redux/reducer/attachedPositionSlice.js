@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [];
-
-const positionSelectedSlice = createSlice({
-  name: 'positionSelected',
-  initialState,
+const attachedPositionSlice = createSlice({
+  name: 'attachedPosition',
+  initialState: [],
   reducers: {
+    INIT_ROWS: (state, action) => action.payload,
     ADD_ROWS: (state, action) => {
       const newRows = action.payload;
       const existingIds = new Set(state.map((row) => row.id));
@@ -34,5 +33,6 @@ const positionSelectedSlice = createSlice({
   },
 });
 
-export const { ADD_ROWS, EDIT_ROWS, DELETE_ROWS } = positionSelectedSlice.actions;
-export default positionSelectedSlice.reducer;
+export const { INIT_ROWS, ADD_ROWS, EDIT_ROWS, DELETE_ROWS } = attachedPositionSlice.actions;
+
+export default attachedPositionSlice.reducer;

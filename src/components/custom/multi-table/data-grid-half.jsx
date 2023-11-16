@@ -6,7 +6,7 @@ import Rating from '@mui/material/Rating';
 import { DataGrid, getGridNumericOperators } from '@mui/x-data-grid';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { ADD_ROWS, DELETE_ROWS, EDIT_ROWS } from 'src/redux/reducer/positionSelectedSlice';
+import { ADD_ROWS, DELETE_ROWS, EDIT_ROWS } from 'src/redux/reducer/attachedPositionSlice';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ export default function DataGridHalf({ data, columns, action }) {
     columns.filter((column) => !hiddenFields.includes(column.field)).map((column) => column.field);
 
   const selected = data.filter((row) => selectedRows.includes(row.id));
-  const positionSelected = useSelector((state) => state.positionSelected);
+  const positionSelected = useSelector((state) => state.attachedPosition);
   const dispatch = useDispatch();
   let checkboxSelected = null;
 
@@ -50,6 +50,8 @@ export default function DataGridHalf({ data, columns, action }) {
     <DataGrid
       rows={data}
       columns={columns}
+      // getRowHeight={() => 'auto'}
+      rowHeight={35}
       isCellEditable={(params) => false}
       sx={{
         '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {

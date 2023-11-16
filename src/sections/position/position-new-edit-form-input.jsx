@@ -16,7 +16,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { createPosition, POSITION_CSP_OPTIONS } from 'src/_mock';
 
-import UserCreateView from 'src/_create/view/user-create-view';
+import UserCreateView from 'src/_user/view/user-create-view';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField, RHFSelect } from 'src/components/hook-form';
@@ -72,7 +72,6 @@ export default function PositionNewEditForm({ currentPosition }) {
   // });
 
   const onSubmit = handleSubmit(async (data) => {
-
     try {
       const responseData = await createPosition(data);
 

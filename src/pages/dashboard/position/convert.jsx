@@ -1,11 +1,12 @@
 import { Helmet } from 'react-helmet-async';
-import { UserEditView } from 'src/_user/view';
 
 import { useParams } from 'src/routes/hooks';
 
+import { PositionEditView } from 'src/sections/position/view';
+
 // ----------------------------------------------------------------------
 
-export default function UserEditPage() {
+export default function PositionEditPage() {
   const params = useParams();
 
   const { id } = params;
@@ -13,11 +14,10 @@ export default function UserEditPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: User Edit</title>
+        <title> Dashboard: Position Edit</title>
       </Helmet>
 
-      <UserEditView id={`${id}`} />
-      {console.log('in page', id)}
+      <PositionEditView id={`${id}`} />
     </>
   );
 }

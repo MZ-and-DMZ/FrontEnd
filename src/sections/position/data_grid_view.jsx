@@ -1,65 +1,58 @@
-import PropTypes from "prop-types";
-import { useState, useCallback } from "react";
+import PropTypes from 'prop-types';
+import { useState, useCallback } from 'react';
 
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Rating from "@mui/material/Rating";
-import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import LinearProgress from "@mui/material/LinearProgress";
-import {
-  GridCellParams,
-  DataGrid,
-  GridToolbar,
-  getGridNumericOperators,
-} from "@mui/x-data-grid";
-import { fPercent } from "src/utils/format-number";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Rating from '@mui/material/Rating';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import LinearProgress from '@mui/material/LinearProgress';
+import { GridCellParams, DataGrid, GridToolbar, getGridNumericOperators } from '@mui/x-data-grid';
+import { fPercent } from 'src/utils/format-number';
 
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import { useSelector, useDispatch } from "react-redux";
-import { ADD_ROWS, EDIT_ROWS } from "src/redux/reducer/positionSelectedSlice";
+import Label from 'src/components/label';
+import Iconify from 'src/components/iconify';
+import { useSelector, useDispatch } from 'react-redux';
+import { ADD_ROWS, EDIT_ROWS } from 'src/redux/reducer/attachedPositionSlice';
 
 // ----------------------------------------------------------------------
 
 const columns = [
   {
-    field: "id",
+    field: 'id',
   },
   {
-    field: "csp",
-    type: "singleSelect",
-    headerName: "",
-    valueOptions: ["aws", "gcp"],
-    align: "center",
-    headerAlign: "center",
+    field: 'csp',
+    type: 'singleSelect',
+    headerName: '',
+    valueOptions: ['aws', 'gcp'],
+    align: 'center',
+    headerAlign: 'center',
     width: 30,
     renderCell: (params) => (
       <Label
         variant="soft"
         color={
-          (params.row.csp === "" && "error") ||
-          (params.row.csp === "aws" && "warning") ||
-          "success"
+          (params.row.csp === '' && 'error') || (params.row.csp === 'aws' && 'warning') || 'success'
         }
-        sx={{ mx: "auto" }}
+        sx={{ mx: 'auto' }}
       >
         {params.row.csp}
       </Label>
     ),
   },
   {
-    field: "positionName",
-    headerName: "Position Name",
+    field: 'positionName',
+    headerName: 'Position Name',
     flex: 1,
     editable: true,
   },
   {
-    field: "policies",
-    headerName: "AWS권한/GCP역할",
-    align: "left",
-    headerAlign: "left",
+    field: 'policies',
+    headerName: 'AWS권한/GCP역할',
+    align: 'left',
+    headerAlign: 'left',
     width: 200,
   },
   // {
@@ -88,9 +81,9 @@ export default function DataGridView({ data }) {
   });
 
   if (columns.length) {
-    const ratingColumn = columns.find((column) => column.field === "rating");
+    const ratingColumn = columns.find((column) => column.field === 'rating');
 
-    const ratingColIndex = columns.findIndex((col) => col.field === "rating");
+    const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
 
     const ratingFilterOperators = getGridNumericOperators().map((operator) => ({
       ...operator,
@@ -106,12 +99,10 @@ export default function DataGridView({ data }) {
     setColumnVisibilityModel(newModel);
   }, []);
 
-  const hiddenFields = ["id", "action"];
+  const hiddenFields = ['id', 'action'];
 
   const getTogglableColumns = () =>
-    columns
-      .filter((column) => !hiddenFields.includes(column.field))
-      .map((column) => column.field);
+    columns.filter((column) => !hiddenFields.includes(column.field)).map((column) => column.field);
 
   const selected = data.filter((row) => selectedRows.includes(row.id));
 
@@ -130,17 +121,15 @@ export default function DataGridView({ data }) {
       columns={columns}
       isCellEditable={(params) => false}
       sx={{
-        "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
-          outline: "none !important",
+        '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
+          outline: 'none !important',
         },
       }}
       onRowSelectionModelChange={(newSelectionModel) => {
         setSelectedRows(newSelectionModel);
         // console.info('newSelectionModel', newSelectionModel);
 
-        checkboxSelected = data.filter((row) =>
-          newSelectionModel.includes(row.id),
-        );
+        checkboxSelected = data.filter((row) => newSelectionModel.includes(row.id));
         // console.info('selected2', checkboxSelected);
         dispatch(ADD_ROWS(checkboxSelected));
       }}
@@ -166,7 +155,7 @@ DataGridView.propTypes = {
 
 function RatingInputValue({ item, applyValue }) {
   return (
-    <Box sx={{ p: 1, height: 1, alignItems: "flex-end", display: "flex" }}>
+    <Box sx={{ p: 1, height: 1, alignItems: 'flex-end', display: 'flex' }}>
       <Rating
         size="small"
         precision={0.5}
