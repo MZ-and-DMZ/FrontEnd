@@ -1,26 +1,28 @@
-import { format } from 'date-fns';
 import PropTypes from 'prop-types';
+
+import { useEffect, useState } from 'react';
 
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import Paper from '@mui/material/Paper';
 
 import { useBoolean } from 'src/hooks/use-boolean';
-
-import { fCurrency } from 'src/utils/format-number';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+
+import { parseUserLoggingList } from 'src/_mock/_log';
 
 // ----------------------------------------------------------------------
 
@@ -32,29 +34,46 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }) {
-  const { sent, invoiceNumber, createDate, dueDate, status, invoiceTo, totalAmount } = row;
+  const { userName, date, version, historyDate, historyVersion, actionList, actionCount, status } = row;
 
   const confirm = useBoolean();
 
   const popover = usePopover();
 
-  return (
-    <>
+   const collapse = useBoolean();
+
+  const [tableData, setTableData] = useState(parseUserLoggingList);
+
+  useEffect(() => {
+  const fetchData = async () => {
+  try {
+  const data = await parseUserLoggingList();
+  setTableData(data);
+  } catch (error) {
+  console.error('로그 데이터를 가져오고 구문 분석하는 동안 오류 발생:', error);
+  // 에러 처리 로직을 추가할 수 있습니다.
+  }
+  };
+
+  fetchData();
+  }, []);
+
+const renderPrimary = (
       <TableRow hover selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={invoiceTo.name} sx={{ mr: 2 }}>
+        {/* <TableCell sx={{ display: 'flex', alignItems: 'center' }}> */}
+          {/* <Avatar alt={invoiceTo.name} sx={{ mr: 2 }}>
             {invoiceTo.name.charAt(0).toUpperCase()}
-          </Avatar>
+          </Avatar> */}
 
-          <ListItemText
+          {/* <ListItemText
             disableTypography
             primary={
               <Typography variant="body2" noWrap>
-                {invoiceTo.name}
+                {user_name}
               </Typography>
             }
             secondary={
@@ -68,12 +87,12 @@ export default function InvoiceTableRow({
               </Link>
             }
           />
-        </TableCell>
+        </TableCell> */}
 
         <TableCell>
           <ListItemText
-            primary={format(new Date(createDate), 'dd MMM yyyy')}
-            secondary={format(new Date(createDate), 'p')}
+            primary={userName}
+            // secondary={date}
             primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
@@ -83,7 +102,7 @@ export default function InvoiceTableRow({
           />
         </TableCell>
 
-        <TableCell>
+        {/* <TableCell>
           <ListItemText
             primary={format(new Date(dueDate), 'dd MMM yyyy')}
             secondary={format(new Date(dueDate), 'p')}
@@ -94,13 +113,18 @@ export default function InvoiceTableRow({
               typography: 'caption',
             }}
           />
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell>{fCurrency(totalAmount)}</TableCell>
+        {/* <TableCell>{action_count}</TableCell>
 
-        <TableCell align="center">{sent}</TableCell>
+        <TableCell>{version}</TableCell> */}
 
-        <TableCell>
+        <TableCell>{date}</TableCell>
+        {/* <TableCell>{date}</TableCell> */}
+        <TableCell>{version}</TableCell>
+        {/* <TableCell>{actionCount}</TableCell> */}
+
+        {/* <TableCell>
           <Label
             variant="soft"
             color={
@@ -112,14 +136,86 @@ export default function InvoiceTableRow({
           >
             {status}
           </Label>
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell align="right" sx={{ px: 1 }}>
+        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+                <IconButton
+                  color={collapse.value ? 'inherit' : 'default'}
+                  onClick={collapse.onToggle}
+                  sx={{
+                    ...(collapse.value && {
+                      bgcolor: 'action.hover',
+                    }),
+                  }}
+                >
+                  <Iconify icon="eva:arrow-ios-downward-fill" />
+                </IconButton>
+              </TableCell>
+
+        {/* <TableCell align="right" sx={{ px: 1 }}>
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
+);
+
+  const renderSecondary = (
+  <TableRow>
+    <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
+      <Collapse
+        in={collapse.value}
+        timeout="auto"
+        unmountOnExit
+        sx={{ bgcolor: 'background.neutral' }}
+      >
+        <Stack component={Paper} sx={{ m: 1.5 }}>
+          {historyVersion}
+            <Stack
+              // key={id}
+              direction="row"
+              alignItems="center"
+              sx={{
+                p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
+                '&:not(:last-of-type)': {
+                  borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
+                },
+                '&:hover': {
+                  background: 'rgba(0, 0, 0, 0.1)',
+                },
+              }}
+            >
+              {/* Add checkboxes for date, version, and actionList */}
+              <Checkbox
+                // Customize the checkbox according to your needs
+                // You may want to handle checkbox state and onChange event
+              />
+              <ListItemText
+                primary={`action list: ${actionList}`}
+                primaryTypographyProps={{
+                  typography: 'body2',
+                }}
+                secondaryTypographyProps={{
+                  component: 'span',
+                  color: 'text.disabled',
+                  mt: 0.5,
+                }}
+              />
+            </Stack>
+        </Stack>
+      </Collapse>
+    </TableCell>
+  </TableRow>
+);
+
+console.log('actionList',actionList);
+      
+
+  return (
+    <>
+      {renderPrimary}
+
+      {renderSecondary}
 
       <CustomPopover
         open={popover.open}

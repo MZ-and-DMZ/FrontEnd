@@ -1,5 +1,5 @@
 import sumBy from 'lodash/sumBy';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -23,7 +23,8 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { fTimestamp } from 'src/utils/format-time';
 
-import { _invoices, INVOICE_SERVICE_OPTIONS } from 'src/_mock';
+import { INVOICE_SERVICE_OPTIONS } from 'src/_mock';
+import { parseLoggingList, parseUserLoggingList } from 'src/_mock/_log';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -50,12 +51,11 @@ import InvoiceTableFiltersResult from '../invoice-table-filters-result';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'invoiceNumber', label: 'Customer' },
-  { id: 'createDate', label: 'Create' },
-  { id: 'dueDate', label: 'Due' },
-  { id: 'price', label: 'Amount' },
-  { id: 'sent', label: 'Sent', align: 'center' },
-  { id: 'status', label: 'Status' },
+  { id: 'userName', label: '사용자 이름' },
+  { id: 'date', label: 'date' },
+  { id: 'version', label: '버전 정보' },
+  // { id: 'actionCount', label: '할당된 권한 수', align: 'center' },
+  // { id: 'status', label: 'status' },
   { id: '' },
 ];
 
@@ -80,9 +80,23 @@ export default function InvoiceListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_invoices);
+  const [tableData, setTableData] = useState(parseLoggingList);
 
   const [filters, setFilters] = useState(defaultFilters);
+
+  useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const data = await parseLoggingList();
+      setTableData(data);
+    } catch (error) {
+      console.error('로그 데이터를 가져오고 구문 분석하는 동안 오류 발생:', error);
+      // 에러 처리 로직을 추가할 수 있습니다.
+    }
+  };
+
+  fetchData();
+}, []);
 
   const dateError =
     filters.startDate && filters.endDate
@@ -111,13 +125,23 @@ export default function InvoiceListView() {
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
-  const getInvoiceLength = (status) => tableData.filter((item) => item.status === status).length;
+  const getInvoiceLength = (status) => {
+  if (Array.isArray(tableData)) {
+    return tableData.filter((item) => item.status === status).length;
+  }
+  return 0; // 혹은 원하는 기본값
+};
 
-  const getTotalAmount = (status) =>
-    sumBy(
+
+const getTotalAmount = (status) => {
+  if (Array.isArray(tableData)) {
+    return sumBy(
       tableData.filter((item) => item.status === status),
       'totalAmount'
     );
+  }
+  return 0; // 혹은 원하는 기본값
+};
 
   const getPercentByStatus = (status) => (getInvoiceLength(status) / tableData.length) * 100;
 
@@ -125,28 +149,28 @@ export default function InvoiceListView() {
     { value: 'all', label: 'All', color: 'default', count: tableData.length },
     {
       value: 'paid',
-      label: 'Paid',
+      label: '정상 권한',
       color: 'success',
       count: getInvoiceLength('paid'),
     },
     {
       value: 'pending',
-      label: 'Pending',
+      label: '갱신 대상',
       color: 'warning',
       count: getInvoiceLength('pending'),
     },
     {
       value: 'overdue',
-      label: 'Overdue',
+      label: '초과 권한',
       color: 'error',
       count: getInvoiceLength('overdue'),
     },
-    {
-      value: 'draft',
-      label: 'Draft',
-      color: 'default',
-      count: getInvoiceLength('draft'),
-    },
+    // {
+    //   value: 'draft',
+    //   label: 'Draft',
+    //   color: 'default',
+    //   count: getInvoiceLength('draft'),
+    // },
   ];
 
   const handleFilters = useCallback(
@@ -210,18 +234,18 @@ export default function InvoiceListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="List"
+          heading="권한 최적화"
           links={[
             {
               name: 'Dashboard',
               href: paths.dashboard.root,
             },
             {
-              name: 'Invoice',
+              name: '권한 최적화',
               href: paths.dashboard.invoice.root,
             },
             {
-              name: 'List',
+              name: '목록',
             },
           ]}
           action={
@@ -229,9 +253,9 @@ export default function InvoiceListView() {
               component={RouterLink}
               href={paths.dashboard.invoice.new}
               variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
+              startIcon={<Iconify icon="mingcute:restore" />}
             >
-              New Invoice
+              RollBack
             </Button>
           }
           sx={{
@@ -251,7 +275,7 @@ export default function InvoiceListView() {
               sx={{ py: 2 }}
             >
               <InvoiceAnalytic
-                title="Total"
+                title="전체 사용자 수"
                 total={tableData.length}
                 percent={100}
                 price={sumBy(tableData, 'totalAmount')}
@@ -260,7 +284,7 @@ export default function InvoiceListView() {
               />
 
               <InvoiceAnalytic
-                title="Paid"
+                title="적정 권한"
                 total={getInvoiceLength('paid')}
                 percent={getPercentByStatus('paid')}
                 price={getTotalAmount('paid')}
@@ -269,7 +293,7 @@ export default function InvoiceListView() {
               />
 
               <InvoiceAnalytic
-                title="Pending"
+                title="갱신 대상"
                 total={getInvoiceLength('pending')}
                 percent={getPercentByStatus('pending')}
                 price={getTotalAmount('pending')}
@@ -278,7 +302,7 @@ export default function InvoiceListView() {
               />
 
               <InvoiceAnalytic
-                title="Overdue"
+                title="초과 권한"
                 total={getInvoiceLength('overdue')}
                 percent={getPercentByStatus('overdue')}
                 price={getTotalAmount('overdue')}
@@ -286,14 +310,14 @@ export default function InvoiceListView() {
                 color={theme.palette.error.main}
               />
 
-              <InvoiceAnalytic
+              {/* <InvoiceAnalytic
                 title="Draft"
                 total={getInvoiceLength('draft')}
                 percent={getPercentByStatus('draft')}
                 price={getTotalAmount('draft')}
                 icon="solar:file-corrupted-bold-duotone"
                 color={theme.palette.text.secondary}
-              />
+              /> */}
             </Stack>
           </Scrollbar>
         </Card>
@@ -360,13 +384,13 @@ export default function InvoiceListView() {
               }
               action={
                 <Stack direction="row">
-                  <Tooltip title="Sent">
+                  <Tooltip title="복구하기">
                     <IconButton color="primary">
-                      <Iconify icon="iconamoon:send-fill" />
+                      <Iconify icon="ic:baseline-restore" />
                     </IconButton>
                   </Tooltip>
 
-                  <Tooltip title="Download">
+                  {/* <Tooltip title="Download">
                     <IconButton color="primary">
                       <Iconify icon="eva:download-outline" />
                     </IconButton>
@@ -376,7 +400,7 @@ export default function InvoiceListView() {
                     <IconButton color="primary">
                       <Iconify icon="solar:printer-minimalistic-bold" />
                     </IconButton>
-                  </Tooltip>
+                  </Tooltip> */}
 
                   <Tooltip title="Delete">
                     <IconButton color="primary" onClick={confirm.onTrue}>
@@ -413,7 +437,12 @@ export default function InvoiceListView() {
                     .map((row) => (
                       <InvoiceTableRow
                         key={row.id}
-                        row={row}
+                        row={{
+                          userName: row.userName,
+                          date: row.date,
+                          version: row.version,
+                          // status: row.status
+                        }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onViewRow={() => handleViewRow(row.id)}
@@ -439,7 +468,6 @@ export default function InvoiceListView() {
             rowsPerPage={table.rowsPerPage}
             onPageChange={table.onChangePage}
             onRowsPerPageChange={table.onChangeRowsPerPage}
-            //
             dense={table.dense}
             onChangeDense={table.onChangeDense}
           />
@@ -476,6 +504,9 @@ export default function InvoiceListView() {
 
 function applyFilter({ inputData, comparator, filters, dateError }) {
   const { name, status, service, startDate, endDate } = filters;
+  inputData = Array.from(inputData);
+  console.log('Original inputData:', inputData);
+
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -514,6 +545,8 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
       );
     }
   }
+
+  console.log('Filtered inputData:', inputData);
 
   return inputData;
 }

@@ -143,17 +143,17 @@ export function useNavData() {
 
           // INVOICE
           {
-            title: t('회수내역'),
+            title: t('권한 최적화'),
             path: paths.dashboard.invoice.root,
             icon: ICONS.invoice,
             children: [
-              { title: t('list'), path: paths.dashboard.invoice.root },
-              {
-                title: t('details'),
-                path: paths.dashboard.invoice.demo.details,
-              },
-              { title: t('create'), path: paths.dashboard.invoice.new },
-              { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+              { title: t('로그'), path: paths.dashboard.invoice.root },
+              // {
+              //   title: t('details'),
+              //   path: paths.dashboard.invoice.demo.details,
+              // },
+              // { title: t('create'), path: paths.dashboard.invoice.new },
+              { title: t('세부사항'), path: paths.dashboard.invoice.demo.edit },
             ],
           },
 
