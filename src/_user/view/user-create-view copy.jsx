@@ -18,7 +18,7 @@ import { _positionList, _roles, _mock } from 'src/_mock';
 import { useTable } from 'src/components/table';
 import { useSettingsContext } from 'src/components/settings';
 
-import { EDIT_ROWS } from 'src/redux/reducer/attachedPositionSlice';
+import { EDIT_ROWS } from 'src/redux/reducer/user/create/attachedPositionSlice';
 
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 

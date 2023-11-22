@@ -1,13 +1,34 @@
 import React, { useState, useEffect } from 'react';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
-  FormControl, InputLabel, Select, MenuItem, Chip, Input, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Button,
-  TextField, InputAdornment, Box, TablePagination, Checkbox
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Chip,
+  Input,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button,
+  TextField,
+  InputAdornment,
+  Box,
+  TablePagination,
+  Checkbox,
 } from '@mui/material';
 
 import styled from '@emotion/styled';
 
+import { recommendPolicies } from 'src/_mock';
 import { getAwsServiceList, getActionCrudData, _parseActionCrudData } from 'src/_mock/_aws';
+import { UPDATE_STEP2 } from 'src/redux/reducer/position/create/step2Slice';
 
 const RootContainer = styled('div')({
   display: 'flex',
@@ -47,12 +68,19 @@ const StyledChip = styled(Chip)(({ theme, permissionType }) => {
   };
 });
 
-
 const TableWrapper = styled(Box)({
   marginTop: (theme) => theme.spacing(2),
 });
 
 const SecondCreateForm = () => {
+  const step2 = useSelector((state) => state.step2);
+  const [selectedPermissions, setSelectedPermissions] = useState({
+    create: [],
+    read: [],
+    update: [],
+    delete: [],
+  });
+  const [recommendedPolicies, setRecommendedPolicies] = useState(null);
   const [awsServiceList, setAwsServiceList] = useState([]);
   const [filteredServiceList, setFilteredServiceList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -68,14 +96,11 @@ const SecondCreateForm = () => {
   const [createPermissionChecked, setCreatePermissionChecked] = useState(false);
   const [updatePermissionChecked, setUpdatePermissionChecked] = useState(false);
   const [deletePermissionChecked, setDeletePermissionChecked] = useState(false);
-  const [selectedPermissions, setSelectedPermissions] = useState({
-    create: [],
-    read: [],
-    update: [],
-    delete: [],
-  });
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,15 +121,28 @@ const SecondCreateForm = () => {
 
   useEffect(() => {
     if (selectedCategory) {
-      const selectedService = awsServiceList.find((service) => service.actionCrudName === selectedCategory);
+      const selectedService = awsServiceList.find(
+        (service) => service.actionCrudName === selectedCategory
+      );
       setMenuList(selectedService?.menuList || []);
     }
   }, [selectedCategory, awsServiceList]);
 
+  useEffect(() => {
+    const step2data = [
+      ...selectedPermissions.create,
+      ...selectedPermissions.read,
+      ...selectedPermissions.update,
+      ...selectedPermissions.delete,
+    ];
+    dispatch(UPDATE_STEP2(step2data));
+    console.log('step2data', step2data);
+  }, [selectedPermissions, dispatch]);
+
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
     setSelectedCrudType('');
-    setSelectedSubCategory(menu); 
+    setSelectedSubCategory(menu);
     setSelectedPermissions({
       create: [],
       read: [],
@@ -117,7 +155,9 @@ const SecondCreateForm = () => {
     setSelectedCategory(selectedService);
 
     try {
-      const selectedServiceData = parsedData.find((service) => service.actionCrudName === selectedService);
+      const selectedServiceData = parsedData.find(
+        (service) => service.actionCrudName === selectedService
+      );
       const selectedServiceMenuList = selectedServiceData?.menuList || [];
 
       setSelectedSubCategory('');
@@ -140,8 +180,8 @@ const SecondCreateForm = () => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filteredServices = awsServiceList.filter(
-      (service) => service.actionCrudName.toLowerCase().includes(query)
+    const filteredServices = awsServiceList.filter((service) =>
+      service.actionCrudName.toLowerCase().includes(query)
     );
 
     setFilteredServiceList(filteredServices);
@@ -152,8 +192,8 @@ const SecondCreateForm = () => {
     setSelectedCategory('');
     setSearchQuery(query);
 
-    const filteredServices = awsServiceList.filter(
-      (service) => service.actionCrudName.toLowerCase().includes(query)
+    const filteredServices = awsServiceList.filter((service) =>
+      service.actionCrudName.toLowerCase().includes(query)
     );
 
     setFilteredServiceList(filteredServices);
@@ -163,9 +203,7 @@ const SecondCreateForm = () => {
     const query = event.target.value.toLowerCase();
     setSearchMenuQuery(query);
 
-    const filteredMenus = menuList.filter(
-      (menu) => menu.menu.toLowerCase().includes(query)
-    );
+    const filteredMenus = menuList.filter((menu) => menu.menu.toLowerCase().includes(query));
 
     setMenuList(filteredMenus);
   };
@@ -266,7 +304,6 @@ const SecondCreateForm = () => {
     // selectedMenuData 업데이트
     setSelectedMenuData(menuData);
   };
-  
 
   return (
     <RootContainer>
@@ -277,11 +314,7 @@ const SecondCreateForm = () => {
           onChange={handleSearch}
           placeholder="Search services..."
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                검색
-              </InputAdornment>
-            ),
+            startAdornment: <InputAdornment position="start">검색</InputAdornment>,
           }}
         />
         <TableContainer component={Paper}>
@@ -319,20 +352,16 @@ const SecondCreateForm = () => {
 
       {selectedCategory && (
         <TableWrapper>
-                  <TextField
-          fullWidth
-          value={searchMenuQuery}
-          onChange={handleMenuSearch}
-          placeholder="메뉴 검색..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                검색
-              </InputAdornment>
-            ),
-          }}
-        />
-          
+          <TextField
+            fullWidth
+            value={searchMenuQuery}
+            onChange={handleMenuSearch}
+            placeholder="메뉴 검색..."
+            InputProps={{
+              startAdornment: <InputAdornment position="start">검색</InputAdornment>,
+            }}
+          />
+
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -346,9 +375,7 @@ const SecondCreateForm = () => {
                   .map((menu, index) => (
                     <TableRow key={index} selected={selectedSubCategory === menu.menu}>
                       <TableCell>
-                        <Button onClick={() => handleMenuClick(menu.menu)}>
-                          {menu.menu}
-                        </Button>
+                        <Button onClick={() => handleMenuClick(menu.menu)}>{menu.menu}</Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -367,177 +394,189 @@ const SecondCreateForm = () => {
         </TableWrapper>
       )}
 
-{selectedCategory && selectedSubCategory && (
-  <TableWrapper>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-            <Checkbox
-                  checked={createPermissionChecked}
-                  onChange={handleCreatePermissionChange}
-                />
-                생성 권한</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-          {awsServiceList
-  .find((service) => service.actionCrudName === selectedCategory)
-  ?.menuList
-  .filter((menu) => menu.menu === selectedSubCategory)
-  .map((menu, index) => (
-    <TableCell key={index}>
-      {menu && menu.createPermissions.length > 0 ? (
-        menu.createPermissions.map((permission, i) => (
-          <StyledChip key={i} label={permission} />
-        ))
-      ) : (
-        <StyledChip label="없음" />
+      {selectedCategory && selectedSubCategory && (
+        <TableWrapper>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Checkbox
+                      checked={createPermissionChecked}
+                      onChange={handleCreatePermissionChange}
+                    />
+                    생성 권한
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  {awsServiceList
+                    .find((service) => service.actionCrudName === selectedCategory)
+                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                    .map((menu, index) => (
+                      <TableCell key={index}>
+                        {menu && menu.createPermissions.length > 0 ? (
+                          menu.createPermissions.map((permission, i) => (
+                            <StyledChip key={i} label={permission} />
+                          ))
+                        ) : (
+                          <StyledChip label="없음" />
+                        )}
+                      </TableCell>
+                    ))}
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </TableWrapper>
       )}
-    </TableCell>
-  ))}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </TableWrapper>
-)}
 
-{selectedCategory && selectedSubCategory && (
-  <TableWrapper>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-            <Checkbox
-                  checked={readPermissionChecked}
-                  onChange={handleReadPermissionChange}
-                />
-                읽기 권한</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-          {awsServiceList
-  .find((service) => service.actionCrudName === selectedCategory)
-  ?.menuList
-  .filter((menu) => menu.menu === selectedSubCategory)
-  .map((menu, index) => (
-    <TableCell key={index}>
-      {menu && menu.readPermissions.length > 0 ? (
-        menu.readPermissions.map((permission, i) => (
-          <StyledChip key={i} label={permission} />
-        ))
-      ) : (
-        <StyledChip label="없음" />
+      {selectedCategory && selectedSubCategory && (
+        <TableWrapper>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Checkbox
+                      checked={readPermissionChecked}
+                      onChange={handleReadPermissionChange}
+                    />
+                    읽기 권한
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  {awsServiceList
+                    .find((service) => service.actionCrudName === selectedCategory)
+                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                    .map((menu, index) => (
+                      <TableCell key={index}>
+                        {menu && menu.readPermissions.length > 0 ? (
+                          menu.readPermissions.map((permission, i) => (
+                            <StyledChip key={i} label={permission} />
+                          ))
+                        ) : (
+                          <StyledChip label="없음" />
+                        )}
+                      </TableCell>
+                    ))}
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </TableWrapper>
       )}
-    </TableCell>
-  ))}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </TableWrapper>
-)}
 
-{selectedCategory && selectedSubCategory && (
-  <TableWrapper>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-            <Checkbox
-                  checked={updatePermissionChecked}
-                  onChange={handleUpdatePermissionChange}
-                />
-                수정 권한</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-          {awsServiceList
-  .find((service) => service.actionCrudName === selectedCategory)
-  ?.menuList
-  .filter((menu) => menu.menu === selectedSubCategory)
-  .map((menu, index) => (
-    <TableCell key={index}>
-      {menu && menu.updatePermissions.length > 0 ? (
-        menu.updatePermissions.map((permission, i) => (
-          <StyledChip key={i} label={permission} />
-        ))
-      ) : (
-        <StyledChip label="없음" />
+      {selectedCategory && selectedSubCategory && (
+        <TableWrapper>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Checkbox
+                      checked={updatePermissionChecked}
+                      onChange={handleUpdatePermissionChange}
+                    />
+                    수정 권한
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  {awsServiceList
+                    .find((service) => service.actionCrudName === selectedCategory)
+                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                    .map((menu, index) => (
+                      <TableCell key={index}>
+                        {menu && menu.updatePermissions.length > 0 ? (
+                          menu.updatePermissions.map((permission, i) => (
+                            <StyledChip key={i} label={permission} />
+                          ))
+                        ) : (
+                          <StyledChip label="없음" />
+                        )}
+                      </TableCell>
+                    ))}
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </TableWrapper>
       )}
-    </TableCell>
-  ))}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </TableWrapper>
-)}
 
-{selectedCategory && selectedSubCategory && (
-  <TableWrapper>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-            <Checkbox
-                  checked={deletePermissionChecked}
-                  onChange={handleDeletePermissionChange}
-                />
-                삭제 권한</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-          {awsServiceList
-  .find((service) => service.actionCrudName === selectedCategory)
-  ?.menuList
-  .filter((menu) => menu.menu === selectedSubCategory)
-  .map((menu, index) => (
-    <TableCell key={index}>
-      {menu && menu.deletePermissions.length > 0 ? (
-        menu.deletePermissions.map((permission, i) => (
-          <StyledChip key={i} label={permission} />
-        ))
-      ) : (
-        <StyledChip label="없음" />
+      {selectedCategory && selectedSubCategory && (
+        <TableWrapper>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Checkbox
+                      checked={deletePermissionChecked}
+                      onChange={handleDeletePermissionChange}
+                    />
+                    삭제 권한
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  {awsServiceList
+                    .find((service) => service.actionCrudName === selectedCategory)
+                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                    .map((menu, index) => (
+                      <TableCell key={index}>
+                        {menu && menu.deletePermissions.length > 0 ? (
+                          menu.deletePermissions.map((permission, i) => (
+                            <StyledChip key={i} label={permission} />
+                          ))
+                        ) : (
+                          <StyledChip label="없음" />
+                        )}
+                      </TableCell>
+                    ))}
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </TableWrapper>
       )}
-    </TableCell>
-  ))}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </TableWrapper>
-)}
 
-{selectedCategory && selectedSubCategory && (
-  <div>
-    <h4>선택된 권한 :</h4>
-    <div>
-      {Object.keys(selectedPermissions).map((permissionType) => (
-        selectedPermissions[permissionType].length > 0 && (
-          <React.Fragment key={permissionType}>
-            <h5>{`${permissionType} 권한:`}</h5>
-            {selectedPermissions[permissionType].map((permission, i) => (
-              <StyledChip key={i} label={`${permissionType}: ${permission}`} permissionType={permissionType} />
-            ))}
-          </React.Fragment>
-        )
-      ))}
-    </div>
-  </div>
-)}
-
-
+      {selectedCategory && selectedSubCategory && (
+        <div>
+          <h4>선택된 권한 :</h4>
+          <div>
+            {Object.keys(selectedPermissions).map(
+              (permissionType) =>
+                selectedPermissions[permissionType].length > 0 && (
+                  <React.Fragment key={permissionType}>
+                    <h5>{`${permissionType} 권한:`}</h5>
+                    {selectedPermissions[permissionType].map((permission, i) => (
+                      <StyledChip
+                        key={i}
+                        label={`${permissionType}: ${permission}`}
+                        permissionType={permissionType}
+                      />
+                    ))}
+                  </React.Fragment>
+                )
+            )}
+          </div>
+        </div>
+      )}
+      <Button
+        onClick={async () => {
+          const recommendedPolicy = await recommendPolicies(selectedPermissions);
+          console.log('recommendedPolicies', recommendedPolicy);
+          setRecommendedPolicies(recommendedPolicy);
+        }}
+      >
+        {`추천정책:${recommendedPolicies || '없음'}`}
+      </Button>
     </RootContainer>
   );
 };

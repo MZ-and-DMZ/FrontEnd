@@ -70,3 +70,47 @@ export async function PositionMenuData() {
     console.log(error);
   }
 }
+
+export async function convertPosition(positionName) {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_MOCK_API}/positions/convert/${positionName}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    const data = await response.json();
+    console.log('data', data);
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function recommendPolicies(policiesList) {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/recommend`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        actions: [
+          ...policiesList.create,
+          ...policiesList.read,
+          ...policiesList.update,
+          ...policiesList.delete,
+        ],
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}

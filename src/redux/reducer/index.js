@@ -1,16 +1,16 @@
 // src/redux/reducers/index.js
 import { combineReducers } from 'redux';
-import attachedPositionReducer from './attachedPositionSlice';
-import userNameReducer from './userNameSlice';
-import descriptionReducer from './descriptionSlice';
-import awsAccountReducer from './awsAccountSlice';
-import gcpAccountReducer from './gcpAccountSlice';
-import cspReducer from './cspSlice';
-import departmentReducer from './departmentSlice';
-import dutyReducer from './dutySlice';
-import attachedGroupReducer from './attachedGroupSlice';
+import attachedPositionReducer from './user/create/attachedPositionSlice';
+import userNameReducer from './user/create/userNameSlice';
+import descriptionReducer from './user/create/descriptionSlice';
+import awsAccountReducer from './user/create/awsAccountSlice';
+import gcpAccountReducer from './user/create/gcpAccountSlice';
+import cspReducer from './user/create/cspSlice';
+import departmentReducer from './user/create/departmentSlice';
+import dutyReducer from './user/create/dutySlice';
+import attachedGroupReducer from './user/create/attachedGroupSlice';
 
-import positionSelectedReducer from '../reducer/position/positionSelectedRowSlice';
+import positionSelectedReducer from './position/create/step3Slice';
 
 // import userSelectedReducer from './userSelectedSlice';
 

@@ -14,7 +14,7 @@ import { fPercent } from 'src/utils/format-number';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { useSelector, useDispatch } from 'react-redux';
-import { ADD_ROWS, EDIT_ROWS } from 'src/redux/reducer/attachedPositionSlice';
+import { ADD_ROWS, EDIT_ROWS } from 'src/redux/reducer/user/create/attachedPositionSlice';
 
 // ----------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 async function AwsPolicyData() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/boch/get/aws/policylist`, {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/policy/list`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -17,14 +17,15 @@ const awsPolicyData = await AwsPolicyData();
 
 export default function getAwsPolicyDescription(policyName) {
   const awsPolicies = awsPolicyData.aws_policy_list;
-  const foundPolicy = awsPolicies.find(policy => policy.PolicyName === policyName);
+  const foundPolicy = awsPolicies.find((policy) => policy.PolicyName === policyName);
   return foundPolicy ? foundPolicy.Description : 'Description not found';
 }
 
 export const _awsPolicyList = [...Array(awsPolicyData.aws_policy_list.length)].map((_, index) => ({
   id: awsPolicyData.aws_policy_list[index]._id,
-  createDate: awsPolicyData.aws_policy_list[index].createDate.$createDate,
-  description: awsPolicyData.aws_policy_list[index].description,
-  policyName: awsPolicyData.aws_policy_list[index].policyName,
-  updateDate: awsPolicyData.awsPolicy_list[index].updateDate.$updateDate,
+  createDate: awsPolicyData.aws_policy_list[index].CreateDate.$date,
+  description: awsPolicyData.aws_policy_list[index].Description,
+  name: awsPolicyData.aws_policy_list[index].PolicyName,
+  csp: 'aws',
+  // updateDate: awsPolicyData.awsPolicy_list[index].UpdateDate.$date,
 }));
