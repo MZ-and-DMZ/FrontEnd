@@ -85,13 +85,6 @@ export default function PositionMultiTable() {
 
   // currntPosition을 가져옴 없으면 [{id, positionName, description, csp, policies["Compute Instance Admin (beta)",...]}, ...]
   const currentPosition = useSelector((state) => state.positionSelected);
-  useEffect(
-    () => () => {
-      SELECT_POSITION({}); // 초기화
-      INIT_ROWS([]); // 초기화
-    },
-    []
-  );
 
   // useEffect로 convertPositon으로 fetch한 결과를  _roelsList에서 가져옴 ['roles/pubsub.admin', ...]
   const [convertedPolicies, setConvertedPolicies] = useState([]);
