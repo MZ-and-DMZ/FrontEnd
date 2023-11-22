@@ -128,7 +128,7 @@ export function useNavData() {
               { title: t('create'), path: paths.dashboard.product.new },
               { title: t('edit'), path: paths.dashboard.product.demo.edit },
             ],
-          }, 
+          },
 
           // ORDER
           {
@@ -183,7 +183,6 @@ export function useNavData() {
               { title: t('edit'), path: paths.dashboard.job.demo.edit },
             ],
           },
-
 
           /*
 

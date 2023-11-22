@@ -59,7 +59,7 @@ const userSelectedSlice = createSlice({
       state.position_list = state.position_list.filter((row) => !idsToRemove.includes(row.id));
     },
     EDIT_ROWS: (state, action) => {
-      const idsToEdit = action.payload; //payload로 수정할 row 배열을 받음
+      const idsToEdit = action.payload; // payload로 수정할 row 배열을 받음
       state.position_list = state.position_list.filter((row) => !idsToEdit.includes(row.id));
     },
   },

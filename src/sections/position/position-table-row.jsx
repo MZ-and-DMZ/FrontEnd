@@ -19,7 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { SELECT_ROW } from 'src/redux/reducer/position/positionSelectedRowSlice';
+import { UPDATE_STEP3 } from 'src/redux/reducer/position/create/step3Slice';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -188,17 +188,17 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
   //   dispatch(SELECT_ROW({}));
   // }
 
-  useEffect(() => {
-    if (selected) {
-      console.info('selected row', row);
-      console.info('selected', selected);
-      dispatch(SELECT_ROW(row));
-    } else {
-      console.info('selected', selected);
-      console.info('selected row', row);
-      dispatch(SELECT_ROW({}));
-    }
-  }, [selected, row, dispatch]);
+  // useEffect(() => {
+  //   if (selected) {
+  //     console.info('selected row', row);
+  //     console.info('selected', selected);
+  //     dispatch(SELECT_ROW(row));
+  //   } else {
+  //     console.info('selected', selected);
+  //     console.info('selected row', row);
+  //     // dispatch(SELECT_ROW({}));
+  //   }
+  // }, [selected, row, dispatch]);
 
   return (
     <>

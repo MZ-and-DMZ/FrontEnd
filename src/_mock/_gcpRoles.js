@@ -1,6 +1,6 @@
 async function GcpRoleData() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/boch/get/gcp/rolelist`, {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/gcp/role/list`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -17,16 +17,17 @@ const gcpRoleData = await GcpRoleData();
 
 export default function getGcpRoleDescription(roleName) {
   const gcpRoles = gcpRoleData.gcp_role_list;
-  const foundRole = gcpRoles.find(role => role.RoleName === roleName);
+  const foundRole = gcpRoles.find((role) => role.RoleName === roleName);
   return foundRole ? foundRole.Description : 'Description not found';
 }
-
+console.log(gcpRoleData);
 export const _gcpRoleList = [...Array(gcpRoleData.gcp_role_list.length)].map((_, index) => ({
   id: gcpRoleData.gcp_role_list[index]._id.$oid,
-  name: gcpRoleData.gcp_role_list[index].name,
-  title: gcpRoleData.gcp_role_list[index].title,
+  name: gcpRoleData.gcp_role_list[index].title,
+  gcpName: gcpRoleData.gcp_role_list[index].name,
   description: gcpRoleData.gcp_role_list[index].description,
-  includedPermissions: gcpRoleData.gcp_role_list[index].includedPermissions.map((permission) => Object.keys(permission)[0]),
+  includedPermissions: gcpRoleData.gcp_role_list[index].includedPermissions,
   stage: gcpRoleData.gcp_role_list[index].stage,
   etag: gcpRoleData.gcp_role_list[index].etag,
+  csp: 'gcp',
 }));

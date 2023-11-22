@@ -19,7 +19,7 @@ import { createPosition, POSITION_CSP_OPTIONS } from 'src/_mock';
 import UserCreateView from 'src/_user/view/user-create-view';
 
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, { RHFTextField, RHFSelect } from 'src/components/hook-form';
+import FormProvider, { RHFTextField, RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
 
 export default function PositionNewEditForm({ currentPosition }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -105,32 +105,23 @@ export default function PositionNewEditForm({ currentPosition }) {
         {/* <Grid xs={12} md={8}> */}
         <Grid xs={12}>
           <Card sx={{ p: 3 }}>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <RHFTextField name="name" label="직무 이름" />
-              <RHFSelect name="csp" label="CSP">
-                {POSITION_CSP_OPTIONS.map((csp) => (
-                  <MenuItem key={csp.value} value={csp.value}>
-                    {csp.label}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-              <RHFTextField name="position id" label="직무 ID" />
-              <RHFTextField name="position description" label="직무 설명" />
-            </Box>
-
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                {!currentPosition ? 'Create Position' : 'Save Changes'}
-              </LoadingButton>
-            </Stack>
+            <Grid container spacing={2}>
+              <Grid xs={3}>
+                <RHFTextField name="positionName" label="Position Name" />
+              </Grid>
+              <Grid xs={1}>
+                <RHFAutocomplete
+                  name="csp"
+                  label="Cloud"
+                  options={['AWS', 'GCP', 'AWS, GCP']}
+                  getOptionLabel={(option) => option}
+                  isOptionEqualToValue={(option, value) => option === value}
+                />
+              </Grid>
+              <Grid xs={8}>
+                <RHFTextField name="description" label="Description" />
+              </Grid>
+            </Grid>
           </Card>
         </Grid>
       </Grid>

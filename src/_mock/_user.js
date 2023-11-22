@@ -81,7 +81,7 @@ export function createUserData(_reduxList) {
   );
   console.info('reduxList', _reduxList);
   // fetch(`${process.env.REACT_APP_MOCK_API}/users/create`, {
-  fetch(`http://54.180.76.116:8080/users/create`, {
+  fetch(`${process.env.REACT_APP_MOCK_API}/users/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

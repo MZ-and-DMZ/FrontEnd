@@ -12,7 +12,7 @@ import Label from 'src/components/label';
 import { useTable } from 'src/components/table';
 import DataGridHalf from 'src/components/custom/multi-table/data-grid-half';
 
-import { INIT_ROWS } from 'src/redux/reducer/attachedPositionSlice';
+import { INIT_ROWS } from 'src/redux/reducer/user/create/attachedPositionSlice';
 
 import UserTableToolbar from './user-table-toolbar';
 
