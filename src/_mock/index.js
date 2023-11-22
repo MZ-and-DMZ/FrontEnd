@@ -15,3 +15,5 @@ export * from './_product';
 // export * from './_overview';
 export * from './_calendar';
 export * from './_position';
+export * from './_awsPolicies';
+export * from './_gcpRoles';

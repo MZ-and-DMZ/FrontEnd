@@ -10,20 +10,34 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 
-import userNameReducer from '../reducer/userNameSlice';
-import descriptionReducer from '../reducer/descriptionSlice';
-import awsAccountReducer from '../reducer/awsAccountSlice';
-import gcpAccountReducer from '../reducer/gcpAccountSlice';
-import cspReducer from '../reducer/cspSlice';
-import departmentReducer from '../reducer/departmentSlice';
-import dutyReducer from '../reducer/dutySlice';
-import attachedPositionReducer from '../reducer/attachedPositionSlice';
-import attachedGroupReducer from '../reducer/attachedGroupSlice';
+// user
+// user list
+import userSelectedReducer from '../reducer/user/list/userSelectedSlice';
+// user create
+import userNameReducer from '../reducer/user/create/userNameSlice';
+import descriptionReducer from '../reducer/user/create/descriptionSlice';
+import awsAccountReducer from '../reducer/user/create/awsAccountSlice';
+import gcpAccountReducer from '../reducer/user/create/gcpAccountSlice';
+import cspReducer from '../reducer/user/create/cspSlice';
+import departmentReducer from '../reducer/user/create/departmentSlice';
+import dutyReducer from '../reducer/user/create/dutySlice';
+import attachedPositionReducer from '../reducer/user/create/attachedPositionSlice';
+import attachedGroupReducer from '../reducer/user/create/attachedGroupSlice';
 
-import positionSelectedReducer from '../reducer/position/positionSelectedRowSlice';
+// position
+// position list
+import positionSelectedReducer from '../reducer/position/list/positionSelectedSlice';
+// position create
+import step1Reducer from '../reducer/position/create/step1Slice';
+import step2Reducer from '../reducer/position/create/step2Slice';
+import step3Reducer from '../reducer/position/create/step3Slice';
 
 const store = configureStore({
   reducer: {
+    // user
+    // user list
+    userSelected: userSelectedReducer,
+    // user create
     userName: userNameReducer,
     description: descriptionReducer,
     awsAccount: awsAccountReducer,
@@ -33,7 +47,14 @@ const store = configureStore({
     duty: dutyReducer,
     attachedGroup: attachedGroupReducer,
     attachedPosition: attachedPositionReducer,
-    positionSelectedRow: positionSelectedReducer,
+
+    // position
+    // position list
+    positionSelected: positionSelectedReducer,
+    // position create
+    step1: step1Reducer,
+    step2: step2Reducer,
+    step3: step3Reducer,
   },
 });
 

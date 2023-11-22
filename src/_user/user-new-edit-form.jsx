@@ -32,15 +32,15 @@ import FormProvider, {
   RHFUploadAvatar,
   RHFAutocomplete,
 } from 'src/components/hook-form';
-import { INPUT_AWSACCOUNT } from 'src/redux/reducer/awsAccountSlice';
-import { INPUT_CSP } from 'src/redux/reducer/cspSlice';
-import { INPUT_DESCRIPTION } from 'src/redux/reducer/descriptionSlice';
-import { INPUT_GCPACCOUNT } from 'src/redux/reducer/gcpAccountSlice';
-import { INPUT_USERNAME } from 'src/redux/reducer/userNameSlice';
-import { INPUT_ATTACHEDGROUP } from 'src/redux/reducer/attachedGroupSlice';
-import { INPUT_DUTY } from 'src/redux/reducer/dutySlice';
-import { INPUT_DEPARTMENT } from 'src/redux/reducer/departmentSlice';
-import { ADD_ROWS } from 'src/redux/reducer/attachedPositionSlice';
+import { INPUT_AWSACCOUNT } from 'src/redux/reducer/user/create/awsAccountSlice';
+import { INPUT_CSP } from 'src/redux/reducer/user/create/cspSlice';
+import { INPUT_DESCRIPTION } from 'src/redux/reducer/user/create/descriptionSlice';
+import { INPUT_GCPACCOUNT } from 'src/redux/reducer/user/create/gcpAccountSlice';
+import { INPUT_USERNAME } from 'src/redux/reducer/user/create/userNameSlice';
+import { INPUT_ATTACHEDGROUP } from 'src/redux/reducer/user/create/attachedGroupSlice';
+import { INPUT_DUTY } from 'src/redux/reducer/user/create/dutySlice';
+import { INPUT_DEPARTMENT } from 'src/redux/reducer/user/create/departmentSlice';
+import { ADD_ROWS } from 'src/redux/reducer/user/create/attachedPositionSlice';
 // ----------------------------------------------------------------------
 
 /**

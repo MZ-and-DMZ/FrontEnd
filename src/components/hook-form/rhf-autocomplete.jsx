@@ -4,7 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import { INPUT_CSP } from 'src/redux/reducer/cspSlice';
+import { INPUT_CSP } from 'src/redux/reducer/user/create/cspSlice';
 import { useDispatch } from 'react-redux';
 // ----------------------------------------------------------------------
 

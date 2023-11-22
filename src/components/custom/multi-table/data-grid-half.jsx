@@ -6,7 +6,11 @@ import Rating from '@mui/material/Rating';
 import { DataGrid, getGridNumericOperators } from '@mui/x-data-grid';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { ADD_ROWS, DELETE_ROWS, EDIT_ROWS } from 'src/redux/reducer/attachedPositionSlice';
+import {
+  ADD_ROWS,
+  DELETE_ROWS,
+  EDIT_ROWS,
+} from 'src/redux/reducer/user/create/attachedPositionSlice';
 
 // ----------------------------------------------------------------------
 

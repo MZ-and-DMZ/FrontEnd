@@ -1,5 +1,8 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+
+import { useState, useCallback, useEffect } from 'react';
+
+import { useDispatch } from 'react-redux';
 
 import { Box } from '@mui/system';
 import Tab from '@mui/material/Tab';
@@ -38,6 +41,7 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
+import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 
 import PositionTableRow from '../position-table-row';
 import PositionTableToolbar from '../position-table-toolbar';
@@ -65,6 +69,8 @@ const defaultFilters = {
 
 export default function PositionListView() {
   const table = useTable();
+
+  const dispatch = useDispatch();
 
   const settings = useSettingsContext();
 
@@ -296,7 +302,10 @@ export default function PositionListView() {
                           policies: row.policies.join(', '),
                         }}
                         selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
+                        onSelectRow={() => {
+                          table.onSelectRow(row.id);
+                          dispatch(SELECT_POSITION(row));
+                        }}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
                       />

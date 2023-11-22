@@ -128,7 +128,7 @@ export function useNavData() {
               { title: t('create'), path: paths.dashboard.product.new },
               { title: t('edit'), path: paths.dashboard.product.demo.edit },
             ],
-          }, 
+          },
 
           // ORDER
           {
@@ -143,7 +143,7 @@ export function useNavData() {
 
           // INVOICE
           {
-            title: t('회수내역'),
+            title: t('권한 최적화'),
             path: paths.dashboard.invoice.root,
             icon: ICONS.invoice,
             children: [
@@ -183,7 +183,6 @@ export function useNavData() {
               { title: t('edit'), path: paths.dashboard.job.demo.edit },
             ],
           },
-
 
           /*
 

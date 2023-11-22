@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import Container from '@mui/material/Container';
 
 import { paths } from 'src/routes/paths';
@@ -7,7 +10,6 @@ import { object } from 'prop-types';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { _positionList } from 'src/_mock';
-import { useEffect, useState } from 'react';
 import { Button, Step, StepLabel, Stepper, Typography } from '@mui/material';
 
 import { MailView } from 'src/sections/mail/view';
@@ -34,11 +36,28 @@ import SecondCreateForm from '../position-new-edit-form-tree';
 // 4. user-new-edit-form.jsx, user-table-toolbar.jsx, data_grid_import.jsx, data_grid_view.jsx 등등
 //    position으로 시작하지 않는 것들은 나중에 table 관련된 것으로 바꿀 예정임. 지우지 말아주셈.
 
-export default function PositionCreateView({ convertPosition }) {
-  const settings = useSettingsContext();
-  const [activeStep, setActiveStep] = useState(0);
-  // const [currentPosition, setCurrentPosition] = useState(_positionList);
+/**
+ *
+ * @param {object} currentPosition
+ * @param {String} currentPosition.id
+ * @param {String} currentPosition.positionName
+ * @param {String} currentPosition.description
+ * @param {String} currentPosition.csp
+ * @param {Array} convertPosition.policies - List of Policy Name
+ * @returns
+ */
 
+export default function PositionCreateView() {
+  // const currentPosition = useSelector((state) => state.positionSelectedRow);
+  const settings = useSettingsContext();
+  const [activeStep, setActiveStep] = useState(2);
+  // const [currentPosition, setCurrentPosition] = useState(_positionList);
+  // useEffect(() => {
+  //   if (convertPosition) {
+  //     setActiveStep(2);
+  //   }
+  //   console.log('convertPosition', convertPosition);
+  // }, [convertPosition]);
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -59,8 +78,8 @@ export default function PositionCreateView({ convertPosition }) {
         setStepPage(<SecondCreateForm />);
         break;
       case 2:
-        // setStepPage(<PositionNewEditFormTable convertPosition={convertPosition} />);
         setStepPage(<PositionNewEditFormTable />);
+        // setStepPage(<PositionNewEditFormTable currentPosition={currentPosition} />);
         break;
       default:
         setStepPage(<PositionNewEditFormInput />);
@@ -115,6 +134,6 @@ export default function PositionCreateView({ convertPosition }) {
   );
 }
 
-PositionCreateView.propTypes = {
-  convertPosition: object,
-};
+// PositionCreateView.propTypes = {
+//   convertPosition: object,
+// };
