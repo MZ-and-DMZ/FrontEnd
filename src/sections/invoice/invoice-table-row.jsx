@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types';
 
-import { useEffect, useState } from 'react';
-
-import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,12 +14,9 @@ import Paper from '@mui/material/Paper';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
-import { parseLoggingList } from 'src/_mock/_log';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +28,7 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }) {
-  const { userName, date, version, actionList, actionCount, status } = row;
+  const { userName, date, version, actionList, actionCount } = row;
 
   const confirm = useBoolean();
 
@@ -47,31 +41,6 @@ const renderPrimary = (
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
-
-        {/* <TableCell sx={{ display: 'flex', alignItems: 'center' }}> */}
-          {/* <Avatar alt={invoiceTo.name} sx={{ mr: 2 }}>
-            {invoiceTo.name.charAt(0).toUpperCase()}
-          </Avatar> */}
-
-          {/* <ListItemText
-            disableTypography
-            primary={
-              <Typography variant="body2" noWrap>
-                {user_name}
-              </Typography>
-            }
-            secondary={
-              <Link
-                noWrap
-                variant="body2"
-                onClick={onViewRow}
-                sx={{ color: 'text.disabled', cursor: 'pointer' }}
-              >
-                {invoiceNumber}
-              </Link>
-            }
-          />
-        </TableCell> */}
 
         <TableCell>
           <ListItemText
@@ -187,8 +156,6 @@ const renderPrimary = (
   </TableRow>
 );
 
-
-      
 
   return (
     <>
