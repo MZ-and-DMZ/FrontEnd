@@ -24,7 +24,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { fTimestamp } from 'src/utils/format-time';
 
 import { INVOICE_SERVICE_OPTIONS } from 'src/_mock';
-import { parseLoggingList, parseUserLoggingList } from 'src/_mock/_log';
+import { parseLoggingList } from 'src/_mock/_log';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -54,7 +54,7 @@ const TABLE_HEAD = [
   { id: 'userName', label: '사용자 이름' },
   { id: 'date', label: 'date' },
   { id: 'version', label: '버전 정보' },
-  // { id: 'actionCount', label: '할당된 권한 수', align: 'center' },
+  { id: 'actionCount', label: '할당된 권한 수', align: 'center' },
   // { id: 'status', label: 'status' },
   { id: '' },
 ];
@@ -441,6 +441,8 @@ const getTotalAmount = (status) => {
                           userName: row.userName,
                           date: row.date,
                           version: row.version,
+                          actionCount: row.actionCount,
+                          actionList: row.actionList,
                           // status: row.status
                         }}
                         selected={table.selected.includes(row.id)}

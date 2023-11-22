@@ -1,6 +1,6 @@
 async function LogData() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/list`, {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/list/all`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -19,10 +19,12 @@ export const parseLoggingList = async () => {
 
     if (Array.isArray(loggingList)) {
       const parsedList = loggingList.map((user) => ({
-        id: user._id.$oid,
+        // id: user._id.$oid,
         userName: user.user_name,
-        date: user.latest_history_date,
-        version: user.latest_history_version,
+        date: user.date,
+        version: user.version,
+        actionCount: user.action_count,
+        actionList: user.action_list || [],
         // history: user.history.map((entry) => ({
         //   date: entry.date,
         //   version: entry.version,
@@ -42,53 +44,53 @@ export const parseLoggingList = async () => {
   }
 };
 
-async function UserLogData() {
-  try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/history/mzdmz_heo`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await response.json();
-    return data.logging_user_history; 
-  } catch (error) {
-    console.log(error);
-  }
-}
+// async function UserLogData() {
+//   try {
+//     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/history/mzdmz_heo`, {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//     const data = await response.json();
+//     return data.logging_user_history; 
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
-export const parseUserLoggingList = async () => {
-  try {
-    const loggingUserHistory = await UserLogData();
+// export const parseUserLoggingList = async () => {
+//   try {
+//     const loggingUserHistory = await UserLogData();
 
-    if (!Array.isArray(loggingUserHistory)) {
-      console.error('UserLogData가 배열을 반환하지 않았습니다:', loggingUserHistory);
-      return [];
-    }
+//     if (!Array.isArray(loggingUserHistory)) {
+//       console.error('UserLogData가 배열을 반환하지 않았습니다:', loggingUserHistory);
+//       return [];
+//     }
 
-    const parsedList = loggingUserHistory.map((history) => {
-      // history가 필요한 속성을 가지고 있는지 확인합니다.
-      if (!history.date || !history.version || !Array.isArray(history.action_list)) {
-        console.error('유효하지 않은 history 객체입니다:', history);
-        return null; // map에서이 항목을 건너 뜁니다.
-      }
+//     const parsedList = loggingUserHistory.map((history) => {
+//       // history가 필요한 속성을 가지고 있는지 확인합니다.
+//       if (!history.date || !history.version || !Array.isArray(history.action_list)) {
+//         console.error('유효하지 않은 history 객체입니다:', history);
+//         return null; // map에서이 항목을 건너 뜁니다.
+//       }
 
-      const actionList = history.action_list;
+//       const actionList = history.action_list;
 
-      return {
-        historyDate: history.date,
-        historyVersion: history.version,
-        actionList,
-      };
-    }).filter(Boolean); // 배열에서 null 값을 제거합니다.
+//       return {
+//         historyDate: history.date,
+//         historyVersion: history.version,
+//         actionList,
+//       };
+//     }).filter(Boolean); // 배열에서 null 값을 제거합니다.
 
-    console.log('파싱된 사용자 로깅 목록:', parsedList);
-    return parsedList;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
+//     console.log('파싱된 사용자 로깅 목록:', parsedList);
+//     return parsedList;
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// };
 
 
  

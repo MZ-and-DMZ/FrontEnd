@@ -22,7 +22,7 @@ import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import { parseUserLoggingList } from 'src/_mock/_log';
+import { parseLoggingList } from 'src/_mock/_log';
 
 // ----------------------------------------------------------------------
 
@@ -34,29 +34,13 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }) {
-  const { userName, date, version, historyDate, historyVersion, actionList, actionCount, status } = row;
+  const { userName, date, version, actionList, actionCount, status } = row;
 
   const confirm = useBoolean();
 
   const popover = usePopover();
 
    const collapse = useBoolean();
-
-  const [tableData, setTableData] = useState(parseUserLoggingList);
-
-  useEffect(() => {
-  const fetchData = async () => {
-  try {
-  const data = await parseUserLoggingList();
-  setTableData(data);
-  } catch (error) {
-  console.error('로그 데이터를 가져오고 구문 분석하는 동안 오류 발생:', error);
-  // 에러 처리 로직을 추가할 수 있습니다.
-  }
-  };
-
-  fetchData();
-  }, []);
 
 const renderPrimary = (
       <TableRow hover selected={selected}>
@@ -115,14 +99,9 @@ const renderPrimary = (
           />
         </TableCell> */}
 
-        {/* <TableCell>{action_count}</TableCell>
-
-        <TableCell>{version}</TableCell> */}
-
         <TableCell>{date}</TableCell>
-        {/* <TableCell>{date}</TableCell> */}
         <TableCell>{version}</TableCell>
-        {/* <TableCell>{actionCount}</TableCell> */}
+        <TableCell>{actionCount}</TableCell>
 
         {/* <TableCell>
           <Label
@@ -170,7 +149,7 @@ const renderPrimary = (
         sx={{ bgcolor: 'background.neutral' }}
       >
         <Stack component={Paper} sx={{ m: 1.5 }}>
-          {historyVersion}
+          {version}
             <Stack
               // key={id}
               direction="row"
@@ -208,7 +187,7 @@ const renderPrimary = (
   </TableRow>
 );
 
-console.log('actionList',actionList);
+
       
 
   return (
