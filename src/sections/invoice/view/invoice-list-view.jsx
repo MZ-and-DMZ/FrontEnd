@@ -54,13 +54,13 @@ const TABLE_HEAD = [
   { id: 'userName', label: '사용자 이름' },
   { id: 'date', label: 'date' },
   { id: 'version', label: '버전 정보' },
-  { id: 'actionCount', label: '할당된 권한 수', align: 'center' },
+  { id: 'actionCount', label: '할당된 권한', width: 300 },
   // { id: 'status', label: 'status' },
-  { id: '' },
+  // { id: '' },
 ];
 
 const defaultFilters = {
-  name: '',
+  userName: '',
   service: [],
   status: 'all',
   startDate: null,
@@ -118,7 +118,7 @@ export default function InvoiceListView() {
   const denseHeight = table.dense ? 56 : 76;
 
   const canReset =
-    !!filters.name ||
+    !!filters.userName ||
     !!filters.service.length ||
     filters.status !== 'all' ||
     (!!filters.startDate && !!filters.endDate);
@@ -174,11 +174,11 @@ const getTotalAmount = (status) => {
   ];
 
   const handleFilters = useCallback(
-    (name, value) => {
+    (userName, value) => {
       table.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
-        [name]: value,
+        [userName]: value,
       }));
     },
     [table]
@@ -356,7 +356,7 @@ const getTotalAmount = (status) => {
             onFilters={handleFilters}
             //
             dateError={dateError}
-            serviceOptions={INVOICE_SERVICE_OPTIONS.map((option) => option.name)}
+            serviceOptions={INVOICE_SERVICE_OPTIONS.map((option) => option.userName)}
           />
 
           {canReset && (
@@ -505,7 +505,7 @@ const getTotalAmount = (status) => {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters, dateError }) {
-  const { name, status, service, startDate, endDate } = filters;
+  const { userName, status, service, startDate, endDate } = filters;
   inputData = Array.from(inputData);
   console.log('Original inputData:', inputData);
 
@@ -520,11 +520,11 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (name) {
+  if (userName) {
     inputData = inputData.filter(
-      (invoice) =>
-        invoice.invoiceNumber.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        invoice.invoiceTo.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (item) =>
+        item.userName.toLowerCase().indexOf(userName.toLowerCase()) !== -1 
+        // invoice.invoiceTo.userName.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 

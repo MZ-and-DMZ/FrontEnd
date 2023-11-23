@@ -18,8 +18,8 @@ export const parseLoggingList = async () => {
     const loggingList = await LogData();
 
     if (Array.isArray(loggingList)) {
-      const parsedList = loggingList.map((user) => ({
-        // id: user._id.$oid,
+      const parsedList = loggingList.map((user, index) => ({
+        id: index,
         userName: user.user_name,
         date: user.date,
         version: user.version,
@@ -31,12 +31,8 @@ export const parseLoggingList = async () => {
         //   actionCount: entry.action_count,
         //   actionList: entry.action_list || [],
         }));
-
-      console.log('Parsed Logging List:', parsedList); // 확인용 로그
-
       return parsedList;
     }
-      console.error('LogData did not return an array:', loggingList);
       return [];
   } catch (error) {
     console.log(error);

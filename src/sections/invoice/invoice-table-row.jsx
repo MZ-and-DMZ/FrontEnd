@@ -1,5 +1,9 @@
 import PropTypes from 'prop-types';
 
+import { format } from 'date-fns';
+
+import { useState } from 'react';
+
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
@@ -7,10 +11,11 @@ import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
+// import Stack from '@mui/material/Stack';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import Paper from '@mui/material/Paper';
+// import Collapse from '@mui/material/Collapse';
+// import Paper from '@mui/material/Paper';
+import Select from '@mui/material/Select';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -34,7 +39,9 @@ export default function InvoiceTableRow({
 
   const popover = usePopover();
 
-   const collapse = useBoolean();
+  //  const collapse = useBoolean();
+
+   const [ setSelectedAction ] = useState(actionCount);
 
 const renderPrimary = (
       <TableRow hover selected={selected}>
@@ -55,10 +62,10 @@ const renderPrimary = (
           />
         </TableCell>
 
-        {/* <TableCell>
+        <TableCell>
           <ListItemText
-            primary={format(new Date(dueDate), 'dd MMM yyyy')}
-            secondary={format(new Date(dueDate), 'p')}
+            primary={format(new Date(date), 'dd MMM yyyy')}
+            secondary={format(new Date(date), 'p')}
             primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
@@ -66,12 +73,44 @@ const renderPrimary = (
               typography: 'caption',
             }}
           />
-        </TableCell> */}
+        </TableCell>
 
-        <TableCell>{date}</TableCell>
-        <TableCell>{version}</TableCell>
-        <TableCell>{actionCount}</TableCell>
+        {/* <TableCell>{date}</TableCell> */}
+        <TableCell>{`Version ${version}`}</TableCell>
+        {/* <TableCell>{actionCount}</TableCell> */}
 
+        <TableCell>
+          <ListItemText
+        primary={
+          Array.isArray(actionList) ? (
+            <Select
+              value={actionCount}
+              onChange={(event) => setSelectedAction(event.target.value)}
+              displayEmpty
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem key="default" value={actionCount}>{`할당된 권한 수 : ${actionCount}`}</MenuItem>
+              {actionList.map((action, index) => (
+                <MenuItem key={index} value={action}>
+                  {`${action}`}
+                </MenuItem>
+              ))}
+            </Select>
+          ) : (
+            <span>{actionList}</span>
+          )
+        }
+        primaryTypographyProps={{
+          typography: 'body2',
+        }}
+        secondaryTypographyProps={{
+          component: 'span',
+          color: 'text.disabled',
+          mt: 0.5,
+        }}
+      />
+        </TableCell>
+        
         {/* <TableCell>
           <Label
             variant="soft"
@@ -86,6 +125,8 @@ const renderPrimary = (
           </Label>
         </TableCell> */}
 
+        
+        {/* drop down icon
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
                 <IconButton
                   color={collapse.value ? 'inherit' : 'default'}
@@ -98,7 +139,7 @@ const renderPrimary = (
                 >
                   <Iconify icon="eva:arrow-ios-downward-fill" />
                 </IconButton>
-              </TableCell>
+              </TableCell> */}
 
         {/* <TableCell align="right" sx={{ px: 1 }}>
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
@@ -108,60 +149,58 @@ const renderPrimary = (
       </TableRow>
 );
 
-  const renderSecondary = (
-  <TableRow>
-    <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
-      <Collapse
-        in={collapse.value}
-        timeout="auto"
-        unmountOnExit
-        sx={{ bgcolor: 'background.neutral' }}
-      >
-        <Stack component={Paper} sx={{ m: 1.5 }}>
-          {version}
-            <Stack
-              // key={id}
-              direction="row"
-              alignItems="center"
-              sx={{
-                p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
-                '&:not(:last-of-type)': {
-                  borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
-                },
-                '&:hover': {
-                  background: 'rgba(0, 0, 0, 0.1)',
-                },
-              }}
-            >
-              {/* Add checkboxes for date, version, and actionList */}
-              <Checkbox
-                // Customize the checkbox according to your needs
-                // You may want to handle checkbox state and onChange event
-              />
-              <ListItemText
-                primary={`action list: ${actionList}`}
-                primaryTypographyProps={{
-                  typography: 'body2',
-                }}
-                secondaryTypographyProps={{
-                  component: 'span',
-                  color: 'text.disabled',
-                  mt: 0.5,
-                }}
-              />
-            </Stack>
-        </Stack>
-      </Collapse>
-    </TableCell>
-  </TableRow>
-);
+//   const renderSecondary = (
+//   <TableRow>
+//     <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
+//       <Collapse
+//         in={collapse.value}
+//         timeout="auto"
+//         unmountOnExit
+//         sx={{ bgcolor: 'background.neutral' }}
+//       >
+// <Stack
+//       direction="row"
+//       alignItems="center"
+//       sx={{
+//         p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
+//         '&:not(:last-of-type)': {
+//           borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
+//         },
+//         '&:hover': {
+//           background: 'rgba(0, 0, 0, 0.1)',
+//         },
+//       }}
+//     >
+//       <ListItemText
+//         primary={
+//           Array.isArray(actionList) ? (
+//             <div>
+//               {actionList.length > 0 ? `${actionCount} : ${actionList.join(', ')}` : actionCount}
+//             </div>
+//           ) : (
+//             <span>{actionList}</span>
+//           )
+//         }
+//         primaryTypographyProps={{
+//           typography: 'body2',
+//         }}
+//         secondaryTypographyProps={{
+//           component: 'span',
+//           color: 'text.disabled',
+//           mt: 0.5,
+//         }}
+//       />
+//     </Stack>
+//       </Collapse>
+//     </TableCell>
+//   </TableRow>
+// );
 
-
+// 체크박스 선택시 상단에 뜨는 휴지통, 롤백 아이콘
   return (
     <>
       {renderPrimary}
-
-      {renderSecondary}
+      {/* {renderSecondary} */}
 
       <CustomPopover
         open={popover.open}
