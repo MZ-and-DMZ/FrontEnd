@@ -64,7 +64,7 @@ const renderPrimary = (
 
         <TableCell>
           <ListItemText
-            primary={format(new Date(date), 'dd MMM yyyy')}
+            primary={format(new Date(date), 'yyyy/MMM/dd')}
             secondary={format(new Date(date), 'p')}
             primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{

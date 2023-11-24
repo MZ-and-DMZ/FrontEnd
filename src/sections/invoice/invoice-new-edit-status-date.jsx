@@ -41,7 +41,7 @@ export default function InvoiceNewEditStatusDate() {
       </RHFSelect>
 
       <Controller
-        name="createDate"
+        name="date"
         control={control}
         render={({ field, fieldState: { error } }) => (
           <DatePicker

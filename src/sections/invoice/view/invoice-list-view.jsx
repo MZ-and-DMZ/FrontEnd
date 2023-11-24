@@ -542,8 +542,8 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
     if (startDate && endDate) {
       inputData = inputData.filter(
         (invoice) =>
-          fTimestamp(invoice.createDate) >= fTimestamp(startDate) &&
-          fTimestamp(invoice.createDate) <= fTimestamp(endDate)
+          fTimestamp(invoice.date) >= fTimestamp(startDate) &&
+          fTimestamp(invoice.date) <= fTimestamp(endDate)
       );
     }
   }
