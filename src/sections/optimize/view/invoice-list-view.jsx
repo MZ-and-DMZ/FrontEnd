@@ -12,6 +12,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
+import RestoreIcon from '@mui/icons-material/Restore';
+
 import { alpha, useTheme } from '@mui/material/styles';
 import TableContainer from '@mui/material/TableContainer';
 
@@ -47,6 +49,8 @@ import InvoiceAnalytic from '../invoice-analytic';
 import InvoiceTableRow from '../invoice-table-row';
 import InvoiceTableToolbar from '../invoice-table-toolbar';
 import InvoiceTableFiltersResult from '../invoice-table-filters-result';
+// import { handleRestoreSelectedUsers } from '../invoice-table-row'; 
+
 
 // ----------------------------------------------------------------------
 
@@ -97,6 +101,7 @@ export default function InvoiceListView() {
 
   fetchData();
 }, []);
+
 
   const dateError =
     filters.startDate && filters.endDate
@@ -249,13 +254,12 @@ const getTotalAmount = (status) => {
             },
           ]}
           action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.invoice.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:restore" />}
-            >
-              RollBack
+            <Button variant="contained" > 
+            {/* onClick={handleRestoreSelectedUsers} */}
+              <IconButton size="small">
+                <RestoreIcon />
+              </IconButton>
+              복구하기
             </Button>
           }
           sx={{

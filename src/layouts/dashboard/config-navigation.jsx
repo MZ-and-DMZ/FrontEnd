@@ -351,6 +351,23 @@ export function useNavData() {
           },
         ],
       },
+
+{
+        subheader: t('설정'),
+        items: [
+          {
+            title: t('설정'),
+            path: paths.dashboard.user.root,
+            icon: ICONS.lock,
+            children: [
+              { title: t('일반설정'), path: paths.dashboard.user.list },
+              // { title: t('create'), path: paths.dashboard.user.new },
+              // { title: t('edit'), path: paths.dashboard.user.demo.edit },
+            ],
+          },
+        ],
+      },
+
     ],
     [t]
   );

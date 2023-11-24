@@ -23,8 +23,24 @@ import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-// ----------------------------------------------------------------------
 
+import { restoreUser } from 'src/_mock/_log';
+
+// ----------------------------------------------------------------------
+// export const handleRestoreSelectedUsers = async (selectedUsers) => {
+//     try {
+//       // 선택된 사용자 목록을 API로 전송
+//       const response = await restoreUser(selectedUsers);
+//       console.log('Restore successful:', response);
+
+//       // 성공적으로 복구되면 선택 목록 초기화 또는 다른 작업 수행
+//       // setSelectedUsers([]);
+//     } catch (error) {
+//       console.error('Error during user restoration:', error);
+//       // 에러 처리 (예: 에러 메시지 표시)
+//     }
+//   };
+  
 export default function InvoiceTableRow({
   row,
   selected,
@@ -42,6 +58,10 @@ export default function InvoiceTableRow({
   //  const collapse = useBoolean();
 
    const [ setSelectedAction ] = useState(actionCount);
+
+   const [selectedUsers, setSelectedUsers] = useState([]);
+
+
 
 const renderPrimary = (
       <TableRow hover selected={selected}>

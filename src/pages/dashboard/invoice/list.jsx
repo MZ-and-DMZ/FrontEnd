@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { InvoiceListView } from 'src/sections/invoice/view';
+import { InvoiceListView } from 'src/sections/optimize/view';
 
 // ----------------------------------------------------------------------
 
