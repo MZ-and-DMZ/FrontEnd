@@ -304,7 +304,7 @@ const getTotalAmount = (status) => {
           action={
             <Button
   variant="contained"
-  onClick={handleRestoreSelectedUsers}
+  onClick={confirm.onTrue}
   disabled={table.selected.length === 0}
   type="button"  // 이 부분을 추가
 >
@@ -441,7 +441,7 @@ const getTotalAmount = (status) => {
               action={
                 <Stack direction="row">
                   <Tooltip title="복구하기">
-                    <IconButton color="primary" onClick={() => handleRestoreSelectedUsers(table.selected)}>
+                    <IconButton color="primary" onClick={confirm.onTrue}>
                       <Iconify icon="ic:baseline-restore" />
                     </IconButton>
                   </Tooltip>
@@ -532,7 +532,7 @@ const getTotalAmount = (status) => {
         </Card>
       </Container>
 
-      <ConfirmDialog
+            <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
@@ -551,6 +551,31 @@ const getTotalAmount = (status) => {
             }}
           >
             Delete
+          </Button>
+        }
+      />
+
+
+                          
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="복구 알림"
+        content={
+          <>
+            <strong> {table.selected.length} </strong> 개 계정이 성공적으로 복구될 예정입니다.
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="info"
+            onClick={() => {
+              handleRestoreSelectedUsers(table.selected)
+              confirm.onFalse();
+            }}
+          >
+            확인
           </Button>
         }
       />
