@@ -554,8 +554,6 @@ const getTotalAmount = (status) => {
           </Button>
         }
       />
-
-
                           
       <ConfirmDialog
         open={confirm.value}
@@ -573,6 +571,7 @@ const getTotalAmount = (status) => {
             onClick={() => {
               handleRestoreSelectedUsers(table.selected)
               confirm.onFalse();
+              window.location.reload();
             }}
           >
             확인
