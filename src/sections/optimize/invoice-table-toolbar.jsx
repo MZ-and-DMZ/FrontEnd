@@ -27,22 +27,22 @@ export default function InvoiceTableToolbar({
 }) {
   const popover = usePopover();
 
-  const handleFilterName = useCallback(
+  const handleFilterUserName = useCallback(
     (event) => {
-      onFilters('name', event.target.value);
+      onFilters('userName', event.target.value);
     },
     [onFilters]
   );
 
-  const handleFilterService = useCallback(
-    (event) => {
-      onFilters(
-        'service',
-        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
-      );
-    },
-    [onFilters]
-  );
+  // const handleFilterService = useCallback(
+  //   (event) => {
+  //     onFilters(
+  //       'service',
+  //       typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+  //     );
+  //   },
+  //   [onFilters]
+  // );
 
   const handleFilterStartDate = useCallback(
     (newValue) => {
@@ -72,7 +72,7 @@ export default function InvoiceTableToolbar({
           pr: { xs: 2.5, md: 1 },
         }}
       >
-        <FormControl
+        {/* <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 180 },
@@ -95,8 +95,21 @@ export default function InvoiceTableToolbar({
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
-
+        </FormControl> */}
+        <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 3 }}>
+          <TextField
+            fullWidth
+            value={filters.userName}
+            onChange={handleFilterUserName}
+            placeholder="사용자 이름을 검색하세요..."
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
         <DatePicker
           label="Start date"
           value={filters.startDate}
@@ -122,20 +135,7 @@ export default function InvoiceTableToolbar({
           }}
         />
 
-        <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
-          <TextField
-            fullWidth
-            value={filters.name}
-            onChange={handleFilterName}
-            placeholder="Search customer or invoice number..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-            }}
-          />
+
 
           <IconButton onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />

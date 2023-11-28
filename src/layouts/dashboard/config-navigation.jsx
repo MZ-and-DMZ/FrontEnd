@@ -147,13 +147,13 @@ export function useNavData() {
             path: paths.dashboard.invoice.root,
             icon: ICONS.invoice,
             children: [
-              { title: t('list'), path: paths.dashboard.invoice.root },
-              {
-                title: t('details'),
-                path: paths.dashboard.invoice.demo.details,
-              },
-              { title: t('create'), path: paths.dashboard.invoice.new },
-              { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+              { title: t('로그'), path: paths.dashboard.invoice.root },
+              // {
+              //   title: t('details'),
+              //   path: paths.dashboard.invoice.demo.details,
+              // },
+              // { title: t('create'), path: paths.dashboard.invoice.new },
+              { title: t('세부사항'), path: paths.dashboard.invoice.demo.edit },
             ],
           },
 
@@ -351,6 +351,23 @@ export function useNavData() {
           },
         ],
       },
+
+{
+        subheader: t('설정'),
+        items: [
+          {
+            title: t('설정'),
+            path: paths.dashboard.user.root,
+            icon: ICONS.lock,
+            children: [
+              { title: t('일반설정'), path: paths.dashboard.user.list },
+              // { title: t('create'), path: paths.dashboard.user.new },
+              // { title: t('edit'), path: paths.dashboard.user.demo.edit },
+            ],
+          },
+        ],
+      },
+
     ],
     [t]
   );
