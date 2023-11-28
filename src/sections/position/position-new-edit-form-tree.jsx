@@ -573,6 +573,7 @@ const SecondCreateForm = () => {
           const recommendedPolicy = await recommendPolicies(selectedPermissions);
           console.log('recommendedPolicies', recommendedPolicy);
           setRecommendedPolicies(recommendedPolicy);
+          dispatch(UPDATE_STEP2(recommendedPolicy));
         }}
       >
         {`추천정책:${recommendedPolicies || '없음'}`}
