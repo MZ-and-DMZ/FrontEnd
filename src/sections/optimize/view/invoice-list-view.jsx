@@ -26,7 +26,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { fTimestamp } from 'src/utils/format-time';
 
 import { INVOICE_SERVICE_OPTIONS } from 'src/_mock';
-import { parseLoggingList } from 'src/_mock/_log';
+import { parseLoggingList, restoreUser } from 'src/_mock/_log';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -235,6 +235,54 @@ const getTotalAmount = (status) => {
     setFilters(defaultFilters);
   }, []);
 
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  const handleRestoreSelectedUsers = async () => {
+    // Ensure table.selected is an array
+    if (!Array.isArray(table.selected) || table.selected.length === 0) {
+      console.warn('No users selected for restoration.');
+      return;
+    }
+
+    const selectedUsersData = table.selected.map((selectedId) => {
+      const selectedUser = tableData.find((row) => row.id === selectedId);
+      return {
+        userName: selectedUser.userName,
+        version: selectedUser.version,
+      };
+    });
+
+    // Call the restoreUser function with selected users
+    await restoreUser(selectedUsersData);
+
+    // Clear the selected users after restoration
+    table.onResetSelectedRows();
+  };
+
+  // useEffect를 사용하여 selectedUsers 상태가 변경될 때마다 호출
+  useEffect(() => {
+    const restoreData = async () => {
+      try {
+        // Call the restoreUser function with selected users
+        await restoreUser(selectedUsers);
+        console.log('복구 성공');
+
+        // Clear the selected users after restoration
+        setSelectedUsers([]);
+      } catch (error) {
+        console.error('사용자 복구 중 오류 발생:', error);
+        // Handle error (e.g., show error message)
+      }
+    };
+
+    // selectedUsers가 변경될 때마다 복구 함수 호출
+    if (selectedUsers.length > 0) {
+      restoreData();
+    }
+  }, [selectedUsers]);
+
+
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -254,13 +302,17 @@ const getTotalAmount = (status) => {
             },
           ]}
           action={
-            <Button variant="contained" > 
-            {/* onClick={handleRestoreSelectedUsers} */}
-              <IconButton size="small">
-                <RestoreIcon />
-              </IconButton>
-              복구하기
-            </Button>
+            <Button
+  variant="contained"
+  onClick={handleRestoreSelectedUsers}
+  disabled={table.selected.length === 0}
+  type="button"  // 이 부분을 추가
+>
+  <IconButton size="small">
+    <RestoreIcon />
+  </IconButton>
+  복구하기
+</Button>
           }
           sx={{
             mb: { xs: 3, md: 5 },
@@ -389,7 +441,7 @@ const getTotalAmount = (status) => {
               action={
                 <Stack direction="row">
                   <Tooltip title="복구하기">
-                    <IconButton color="primary">
+                    <IconButton color="primary" onClick={() => handleRestoreSelectedUsers(table.selected)}>
                       <Iconify icon="ic:baseline-restore" />
                     </IconButton>
                   </Tooltip>

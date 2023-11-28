@@ -95,6 +95,11 @@ export default function useTable(props) {
     [page, rowsPerPage, selected.length]
   );
 
+  // 새로운 함수 추가: onResetSelectedRows
+  const onResetSelectedRows = useCallback(() => {
+    setSelected([]);
+  }, []);
+
   return {
     dense,
     order,
@@ -105,6 +110,7 @@ export default function useTable(props) {
     selected,
     onSelectRow,
     onSelectAllRows,
+    onResetSelectedRows, // 새로 추가한 함수
     //
     onSort,
     onChangePage,
