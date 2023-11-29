@@ -23,7 +23,6 @@ import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-
 // import { restoreUser } from 'src/_mock/_log';
 
 // ----------------------------------------------------------------------
@@ -40,15 +39,8 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 //       // 에러 처리 (예: 에러 메시지 표시)
 //     }
 //   };
-  
-export default function InvoiceTableRow({
-  row,
-  selected,
-  onSelectRow,
-  onViewRow,
-  onEditRow,
-  onDeleteRow,
-}) {
+
+export function InvoiceTableRow({ row, selected, onSelectRow, onViewRow, onEditRow, onDeleteRow }) {
   const { userName, date, version, actionList, actionCount } = row;
 
   const confirm = useBoolean();
@@ -57,77 +49,82 @@ export default function InvoiceTableRow({
 
   //  const collapse = useBoolean();
 
-   const [ setSelectedAction ] = useState(actionCount);
+  const [setSelectedAction] = useState(actionCount);
 
-const renderPrimary = (
-      <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
-        <TableCell>
-          <ListItemText
-            primary={userName}
-            // secondary={date}
-            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-            secondaryTypographyProps={{
-              mt: 0.5,
-              component: 'span',
-              typography: 'caption',
-            }}
-          />
-        </TableCell>
+  const renderPrimary = (
+    <TableRow hover selected={selected}>
+      <TableCell padding="checkbox">
+        <Checkbox checked={selected} onClick={onSelectRow} />
+      </TableCell>
 
-        <TableCell>
-          <ListItemText
-            primary={format(new Date(date), 'yyyy/MMM/dd')}
-            secondary={format(new Date(date), 'p')}
-            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-            secondaryTypographyProps={{
-              mt: 0.5,
-              component: 'span',
-              typography: 'caption',
-            }}
-          />
-        </TableCell>
+      <TableCell>
+        <ListItemText
+          primary={userName}
+          // secondary={date}
+          primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+          secondaryTypographyProps={{
+            mt: 0.5,
+            component: 'span',
+            typography: 'caption',
+          }}
+        />
+      </TableCell>
 
-        {/* <TableCell>{date}</TableCell> */}
-        <TableCell>{`Version ${version}`}</TableCell>
-        {/* <TableCell>{actionCount}</TableCell> */}
+      <TableCell>
+        <ListItemText
+          primary={format(new Date(date), 'yyyy/MMM/dd')}
+          secondary={format(new Date(date), 'p')}
+          primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+          secondaryTypographyProps={{
+            mt: 0.5,
+            component: 'span',
+            typography: 'caption',
+          }}
+        />
+      </TableCell>
 
-        <TableCell>
-          <ListItemText
-        primary={
-          Array.isArray(actionList) ? (
-            <Select
-              value={actionCount}
-              onChange={(event) => setSelectedAction(event.target.value)}
-              displayEmpty
-              sx={{ minWidth: 120 }}
-            >
-              <MenuItem key="default" value={actionCount}>{`할당된 권한 수 : ${actionCount}`}</MenuItem>
-              {actionList.map((action, index) => (
-                <MenuItem key={index} value={action}>
-                  {`${action}`}
-                </MenuItem>
-              ))}
-            </Select>
-          ) : (
-            <span>{actionList}</span>
-          )
-        }
-        primaryTypographyProps={{
-          typography: 'body2',
-        }}
-        secondaryTypographyProps={{
-          component: 'span',
-          color: 'text.disabled',
-          mt: 0.5,
-        }}
-      />
-        </TableCell>
-        
-        {/* <TableCell>
+      {/* <TableCell>{date}</TableCell> */}
+      <TableCell>{`Version ${version}`}</TableCell>
+      {/* <TableCell>{actionCount}</TableCell> */}
+
+      <TableCell>
+        <ListItemText
+          primary={
+            Array.isArray(actionList) ? (
+              <Select
+                value={actionCount}
+                onChange={(event) => setSelectedAction(event.target.value)}
+                displayEmpty
+                sx={{ minWidth: 120 }}
+              >
+                <MenuItem
+                  key="default"
+                  value={actionCount}
+                >{`할당된 권한 수 : ${actionCount}`}</MenuItem>
+                {actionList.map((action, index) => (
+                  <MenuItem key={index} value={action}>
+                    {`${action}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            ) : (
+              <span>{actionList}</span>
+            )
+          }
+          primaryTypographyProps={{
+            typography: 'body2',
+          }}
+          secondaryTypographyProps={{
+            component: 'span',
+            color: 'text.disabled',
+            mt: 0.5,
+          }}
+        />
+      </TableCell>
+
+      {/* <TableCell>
           <Label
             variant="soft"
             color={
@@ -141,8 +138,7 @@ const renderPrimary = (
           </Label>
         </TableCell> */}
 
-        
-        {/* drop down icon
+      {/* drop down icon
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
                 <IconButton
                   color={collapse.value ? 'inherit' : 'default'}
@@ -157,62 +153,62 @@ const renderPrimary = (
                 </IconButton>
               </TableCell> */}
 
-        {/* <TableCell align="right" sx={{ px: 1 }}>
+      {/* <TableCell align="right" sx={{ px: 1 }}>
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell> */}
-      </TableRow>
-);
+    </TableRow>
+  );
 
-//   const renderSecondary = (
-//   <TableRow>
-//     <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
-//       <Collapse
-//         in={collapse.value}
-//         timeout="auto"
-//         unmountOnExit
-//         sx={{ bgcolor: 'background.neutral' }}
-//       >
-// <Stack
-//       direction="row"
-//       alignItems="center"
-//       sx={{
-//         p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
-//         '&:not(:last-of-type)': {
-//           borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
-//         },
-//         '&:hover': {
-//           background: 'rgba(0, 0, 0, 0.1)',
-//         },
-//       }}
-//     >
-//       <ListItemText
-//         primary={
-//           Array.isArray(actionList) ? (
-//             <div>
-//               {actionList.length > 0 ? `${actionCount} : ${actionList.join(', ')}` : actionCount}
-//             </div>
-//           ) : (
-//             <span>{actionList}</span>
-//           )
-//         }
-//         primaryTypographyProps={{
-//           typography: 'body2',
-//         }}
-//         secondaryTypographyProps={{
-//           component: 'span',
-//           color: 'text.disabled',
-//           mt: 0.5,
-//         }}
-//       />
-//     </Stack>
-//       </Collapse>
-//     </TableCell>
-//   </TableRow>
-// );
+  //   const renderSecondary = (
+  //   <TableRow>
+  //     <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
+  //       <Collapse
+  //         in={collapse.value}
+  //         timeout="auto"
+  //         unmountOnExit
+  //         sx={{ bgcolor: 'background.neutral' }}
+  //       >
+  // <Stack
+  //       direction="row"
+  //       alignItems="center"
+  //       sx={{
+  //         p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
+  //         '&:not(:last-of-type)': {
+  //           borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
+  //         },
+  //         '&:hover': {
+  //           background: 'rgba(0, 0, 0, 0.1)',
+  //         },
+  //       }}
+  //     >
+  //       <ListItemText
+  //         primary={
+  //           Array.isArray(actionList) ? (
+  //             <div>
+  //               {actionList.length > 0 ? `${actionCount} : ${actionList.join(', ')}` : actionCount}
+  //             </div>
+  //           ) : (
+  //             <span>{actionList}</span>
+  //           )
+  //         }
+  //         primaryTypographyProps={{
+  //           typography: 'body2',
+  //         }}
+  //         secondaryTypographyProps={{
+  //           component: 'span',
+  //           color: 'text.disabled',
+  //           mt: 0.5,
+  //         }}
+  //       />
+  //     </Stack>
+  //       </Collapse>
+  //     </TableCell>
+  //   </TableRow>
+  // );
 
-// 체크박스 선택시 상단에 뜨는 휴지통, 롤백 아이콘
+  // 체크박스 선택시 상단에 뜨는 휴지통, 롤백 아이콘
   return (
     <>
       {renderPrimary}
