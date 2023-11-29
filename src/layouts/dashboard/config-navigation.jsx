@@ -157,6 +157,16 @@ export function useNavData() {
             ],
           },
 
+          // 권한 신청
+          {
+            title: t('권한 신청'),
+            path: paths.dashboard.position.root,
+            icon: ICONS.kanban,
+            children: [
+              // 권한 신청
+              { title: t('신규 권한 신청'), path: paths.dashboard.position.new },
+            ],
+          },
           /*
           // BLOG
           {
@@ -352,7 +362,7 @@ export function useNavData() {
         ],
       },
 
-{
+      {
         subheader: t('설정'),
         items: [
           {
@@ -367,7 +377,6 @@ export function useNavData() {
           },
         ],
       },
-
     ],
     [t]
   );

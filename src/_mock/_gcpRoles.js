@@ -22,7 +22,7 @@ export default function getGcpRoleDescription(roleName) {
 }
 console.log(gcpRoleData);
 export const _gcpRoleList = [...Array(gcpRoleData.gcp_role_list.length)].map((_, index) => ({
-  id: gcpRoleData.gcp_role_list[index]._id.$oid,
+  id: index + 1000000,
   name: gcpRoleData.gcp_role_list[index].title,
   gcpName: gcpRoleData.gcp_role_list[index].name,
   description: gcpRoleData.gcp_role_list[index].description,
