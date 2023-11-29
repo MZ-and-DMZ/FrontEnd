@@ -10,7 +10,7 @@ import { object } from 'prop-types';
 
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-import { _positionList } from 'src/_mock';
+import { _positionList, createPosition } from 'src/_mock';
 import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 import { INIT_ROWS } from 'src/redux/reducer/user/create/attachedPositionSlice';
 
@@ -52,6 +52,37 @@ export default function PositionCreateView() {
       dispatch(INIT_ROWS([])); // 초기화
     }; // cleanup,
   }, [dispatch]);
+
+  const [positionData, setPositionData] = useState({
+    positionName: '',
+    description: '',
+    csp: '',
+    policies: [],
+  });
+  const userName = useSelector((state) => state.userName);
+  const description = useSelector((state) => state.description);
+  const csp = useSelector((state) => state.csp);
+  const attachedPolicies = useSelector((state) => state.attachedPosition);
+
+  useEffect(() => {
+    setPositionData((prevData) => ({
+      ...prevData,
+      positionName: userName,
+      description,
+      csp,
+      policies: attachedPolicies.map((policy) => {
+        if (policy.csp === 'aws') {
+          return policy.name;
+        }
+        if (policy.csp === 'gcp') {
+          return policy.gcpName;
+        }
+        return '';
+      }),
+    }));
+  }, [userName, description, csp, attachedPolicies]);
+
+  console.log('positionData', positionData);
 
   const steps = ['CSP 선택 및 직무 기본 정보 기입', '기능별 정책 선택', '역할 및 권한 선택'];
 
@@ -111,7 +142,15 @@ export default function PositionCreateView() {
           <Button disabled={activeStep === 0} onClick={handleBack}>
             Back
           </Button>
-          <Button variant="contained" onClick={handleNext}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              handleNext();
+              if (activeStep === steps.length - 1) {
+                createPosition(positionData);
+              }
+            }}
+          >
             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
           </Button>
         </>

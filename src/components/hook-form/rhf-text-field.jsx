@@ -36,6 +36,7 @@ export default function RHFTextField({ name, helperText, type, ...other }) {
               field.onChange(event.target.value);
             }
             if (name === 'userName') dispatch(INPUT_USERNAME(event.target.value));
+            else if (name === 'positionName') dispatch(INPUT_USERNAME(event.target.value));
             else if (name === 'description') dispatch(INPUT_DESCRIPTION(event.target.value));
             else if (name === 'csp') dispatch(INPUT_CSP(event.target.value));
             else if (name === 'awsAccount') dispatch(INPUT_AWSACCOUNT(event.target.value));

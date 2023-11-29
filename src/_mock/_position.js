@@ -15,7 +15,7 @@ async function PositionData() {
 
 export async function createPosition(data) {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/boch/create/position`, {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/positions/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
