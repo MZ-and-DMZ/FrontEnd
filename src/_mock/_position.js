@@ -21,10 +21,10 @@ export async function createPosition(data) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        positionName: data.name,
-        description: data['position description'],
-        csp: data.csp,
-        policies: [],
+        positionName: data.positionName,
+        description: data.description,
+        csp: data.csp.toLowerCase(),
+        policies: data.policies,
       }),
     });
 

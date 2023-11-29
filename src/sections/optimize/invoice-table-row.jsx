@@ -40,7 +40,14 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 //     }
 //   };
 
-export function InvoiceTableRow({ row, selected, onSelectRow, onViewRow, onEditRow, onDeleteRow }) {
+export default function InvoiceTableRow({
+  row,
+  selected,
+  onSelectRow,
+  onViewRow,
+  onEditRow,
+  onDeleteRow,
+}) {
   const { userName, date, version, actionList, actionCount } = row;
 
   const confirm = useBoolean();
