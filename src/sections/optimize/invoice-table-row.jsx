@@ -24,7 +24,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 
-import { restoreUser } from 'src/_mock/_log';
+// import { restoreUser } from 'src/_mock/_log';
 
 // ----------------------------------------------------------------------
 // export const handleRestoreSelectedUsers = async (selectedUsers) => {
@@ -58,10 +58,6 @@ export default function InvoiceTableRow({
   //  const collapse = useBoolean();
 
    const [ setSelectedAction ] = useState(actionCount);
-
-   const [selectedUsers, setSelectedUsers] = useState([]);
-
-
 
 const renderPrimary = (
       <TableRow hover selected={selected}>
