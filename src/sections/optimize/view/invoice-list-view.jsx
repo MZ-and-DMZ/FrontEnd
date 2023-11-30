@@ -304,13 +304,11 @@ const getTotalAmount = (status) => {
           action={
             <Button
   variant="contained"
+  color="primary"
   onClick={confirm.onTrue}
   disabled={table.selected.length === 0}
   type="button"  // 이 부분을 추가
 >
-  <IconButton size="small">
-    <RestoreIcon />
-  </IconButton>
   복구하기
 </Button>
           }
@@ -567,7 +565,7 @@ const getTotalAmount = (status) => {
         action={
           <Button
             variant="contained"
-            color="info"
+            color="primary"
             onClick={() => {
               handleRestoreSelectedUsers(table.selected)
               confirm.onFalse();
