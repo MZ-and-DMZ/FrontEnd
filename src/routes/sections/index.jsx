@@ -22,14 +22,14 @@ export default function Router() {
     // ----------------------------------------------------------------------
 
     // SET INDEX PAGE WITH HOME PAGE
-    {
-      path: '/',
-      element: (
-        <MainLayout>
-          <HomePage />
-        </MainLayout>
-      ),
-    },
+    // {
+    //   path: '/',
+    //   element: (
+    //     <MainLayout>
+    //       <HomePage />
+    //     </MainLayout>
+    //   ),
+    // },
 
     // Auth routes
     ...authRoutes,
