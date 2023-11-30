@@ -52,7 +52,7 @@ export default function JwtLoginView() {
 
   // useForm을 사용하여 React Hook Form을 설정합니다.
   const methods = useForm({
-    resolver: yupResolver(LoginSchema), // Yup 스키마를 resolver로 사용합니다.
+    // resolver: yupResolver(LoginSchema), // Yup 스키마를 resolver로 사용합니다.
     defaultValues, // 기본 값 설정
   });
 
@@ -139,6 +139,8 @@ export default function JwtLoginView() {
     </FormProvider>
   );
 }
+
+// ----------------------------------------------------------
 
 // import * as Yup from 'yup';
 // import { useState } from 'react';

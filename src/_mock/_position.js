@@ -91,9 +91,9 @@ export async function convertPosition(positionName) {
   }
 }
 
-export async function recommendPolicies(policiesList) {
+export async function recommendPolicies(policiesList, csp) {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/recommend`, {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/recommend/aws`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
