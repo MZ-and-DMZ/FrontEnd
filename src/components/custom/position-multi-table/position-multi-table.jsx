@@ -85,13 +85,6 @@ export default function PositionMultiTable() {
 
   // currntPosition을 가져옴 없으면 [{id, positionName, description, csp, policies["Compute Instance Admin (beta)",...]}, ...]
   const currentPosition = useSelector((state) => state.positionSelected);
-  useEffect(
-    () => () => {
-      SELECT_POSITION({}); // 초기화
-      INIT_ROWS([]); // 초기화
-    },
-    []
-  );
 
   // useEffect로 convertPositon으로 fetch한 결과를  _roelsList에서 가져옴 ['roles/pubsub.admin', ...]
   const [convertedPolicies, setConvertedPolicies] = useState([]);
@@ -133,6 +126,28 @@ export default function PositionMultiTable() {
       console.log('convertedPolicies is null', convertedPolicies);
     }
   }, [convertedPolicies, _rolesList, dispatch]);
+
+  // step2에서 convert한 positionName을 가져옴
+  const convertedPosition = useSelector((state) => state.step2);
+
+  // convertedPosition을 _rolesList에서 찾아서 _reduxList에 추가함
+  useEffect(() => {
+    if (convertedPosition.length > 0) {
+      dispatch(
+        ADD_ROWS(
+          _rolesList.filter((role) =>
+            [...convertedPosition].find(
+              (policy) =>
+                (role.csp === 'gcp' && policy === role.gcpName) ||
+                (role.csp === 'aws' && policy === role.name)
+            )
+          )
+        )
+      );
+    } else {
+      console.log('convertedPosition is null', convertedPosition);
+    }
+  }, [convertedPosition, _rolesList, dispatch]);
 
   return (
     <Grid container spacing={2}>

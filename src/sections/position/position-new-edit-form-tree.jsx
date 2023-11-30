@@ -128,16 +128,16 @@ const SecondCreateForm = () => {
     }
   }, [selectedCategory, awsServiceList]);
 
-  useEffect(() => {
-    const step2data = [
-      ...selectedPermissions.create,
-      ...selectedPermissions.read,
-      ...selectedPermissions.update,
-      ...selectedPermissions.delete,
-    ];
-    dispatch(UPDATE_STEP2(step2data));
-    console.log('step2data', step2data);
-  }, [selectedPermissions, dispatch]);
+  // useEffect(() => {
+  //   const step2data = [
+  //     ...selectedPermissions.create,
+  //     ...selectedPermissions.read,
+  //     ...selectedPermissions.update,
+  //     ...selectedPermissions.delete,
+  //   ];
+  //   dispatch(UPDATE_STEP2(step2data));
+  //   console.log('step2data', step2data);
+  // }, [selectedPermissions, dispatch]);
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
@@ -573,6 +573,7 @@ const SecondCreateForm = () => {
           const recommendedPolicy = await recommendPolicies(selectedPermissions);
           console.log('recommendedPolicies', recommendedPolicy);
           setRecommendedPolicies(recommendedPolicy);
+          dispatch(UPDATE_STEP2(recommendedPolicy));
         }}
       >
         {`추천정책:${recommendedPolicies || '없음'}`}

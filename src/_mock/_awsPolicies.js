@@ -22,7 +22,8 @@ export default function getAwsPolicyDescription(policyName) {
 }
 
 export const _awsPolicyList = [...Array(awsPolicyData.aws_policy_list.length)].map((_, index) => ({
-  id: awsPolicyData.aws_policy_list[index]._id,
+  // id: awsPolicyData.aws_policy_list[index].Arn,
+  id: index,
   createDate: awsPolicyData.aws_policy_list[index].CreateDate.$date,
   description: awsPolicyData.aws_policy_list[index].Description,
   name: awsPolicyData.aws_policy_list[index].PolicyName,

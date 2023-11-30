@@ -7,7 +7,7 @@ async function LogData() {
       },
     });
     const data = await response.json();
-    return data.logging_list; 
+    return data.logging_list;
   } catch (error) {
     console.log(error);
   }
@@ -25,16 +25,16 @@ export const parseLoggingList = async () => {
         version: user.version,
         actionCount: user.action_count,
         actionList: user.action_list || [],
-        }));
+      }));
 
-        // parseLoggingList에서 파싱한 데이터를 restoreUser로 전달
-        parsedList.forEach(({ userName, version }) => {
-          restoreUser(userName, version);
-        });
+      // parseLoggingList에서 파싱한 데이터를 restoreUser로 전달
+      parsedList.forEach((user) => {
+        restoreUser(user.userName, user.version);
+      });
 
       return parsedList;
     }
-      return [];
+    return [];
   } catch (error) {
     console.log(error);
     return [];
@@ -52,7 +52,9 @@ export const restoreUser = async (selectedUsers) => {
 
     // 선택한 사용자를 순회하며 각 사용자에 대해 API 호출
     const restorePromises = selectedUsers.map(async ({ userName, version }) => {
-      const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/rollback/${userName || ''}?version=${version || ''}`;
+      const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/rollback/${
+        userName || ''
+      }?version=${version || ''}`;
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -84,7 +86,3 @@ export const restoreUser = async (selectedUsers) => {
     throw error;
   }
 };
-
-
-
- 

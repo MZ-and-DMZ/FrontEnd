@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
+import { Button, Step, StepLabel, Stepper, Typography } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
@@ -9,8 +10,9 @@ import { object } from 'prop-types';
 
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-import { _positionList } from 'src/_mock';
-import { Button, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { _positionList, createPosition } from 'src/_mock';
+import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
+import { INIT_ROWS } from 'src/redux/reducer/user/create/attachedPositionSlice';
 
 import { MailView } from 'src/sections/mail/view';
 import PositionNewEditFormInput from '../position-new-edit-form-input';
@@ -20,37 +22,12 @@ import SecondCreateForm from '../position-new-edit-form-tree';
 
 // ----------------------------------------------------------------------
 
-// 패치한 점.
-// 1. 일단 파일명이랑 변수명 같게 해서 헷갈리지 않게 했음.
-// 2. position-new-edit-form.jsx 들을 3개로 나눴음. ~~input, ~~table, ~~tree
-// 3. 갖가지 에러들 다 없앰. (빨간줄 다 없앰)
-// 4. ~~input 페이지에서 grid가 full width가 되게끔 함. 그거 <Grid xs={12} md={8}> 에서 md={8}을 없애면 됨.
-//    xs={12}라 되어있는건 12가 최대값임. 13으로 넘어가면 안됨. grid가 12개로 나눠져있기 때문임.
-//    따라서 최대 12 Grid로 나눌 수 있음.
-
-// 결론. 한번 position-new-edit-form ~~ 들은 다 들어가서 확인해보면 금방 끝남.
-// 1. position-new-edit-form-input.jsx 에서는 input 관련된 것만 다룸.
-//    근데 코드에 필요없는 부분이 뭔지 모르겠음. 나중에 삭제해주셈.
-// 2. position-new-edit-form-tree.jsx 에서는 tree 관련된 것만 다룸.
-// 3. position-new-edit-form-table.jsx 에서는 table 관련된 것만 다룸.
-// 4. user-new-edit-form.jsx, user-table-toolbar.jsx, data_grid_import.jsx, data_grid_view.jsx 등등
-//    position으로 시작하지 않는 것들은 나중에 table 관련된 것으로 바꿀 예정임. 지우지 말아주셈.
-
-/**
- *
- * @param {object} currentPosition
- * @param {String} currentPosition.id
- * @param {String} currentPosition.positionName
- * @param {String} currentPosition.description
- * @param {String} currentPosition.csp
- * @param {Array} convertPosition.policies - List of Policy Name
- * @returns
- */
-
 export default function PositionCreateView() {
+  const dispatch = useDispatch();
+
   // const currentPosition = useSelector((state) => state.positionSelectedRow);
   const settings = useSettingsContext();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(1);
   // const [currentPosition, setCurrentPosition] = useState(_positionList);
   // useEffect(() => {
   //   if (convertPosition) {
@@ -65,6 +42,47 @@ export default function PositionCreateView() {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
+  useEffect(() => {
+    console.log('component open');
+    return () => {
+      console.log('component close');
+
+      dispatch(SELECT_POSITION({})); // 초기화
+      dispatch(INIT_ROWS([])); // 초기화
+    }; // cleanup,
+  }, [dispatch]);
+
+  const [positionData, setPositionData] = useState({
+    positionName: '',
+    description: '',
+    csp: '',
+    policies: [],
+  });
+  const userName = useSelector((state) => state.userName);
+  const description = useSelector((state) => state.description);
+  const csp = useSelector((state) => state.csp);
+  const attachedPolicies = useSelector((state) => state.attachedPosition);
+
+  useEffect(() => {
+    setPositionData((prevData) => ({
+      ...prevData,
+      positionName: userName,
+      description,
+      csp,
+      policies: attachedPolicies.map((policy) => {
+        if (policy.csp === 'aws') {
+          return policy.name;
+        }
+        if (policy.csp === 'gcp') {
+          return policy.gcpName;
+        }
+        return '';
+      }),
+    }));
+  }, [userName, description, csp, attachedPolicies]);
+
+  console.log('positionData', positionData);
 
   const steps = ['CSP 선택 및 직무 기본 정보 기입', '기능별 정책 선택', '역할 및 권한 선택'];
 
@@ -124,7 +142,15 @@ export default function PositionCreateView() {
           <Button disabled={activeStep === 0} onClick={handleBack}>
             Back
           </Button>
-          <Button variant="contained" onClick={handleNext}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              handleNext();
+              if (activeStep === steps.length - 1) {
+                createPosition(positionData);
+              }
+            }}
+          >
             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
           </Button>
         </>
