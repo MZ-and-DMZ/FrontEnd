@@ -169,13 +169,24 @@ const handleDurationChange = async (provider, duration) => {
         )}
       </Box>
 
+      <Box>
+      <Typography variant="h4" gutterBottom>
+        권한 최적화 예외 대상
+      </Typography>
+      </Box>
+
+
+
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000} // 6초 동안 표시 후 자동으로 닫힘
+        autoHideDuration={2000} // 6초 동안 표시 후 자동으로 닫힘
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        style={{ marginTop: '50px' }}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%', color: 'white', backgroundColor: theme => theme.palette.primary.main, '& .MuiAlert-icon': {
+        color: 'white', // 아이콘 색상 변경
+      } }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

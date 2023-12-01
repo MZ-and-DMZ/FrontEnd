@@ -28,6 +28,7 @@ import styled from '@emotion/styled';
 
 import { recommendPolicies } from 'src/_mock';
 import { getAwsServiceList, getActionCrudData, _parseActionCrudData } from 'src/_mock/_aws';
+import { getGcpServiceList, getGcpActionCrudData, _parseGcpActionCrudData } from 'src/_mock/_gcp';
 import { UPDATE_STEP2 } from 'src/redux/reducer/position/create/step2Slice';
 
 const RootContainer = styled('div')({
