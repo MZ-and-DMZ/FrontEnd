@@ -570,7 +570,7 @@ const SecondCreateForm = () => {
       )}
       <Button
         onClick={async () => {
-          const recommendedPolicy = await recommendPolicies(selectedPermissions);
+          const recommendedPolicy = await recommendPolicies(selectedPermissions, 'aws'); // csp 설정 바꾸기
           console.log('recommendedPolicies', recommendedPolicy);
           setRecommendedPolicies(recommendedPolicy);
           dispatch(UPDATE_STEP2(recommendedPolicy));

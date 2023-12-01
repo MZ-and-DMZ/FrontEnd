@@ -164,7 +164,7 @@ export function useNavData() {
             icon: ICONS.kanban,
             children: [
               // 권한 신청
-              { title: t('신규 권한 신청'), path: paths.dashboard.position.new },
+              { title: t('신규 권한 신청'), path: paths.dashboard.request.new },
             ],
           },
           /*

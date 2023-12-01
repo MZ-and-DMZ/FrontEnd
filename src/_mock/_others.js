@@ -100,6 +100,10 @@ export const _notifications = [...Array(9)].map((_, index) => ({
     (index === 7 && `<p>You have new message 5 unread messages</p>`) ||
     (index === 8 && `<p>You have new mail`) ||
     '',
+  positionName: '',
+  description: '',
+  csp: '',
+  policies: [],
 }));
 
 // ----------------------------------------------------------------------

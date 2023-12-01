@@ -72,7 +72,7 @@ const TableWrapper = styled(Box)({
   marginTop: (theme) => theme.spacing(2),
 });
 
-const SecondCreateForm = () => {
+const SecondRequestForm = () => {
   const step2 = useSelector((state) => state.step2);
   const [selectedPermissions, setSelectedPermissions] = useState({
     create: [],
@@ -128,16 +128,16 @@ const SecondCreateForm = () => {
     }
   }, [selectedCategory, awsServiceList]);
 
-  useEffect(() => {
-    const step2data = [
-      ...selectedPermissions.create,
-      ...selectedPermissions.read,
-      ...selectedPermissions.update,
-      ...selectedPermissions.delete,
-    ];
-    dispatch(UPDATE_STEP2(step2data));
-    console.log('step2data', step2data);
-  }, [selectedPermissions, dispatch]);
+  // useEffect(() => {
+  //   const step2data = [
+  //     ...selectedPermissions.create,
+  //     ...selectedPermissions.read,
+  //     ...selectedPermissions.update,
+  //     ...selectedPermissions.delete,
+  //   ];
+  //   dispatch(UPDATE_STEP2(step2data));
+  //   console.log('step2data', step2data);
+  // }, [selectedPermissions, dispatch]);
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
@@ -328,7 +328,12 @@ const SecondCreateForm = () => {
               {filteredServiceList
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((service, index) => (
-                  <TableRow key={index} selected={selectedCategory === service.actionCrudName}>
+                  <TableRow
+                    key={index}
+                    selected={selectedCategory === service.actionCrudName}
+                    // set height 15px
+                    sx={{ height: '15px' }}
+                  >
                     <TableCell>
                       <Button onClick={() => handleServiceClick(service.actionCrudName)}>
                         {service.actionCrudName}
@@ -573,6 +578,7 @@ const SecondCreateForm = () => {
           const recommendedPolicy = await recommendPolicies(selectedPermissions, 'aws'); // csp 설정 바꾸기
           console.log('recommendedPolicies', recommendedPolicy);
           setRecommendedPolicies(recommendedPolicy);
+          dispatch(UPDATE_STEP2(recommendedPolicy));
         }}
       >
         {`추천정책:${recommendedPolicies || '없음'}`}
@@ -581,4 +587,4 @@ const SecondCreateForm = () => {
   );
 };
 
-export default SecondCreateForm;
+export default SecondRequestForm;
