@@ -5,6 +5,8 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 
 import { LoadingScreen } from 'src/components/loading-screen';
+import RequestCreatePage from 'src/pages/dashboard/request/new';
+import RequestListPage from 'src/pages/dashboard/request/list';
 
 // ----------------------------------------------------------------------
 
@@ -132,6 +134,17 @@ export const dashboardRoutes = [
           { path: 'new', element: <PositionCreatePage /> },
           { path: ':id/edit', element: <PositionEditPage /> },
           // { path: 'account', element: <UserAccountPage /> },
+        ],
+      },
+      {
+        path: 'request',
+        children: [
+          { element: <RequestCreatePage />, index: true },
+          // { path: 'profile', element: <UserProfilePage /> },
+          // { path: 'cards', element: <UserCardsPage /> },
+          { path: 'list', element: <RequestListPage /> },
+          { path: 'new', element: <RequestCreatePage /> },
+          { path: ':id/edit', element: <PositionEditPage /> },
         ],
       },
       /* {

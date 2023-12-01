@@ -32,6 +32,11 @@ import step1Reducer from '../reducer/position/create/step1Slice';
 import step2Reducer from '../reducer/position/create/step2Slice';
 import step3Reducer from '../reducer/position/create/step3Slice';
 
+// request
+// request list
+// request create
+import requestPositionReducer from '../reducer/request/create/requestPositionSlice';
+
 const store = configureStore({
   reducer: {
     // user
@@ -55,6 +60,11 @@ const store = configureStore({
     step1: step1Reducer,
     step2: step2Reducer,
     step3: step3Reducer,
+
+    // request
+    // request list
+    // request create
+    requestPosition: requestPositionReducer,
   },
 });
 
