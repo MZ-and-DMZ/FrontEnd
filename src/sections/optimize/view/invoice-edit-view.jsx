@@ -4,45 +4,43 @@ import Container from '@mui/material/Container';
 
 import { paths } from 'src/routes/paths';
 
-import { _invoices } from 'src/_mock';
-
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-import InvoiceNewEditForm from '../invoice-new-edit-form';
+import InvoiceDetails from '../invoice-details';
 
 // ----------------------------------------------------------------------
 
-export default function InvoiceEditView({ id }) {
+export default function InvoiceDetailsView({ id }) {
   const settings = useSettingsContext();
 
-  const currentInvoice = _invoices.find((invoice) => invoice.id === id);
+  // const currentInvoice = _invoices.find((invoice) => invoice.id === id);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Edit"
+        heading="권한 최적화 설정"
         links={[
           {
             name: 'Dashboard',
             href: paths.dashboard.root,
           },
           {
-            name: 'Invoice',
+            name: '권한 최적화 설정',
             href: paths.dashboard.invoice.root,
           },
-          { name: currentInvoice?.invoiceNumber },
+          // { name: currentInvoice?.invoiceNumber },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
         }}
       />
 
-      <InvoiceNewEditForm currentInvoice={currentInvoice} />
+      <InvoiceDetails />
     </Container>
   );
 }
 
-InvoiceEditView.propTypes = {
+InvoiceDetailsView.propTypes = {
   id: PropTypes.string,
 };
