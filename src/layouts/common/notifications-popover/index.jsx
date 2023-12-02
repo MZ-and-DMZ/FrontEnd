@@ -1,6 +1,6 @@
 import { m } from 'framer-motion';
 import { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -24,6 +24,11 @@ import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { varHover } from 'src/components/animate';
+
+import {
+  READ_NOTIFICATION,
+  REQUEST_POSITION,
+} from 'src/redux/reducer/request/create/requestPositionSlice';
 
 import NotificationItem from './notification-item';
 
@@ -50,6 +55,8 @@ const TABS = [
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
+  const dispatch = useDispatch();
+
   const drawer = useBoolean();
 
   const smUp = useResponsive('up', 'sm');
@@ -66,14 +73,16 @@ export default function NotificationsPopover() {
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
-  // const handleMarkAllAsRead = () => {
-  //   setNotifications(
-  //     notifications.map((notification) => ({
-  //       ...notification,
-  //       isUnRead: false,
-  //     }))
-  //   );
-  // };
+  const handleMarkAllAsRead = () => {
+    dispatch(
+      REQUEST_POSITION(
+        notifications.map((notification) => ({
+          ...notification,
+          isUnRead: false,
+        }))
+      )
+    );
+  };
 
   const renderHead = (
     <Stack direction="row" alignItems="center" sx={{ py: 2, pl: 2.5, pr: 1, minHeight: 68 }}>
@@ -174,9 +183,14 @@ export default function NotificationsPopover() {
           sx={{ pl: 2.5, pr: 1 }}
         >
           {renderTabs}
-          {/* <IconButton onClick={handleMarkAllAsRead}>
+          <IconButton
+            onClick={() => {
+              console.log('click');
+              dispatch(READ_NOTIFICATION());
+            }}
+          >
             <Iconify icon="solar:settings-bold-duotone" />
-          </IconButton> */}
+          </IconButton>
         </Stack>
 
         <Divider />
