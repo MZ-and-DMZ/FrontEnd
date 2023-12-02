@@ -10,11 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-// import Stack from '@mui/material/Stack';
 import ListItemText from '@mui/material/ListItemText';
-// import Collapse from '@mui/material/Collapse';
-// import Paper from '@mui/material/Paper';
 import Select from '@mui/material/Select';
 
 import { useBoolean } from 'src/hooks/use-boolean';
@@ -22,23 +18,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
-// import { restoreUser } from 'src/_mock/_log';
-
-// ----------------------------------------------------------------------
-// export const handleRestoreSelectedUsers = async (selectedUsers) => {
-//     try {
-//       // 선택된 사용자 목록을 API로 전송
-//       const response = await restoreUser(selectedUsers);
-//       console.log('Restore successful:', response);
-
-//       // 성공적으로 복구되면 선택 목록 초기화 또는 다른 작업 수행
-//       // setSelectedUsers([]);
-//     } catch (error) {
-//       console.error('Error during user restoration:', error);
-//       // 에러 처리 (예: 에러 메시지 표시)
-//     }
-//   };
 
 export default function InvoiceTableRow({
   row,

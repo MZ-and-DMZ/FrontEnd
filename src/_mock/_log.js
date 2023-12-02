@@ -86,3 +86,51 @@ export const restoreUser = async (selectedUsers) => {
     throw error;
   }
 };
+
+export const getCurrentDuration = async () => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/logging/get/duration`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const contentType = response.headers.get('Content-Type');
+
+    if (!contentType || !contentType.includes('application/json')) {
+      // 서버 응답이 JSON이 아닌 경우 처리
+      console.error('서버 응답이 JSON 형식이 아닙니다.');
+      return undefined;
+    }
+
+    const data = await response.json();
+    console.log('API 응답:', data);
+
+    return data.duration;
+  } catch (error) {
+    console.error(`Error fetching current duration: ${error.message}`);
+    return undefined;
+  }
+};
+
+
+
+export const setDuration = async (userInputDuration) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/set/duration?duration=${userInputDuration}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ duration: userInputDuration }),
+    });
+
+    const data = await response.json();
+    return data.duration;  
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};

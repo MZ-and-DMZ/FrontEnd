@@ -1,253 +1,197 @@
-import PropTypes from 'prop-types';
-import { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { setDuration, getCurrentDuration } from 'src/_mock/_log';
 
+import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import { styled } from '@mui/material/styles';
-import TableRow from '@mui/material/TableRow';
-import TableHead from '@mui/material/TableHead';
-import TableCell from '@mui/material/TableCell';
-import TableBody from '@mui/material/TableBody';
-import Grid from '@mui/material/Unstable_Grid2';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { fDate } from 'src/utils/format-time';
-import { fCurrency } from 'src/utils/format-number';
+import Label from 'src/components/label/label';
 
-import { INVOICE_STATUS_OPTIONS } from 'src/_mock';
+const InvoiceDetail = () => {
+  const [awsDuration, setAwsDuration] = useState(5);
+  const [gcpDuration, setGcpDuration] = useState(5);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [currentAwsDuration, setCurrentAwsDuration] = useState(null);
+  const [currentGcpDuration, setCurrentGcpDuration] = useState(null);
+  const [allowDurationChange, setAllowDurationChange] = useState(true);
 
-import Label from 'src/components/label';
-import Scrollbar from 'src/components/scrollbar';
+useEffect(() => {
+  // 페이지가 로드될 때 현재 회수 주기를 가져와서 설정
+  const fetchCurrentDuration = async () => {
+    try {
+      const awsDurationData = await getCurrentDuration('AWS');
+      const gcpDurationData = await getCurrentDuration('GCP');
 
-import InvoiceToolbar from './invoice-toolbar';
+      if (awsDurationData !== undefined) {
+        setCurrentAwsDuration(awsDurationData);
+        // AWS 초기 상태 설정
+        setAwsDuration(awsDurationData);
+      } else {
+        console.error('AWS 회수 주기를 가져오는 데 문제가 있습니다.');
+      }
 
-// ----------------------------------------------------------------------
+      if (gcpDurationData !== undefined) {
+        setCurrentGcpDuration(gcpDurationData);
+        // GCP 초기 상태 설정
+        setGcpDuration(gcpDurationData);
+      } else {
+        console.error('GCP 회수 주기를 가져오는 데 문제가 있습니다.');
+      }
+    } catch (error) {
+      console.error(`현재 주기를 가져오는 중 오류 발생: ${error.message}`);
+    }
+  };
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '& td': {
-    textAlign: 'right',
-    borderBottom: 'none',
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-}));
+  fetchCurrentDuration();
+}, []);
 
-// ----------------------------------------------------------------------
+  const handleSwitchChange = () => {
+    setAllowDurationChange(!allowDurationChange);
+    if (!allowDurationChange) {
+      // 권한 회수 기능이 활성화되었을 때 메시지 표시
+      setSnackbarOpen(true);
+      // 권한 회수 기능이 활성화되었습니다. 메시지를 Snackbar로 표시
+      setSnackbarMessage('권한 최적화 기능이 활성화되었습니다.');
+    } else {
+      // 권한 회수 기능이 비활성화되었을 때 메시지 표시
+      setSnackbarOpen(true);
+      // 권한 회수 기능이 비활성화되었습니다. 메시지를 Snackbar로 표시
+      setSnackbarMessage('권한 최적화 기능이 비활성화되었습니다.');
+    }
+  };
 
-export default function InvoiceDetails({ invoice }) {
-  const [currentStatus, setCurrentStatus] = useState(invoice.status);
+const handleDurationChange = async (provider, duration) => {
+  try {
+    if (allowDurationChange) {
+      // 권한 회수 기능이 활성화된 경우에만 설정 가능
+      const result = await setDuration(duration, provider);
+      console.log(`${provider}에 대한 최적화 주기가 성공적으로 설정되었습니다: ${result}`);
 
-  const handleChangeStatus = useCallback((event) => {
-    setCurrentStatus(event.target.value);
-  }, []);
+      // result를 string으로 변환하여 출력
+      const stringResult = String(result);
+      console.log(`String 형식으로 변환된 결과: ${stringResult}`);
 
-  const renderTotal = (
-    <>
-      <StyledTableRow>
-        <TableCell colSpan={3} />
-        <TableCell sx={{ color: 'text.secondary' }}>
-          <Box sx={{ mt: 2 }} />
-          Subtotal
-        </TableCell>
-        <TableCell width={120} sx={{ typography: 'subtitle2' }}>
-          <Box sx={{ mt: 2 }} />
-          {fCurrency(invoice.subTotal)}
-        </TableCell>
-      </StyledTableRow>
+      // 설정 후 현재 회수 주기 다시 가져와서 업데이트
+      const awsDurationData = await getCurrentDuration('AWS');
+      const gcpDurationData = await getCurrentDuration('GCP');
 
-      <StyledTableRow>
-        <TableCell colSpan={3} />
-        <TableCell sx={{ color: 'text.secondary' }}>Shipping</TableCell>
-        <TableCell width={120} sx={{ color: 'error.main', typography: 'body2' }}>
-          {fCurrency(-invoice.shipping)}
-        </TableCell>
-      </StyledTableRow>
+      setCurrentAwsDuration(awsDurationData);
+      setCurrentGcpDuration(gcpDurationData);
 
-      <StyledTableRow>
-        <TableCell colSpan={3} />
-        <TableCell sx={{ color: 'text.secondary' }}>Discount</TableCell>
-        <TableCell width={120} sx={{ color: 'error.main', typography: 'body2' }}>
-          {fCurrency(-invoice.discount)}
-        </TableCell>
-      </StyledTableRow>
+      // AWS 권한 회수 주기가 며칠로 설정되었습니다. 메시지를 Snackbar로 표시
+      setSnackbarOpen(true);
+      setSnackbarMessage(`${provider} 권한 최적화 주기가 ${duration}일로 설정되었습니다.`);
+    } else {
+      console.log('권한 회수 기능이 비활성화되어 있습니다.');
+    }
+  } catch (error) {
+    console.error(`${provider}에 대한 회수 주기를 설정하는 중 오류 발생: ${error}`);
+  }
+};
 
-      <StyledTableRow>
-        <TableCell colSpan={3} />
-        <TableCell sx={{ color: 'text.secondary' }}>Taxes</TableCell>
-        <TableCell width={120}>{fCurrency(invoice.taxes)}</TableCell>
-      </StyledTableRow>
-
-      <StyledTableRow>
-        <TableCell colSpan={3} />
-        <TableCell sx={{ typography: 'subtitle1' }}>Total</TableCell>
-        <TableCell width={140} sx={{ typography: 'subtitle1' }}>
-          {fCurrency(invoice.totalAmount)}
-        </TableCell>
-      </StyledTableRow>
-    </>
+  const renderDurationOptions = () => (
+    Array.from({ length: 18 }, (_, index) => (index + 1) * 5).map((day) => (
+      <MenuItem key={day} value={day}>
+        {`${day}일`}
+      </MenuItem>
+    ))
   );
 
-  const renderFooter = (
-    <Grid container>
-      <Grid xs={12} md={9} sx={{ py: 3 }}>
-        <Typography variant="subtitle2">NOTES</Typography>
-
-        <Typography variant="body2">
-          We appreciate your business. Should you need us to add VAT or extra notes let us know!
-        </Typography>
-      </Grid>
-
-      <Grid xs={12} md={3} sx={{ py: 3, textAlign: 'right' }}>
-        <Typography variant="subtitle2">Have a Question?</Typography>
-
-        <Typography variant="body2">support@minimals.cc</Typography>
-      </Grid>
-    </Grid>
-  );
-
-  const renderList = (
-    <TableContainer sx={{ overflow: 'unset', mt: 5 }}>
-      <Scrollbar>
-        <Table sx={{ minWidth: 960 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell width={40}>#</TableCell>
-
-              <TableCell sx={{ typography: 'subtitle2' }}>Description</TableCell>
-
-              <TableCell>Qty</TableCell>
-
-              <TableCell align="right">Unit price</TableCell>
-
-              <TableCell align="right">Total</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {invoice.items.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-
-                <TableCell>
-                  <Box sx={{ maxWidth: 560 }}>
-                    <Typography variant="subtitle2">{row.title}</Typography>
-
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                      {row.description}
-                    </Typography>
-                  </Box>
-                </TableCell>
-
-                <TableCell>{row.quantity}</TableCell>
-
-                <TableCell align="right">{fCurrency(row.price)}</TableCell>
-
-                <TableCell align="right">{fCurrency(row.price * row.quantity)}</TableCell>
-              </TableRow>
-            ))}
-
-            {renderTotal}
-          </TableBody>
-        </Table>
-      </Scrollbar>
-    </TableContainer>
-  );
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
-    <>
-      <InvoiceToolbar
-        invoice={invoice}
-        currentStatus={currentStatus || ''}
-        onChangeStatus={handleChangeStatus}
-        statusOptions={INVOICE_STATUS_OPTIONS}
+    <Box>
+      <Typography variant="h4" gutterBottom>
+        권한 최적화
+      </Typography>
+
+      {/* 스위치: 권한 회수 기능 활성화/비활성화 */}
+      <FormControlLabel
+        control={<Switch checked={allowDurationChange} onChange={handleSwitchChange} />}
+        label="권한 최적화 기능 활성화"
       />
 
-      <Card sx={{ pt: 5, px: 5 }}>
-        <Box
-          rowGap={5}
-          display="grid"
-          alignItems="center"
-          gridTemplateColumns={{
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-          }}
+      {/* AWS 회수 주기 설정 */}
+      <Box>
+        <Typography variant="h5" gutterBottom>
+          AWS 최적화 주기 설정
+        </Typography>
+        <Label htmlFor="awsDuration">AWS 최적화 주기가 </Label>
+        <Select
+          id="awsDuration"
+          value={awsDuration}
+          onChange={(e) => setAwsDuration(parseInt(e.target.value, 10))}
+          disabled={!allowDurationChange}
         >
-          <Box
-            component="img"
-            alt="logo"
-            src="/logo/logo_single.svg"
-            sx={{ width: 48, height: 48 }}
-          />
+          {renderDurationOptions()}
+        </Select> <Label>로 설정 됩니다.</Label>
+        
+        <Button onClick={() => handleDurationChange('AWS', awsDuration)} variant="contained" color="primary" disabled={!allowDurationChange}>
+          적용
+        </Button>
+        {currentAwsDuration !== null && (
+          <Typography variant="body1" gutterBottom>
+            현재 AWS에 설정된  주기: {`${currentAwsDuration}일`}
+          </Typography>
+        )}
+      </Box>
 
-          <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
-            <Label
-              variant="soft"
-              color={
-                (currentStatus === 'paid' && 'success') ||
-                (currentStatus === 'pending' && 'warning') ||
-                (currentStatus === 'overdue' && 'error') ||
-                'default'
-              }
-            >
-              {currentStatus}
-            </Label>
+      {/* GCP 회수 주기 설정 */}
+      <Box>
+        <Typography variant="h5" gutterBottom>
+          GCP 회수 주기 설정
+        </Typography>
+        <Label htmlFor="gcpDuration">GCP 회수 주기가 </Label>
+        <Select
+          id="gcpDuration"
+          value={gcpDuration}
+          onChange={(e) => setGcpDuration(parseInt(e.target.value, 10))}
+          disabled={!allowDurationChange}
+        >
+          {renderDurationOptions()}
+        </Select> <Label>로 설정 됩니다. </Label>
+        <Button onClick={() => handleDurationChange('GCP', gcpDuration)} variant="contained" color="primary" disabled={!allowDurationChange}>
+          적용
+        </Button>
+        {currentGcpDuration !== null && (
+          <Typography variant="body1" gutterBottom>
+            현재 GCP에 설정된 회수 주기: {`${currentGcpDuration}일`}
+          </Typography>
+        )}
+      </Box>
 
-            <Typography variant="h6">{invoice.invoiceNumber}</Typography>
-          </Stack>
+      <Box>
+      <Typography variant="h4" gutterBottom>
+        권한 최적화 예외 대상
+      </Typography>
+      </Box>
 
-          <Stack sx={{ typography: 'body2' }}>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Invoice From
-            </Typography>
-            {invoice.invoiceFrom.name}
-            <br />
-            {invoice.invoiceFrom.fullAddress}
-            <br />
-            Phone: {invoice.invoiceFrom.phoneNumber}
-            <br />
-          </Stack>
 
-          <Stack sx={{ typography: 'body2' }}>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Invoice To
-            </Typography>
-            {invoice.invoiceTo.name}
-            <br />
-            {invoice.invoiceTo.fullAddress}
-            <br />
-            Phone: {invoice.invoiceTo.phoneNumber}
-            <br />
-          </Stack>
 
-          <Stack sx={{ typography: 'body2' }}>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Date Create
-            </Typography>
-            {fDate(invoice.createDate)}
-          </Stack>
-
-          <Stack sx={{ typography: 'body2' }}>
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Due Date
-            </Typography>
-            {fDate(invoice.dueDate)}
-          </Stack>
-        </Box>
-
-        {renderList}
-
-        <Divider sx={{ mt: 5, borderStyle: 'dashed' }} />
-
-        {renderFooter}
-      </Card>
-    </>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={2000} // 6초 동안 표시 후 자동으로 닫힘
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        style={{ marginTop: '50px' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%', color: 'white', backgroundColor: theme => theme.palette.primary.main, '& .MuiAlert-icon': {
+        color: 'white', // 아이콘 색상 변경
+      } }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </Box>
   );
-}
-
-InvoiceDetails.propTypes = {
-  invoice: PropTypes.object,
 };
+
+export default InvoiceDetail;

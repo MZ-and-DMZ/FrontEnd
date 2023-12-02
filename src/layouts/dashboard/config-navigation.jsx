@@ -147,13 +147,13 @@ export function useNavData() {
             path: paths.dashboard.invoice.root,
             icon: ICONS.invoice,
             children: [
-              { title: t('로그'), path: paths.dashboard.invoice.root },
+              { title: t('목록'), path: paths.dashboard.invoice.root },
               // {
               //   title: t('details'),
               //   path: paths.dashboard.invoice.demo.details,
               // },
               // { title: t('create'), path: paths.dashboard.invoice.new },
-              { title: t('세부사항'), path: paths.dashboard.invoice.demo.edit },
+              { title: t('설정'), path: paths.dashboard.invoice.demo.edit },
             ],
           },
 
