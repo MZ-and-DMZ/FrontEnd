@@ -11,6 +11,8 @@ import {
   Input,
   TableContainer,
   Paper,
+  Tab,
+  Tabs,
   Table,
   TableHead,
   TableRow,
@@ -81,6 +83,11 @@ const SecondCreateForm = () => {
     update: [],
     delete: [],
   });
+
+  const [selectedTab, setSelectedTab] = useState('aws'); // 기본값은 AWS로 설정
+  const [gcpServiceList, setGcpServiceList] = useState([]);
+  const [gcpParsedData, setGcpParsedData] = useState([]);
+  const [gcpfilteredServiceList, setGcpFilteredServiceList] = useState([]);
   const [recommendedPolicies, setRecommendedPolicies] = useState(null);
   const [awsServiceList, setAwsServiceList] = useState([]);
   const [filteredServiceList, setFilteredServiceList] = useState([]);
@@ -115,6 +122,17 @@ const SecondCreateForm = () => {
       } catch (error) {
         console.error('AWS 서비스 목록을 불러오는 동안 오류 발생:', error);
       }
+
+      try {
+        const gcpMiddleClassification = await getGcpActionCrudData();
+        const parsedGcpDataResult = _parseGcpActionCrudData(gcpMiddleClassification);
+
+        setGcpServiceList(parsedGcpDataResult);
+        setGcpFilteredServiceList(parsedGcpDataResult);
+        setGcpParsedData(parsedGcpDataResult);
+      } catch (error) {
+        console.error('GCP 데이터를 불러오는 동안 오류 발생:', error);
+      }
     };
 
     fetchData();
@@ -139,6 +157,15 @@ const SecondCreateForm = () => {
   //   dispatch(UPDATE_STEP2(step2data));
   //   console.log('step2data', step2data);
   // }, [selectedPermissions, dispatch]);
+
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+    if(tab === 'aws'){
+      setFilteredServiceList(awsServiceList);
+    } else if (tab === 'gcp'){
+      setFilteredServiceList(gcpServiceList);
+    }
+  };
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
@@ -308,6 +335,11 @@ const SecondCreateForm = () => {
 
   return (
     <RootContainer>
+    <Tabs value={selectedTab} onChange={(event, newValue) => handleTabChange(newValue)}>
+        <Tab label="AWS" value="aws" />
+        <Tab label="GCP" value="gcp" />
+      </Tabs>
+
       <StyledFormControl>
         <TextField
           fullWidth
