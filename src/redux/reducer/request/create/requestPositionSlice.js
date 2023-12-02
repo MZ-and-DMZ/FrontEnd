@@ -10,10 +10,15 @@ const requestPositionSlice = createSlice({
   reducers: {
     REQUEST_POSITION: (state, action) =>
       // input을 입력하면 state를 변경하는 reducer
-      [...state, action.payload],
+      [action.payload, ...state],
+    READ_NOTIFICATION: (state, action) =>
+      state.map((notification) => ({
+        ...notification,
+        isUnRead: false,
+      })),
   },
 });
 
-export const { REQUEST_POSITION } = requestPositionSlice.actions;
+export const { REQUEST_POSITION, READ_NOTIFICATION } = requestPositionSlice.actions;
 
 export default requestPositionSlice.reducer;

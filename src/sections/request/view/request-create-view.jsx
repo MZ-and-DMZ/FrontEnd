@@ -29,7 +29,7 @@ export default function RequestCreateView() {
 
   // const currentPosition = useSelector((state) => state.positionSelectedRow);
   const settings = useSettingsContext();
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
   // const [currentPosition, setCurrentPosition] = useState(_positionList);
   // useEffect(() => {
   //   if (convertPosition) {
@@ -157,8 +157,8 @@ export default function RequestCreateView() {
                     type: 'friend',
                     category: 'Communication',
                     isUnRead: true,
-                    createdAt: '2021-09-18T16:51:35.000Z',
-                    title: '<p>test</p>',
+                    createdAt: new Date(),
+                    title: `<p>${positionData.positionName}</p>`,
                   })
                 );
               }
