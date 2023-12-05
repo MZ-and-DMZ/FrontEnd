@@ -90,13 +90,13 @@ export default function NotificationsPopover() {
         Notificationsssssssssssss
       </Typography>
 
-      {/* {!!totalUnRead && (
+      {!!totalUnRead && (
         <Tooltip title="Mark all as read">
           <IconButton color="primary" onClick={handleMarkAllAsRead}>
             <Iconify icon="eva:done-all-fill" />
           </IconButton>
         </Tooltip>
-      )} */}
+      )}
 
       {!smUp && (
         <IconButton onClick={drawer.onFalse}>
