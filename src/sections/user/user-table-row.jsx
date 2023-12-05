@@ -35,7 +35,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
   return (
     <>
-      <TableRow hover selected={selected} onClick={handleTableRowClick}>
+      <TableRow hover selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>

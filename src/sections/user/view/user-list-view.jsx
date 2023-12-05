@@ -1,6 +1,7 @@
 import isEqual from 'lodash/isEqual';
 import { useState, useCallback } from 'react';
 
+import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -239,11 +240,19 @@ export default function UserListView() {
                 )
               }
               action={
+                <Stack direction="row">
                 <Tooltip title="Delete">
                   <IconButton color="primary" onClick={confirm.onTrue}>
                     <Iconify icon="solar:trash-bin-trash-bold" />
                   </IconButton>
                 </Tooltip>
+
+                 <Tooltip title="최적화 대상에서 제외하기">
+                    <IconButton color="primary">
+                      <Iconify icon="icon-park-outline:attention" />
+                    </IconButton>
+                  </Tooltip>
+                  </Stack>
               }
             />
 
