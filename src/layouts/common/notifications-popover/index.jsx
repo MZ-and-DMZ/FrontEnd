@@ -92,7 +92,13 @@ export default function NotificationsPopover() {
 
       {!!totalUnRead && (
         <Tooltip title="Mark all as read">
-          <IconButton color="primary" onClick={handleMarkAllAsRead}>
+          <IconButton
+            color="primary"
+            onClick={() => {
+              console.log('click');
+              dispatch(READ_NOTIFICATION());
+            }}
+          >
             <Iconify icon="eva:done-all-fill" />
           </IconButton>
         </Tooltip>
@@ -183,14 +189,14 @@ export default function NotificationsPopover() {
           sx={{ pl: 2.5, pr: 1 }}
         >
           {renderTabs}
-          <IconButton
+          {/* <IconButton
             onClick={() => {
               console.log('click');
               dispatch(READ_NOTIFICATION());
             }}
           >
             <Iconify icon="solar:settings-bold-duotone" />
-          </IconButton>
+          </IconButton> */}
         </Stack>
 
         <Divider />
