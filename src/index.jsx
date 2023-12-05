@@ -24,7 +24,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import store from './redux/store/store';
-import App from './app';
+import App from './utils/app';
 
 // ----------------------------------------------------------------------
 
