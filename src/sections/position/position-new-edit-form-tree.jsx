@@ -105,7 +105,12 @@ const SecondCreateForm = () => {
   const [updatePermissionChecked, setUpdatePermissionChecked] = useState(false);
   const [deletePermissionChecked, setDeletePermissionChecked] = useState(false);
 
-  const [page, setPage] = useState(0);
+  const [pageAws, setPageAws] = useState(0);
+  const [rowsPerPageAws, setRowsPerPageAws] = useState(5);
+
+  const [pageMenu, setPageMenu] = useState(0);
+  const [rowsPerPageMenu, setRowsPerPageMenu] = useState(5);
+
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const dispatch = useDispatch();
@@ -221,13 +226,23 @@ const handleMenuClick = (menu) => {
     // }
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangePageAws = (event, newPage) => {
+    setPageAws(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 5));
-    setPage(0);
+  const handleChangeRowsPerPageAws = (event) => {
+    setRowsPerPageAws(parseInt(event.target.value, 5));
+    setPageAws(0);
+  };
+
+    // 메뉴 목록 테이블에 대한 함수
+  const handleChangePageMenu = (event, newPage) => {
+    setPageMenu(newPage);
+  };
+
+  const handleChangeRowsPerPageMenu = (event) => {
+    setRowsPerPageMenu(parseInt(event.target.value, 5));
+    setPageMenu(0);
   };
 
   const handleSearch = (event) => {
@@ -390,7 +405,7 @@ const handleMenuClick = (menu) => {
             </TableHead>
             <TableBody>
               {filteredServiceList
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .slice(pageAws * rowsPerPage, pageAws * rowsPerPage + rowsPerPage)
                 .map((service, index) => (
                   <TableRow key={index} selected={selectedCategory === service.actionCrudName}>
                     <TableCell>
@@ -406,11 +421,13 @@ const handleMenuClick = (menu) => {
             rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
             count={filteredServiceList.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPage={rowsPerPageAws}
+            page={pageAws}
+            onPageChange={handleChangePageAws}
+            onRowsPerPageChange={handleChangeRowsPerPageAws}
           />
+
+
         </TableContainer>
       </StyledFormControl>
 
@@ -420,7 +437,7 @@ const handleMenuClick = (menu) => {
             fullWidth
             value={searchMenuQuery}
             onChange={handleMenuSearch}
-            placeholder="메뉴 검색..."
+            placeholder="기능 검색..."
             InputProps={{
               startAdornment: <InputAdornment position="start">검색</InputAdornment>,
             }}
@@ -430,12 +447,12 @@ const handleMenuClick = (menu) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>메뉴 목록</TableCell>
+                  <TableCell>기능 목록</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {menuList
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .slice(pageMenu * rowsPerPage, pageMenu * rowsPerPage + rowsPerPage)
                   .map((menu, index) => (
                     <TableRow key={index} selected={selectedSubCategory === menu.menu}>
                       <TableCell>
@@ -449,10 +466,10 @@ const handleMenuClick = (menu) => {
               rowsPerPageOptions={[5, 10, 25, 50]}
               component="div"
               count={menuList.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPage={rowsPerPageMenu}
+              page={pageMenu}
+              onPageChange={handleChangePageMenu}
+              onRowsPerPageChange={handleChangeRowsPerPageMenu}
             />
           </TableContainer>
         </TableWrapper>
@@ -475,7 +492,7 @@ const handleMenuClick = (menu) => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList
+                  {awsServiceList && gcpServiceList
                     .find((service) => service.actionCrudName === selectedCategory)
                     ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
                     .map((menu, index) => (
@@ -513,7 +530,7 @@ const handleMenuClick = (menu) => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList
+                  {awsServiceList && gcpServiceList
                     .find((service) => service.actionCrudName === selectedCategory)
                     ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
                     .map((menu, index) => (
@@ -551,7 +568,7 @@ const handleMenuClick = (menu) => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList
+                  {awsServiceList && gcpServiceList
                     .find((service) => service.actionCrudName === selectedCategory)
                     ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
                     .map((menu, index) => (
@@ -589,7 +606,7 @@ const handleMenuClick = (menu) => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList
+                  {awsServiceList && gcpServiceList
                     .find((service) => service.actionCrudName === selectedCategory)
                     ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
                     .map((menu, index) => (
@@ -622,7 +639,7 @@ const handleMenuClick = (menu) => {
                     {selectedPermissions[permissionType].map((permission, i) => (
                       <StyledChip
                         key={i}
-                        label={`${permissionType}: ${permission}`}
+                        label={`${permission}`}
                         permissionType={permissionType}
                       />
                     ))}

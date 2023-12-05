@@ -175,8 +175,6 @@ const handleDurationChange = async (provider, duration) => {
       </Typography>
       </Box>
 
-
-
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={2000} // 6초 동안 표시 후 자동으로 닫힘
