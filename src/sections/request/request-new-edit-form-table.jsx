@@ -2,10 +2,11 @@ import { Card } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
-import UserMultiTable from 'src/_user/user-multi-table';
-import UserNewEditForm from 'src/_user/user-new-edit-form';
-
 import PositionMultiTable from 'src/components/custom/position-multi-table/position-multi-table';
+
+import UserMultiTable from '../user/user-multi-table';
+import UserNewEditForm from '../user/user-new-edit-form';
+
 // ----------------------------------------------------------------------
 
 /**

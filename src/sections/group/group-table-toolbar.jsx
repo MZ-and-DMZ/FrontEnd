@@ -17,7 +17,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableToolbar({
+export default function GroupTableToolbar({
   filters,
   onFilters,
   //
@@ -27,7 +27,7 @@ export default function UserTableToolbar({
 
   const handleFilterName = useCallback(
     (event) => {
-      onFilters('positionName', event.target.value);
+      onFilters('name', event.target.value);
     },
     [onFilters]
   );
@@ -35,7 +35,7 @@ export default function UserTableToolbar({
   const handleFilterRole = useCallback(
     (event) => {
       onFilters(
-        'positionName',
+        'role',
         typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
       );
     },
@@ -56,8 +56,7 @@ export default function UserTableToolbar({
           pr: { xs: 2.5, md: 1 },
         }}
       >
-        {/* 선택 드롭박스가 있음. 여기에서 선택할 수 있는데, 채팅이 더 나을듯 함. */}
-        {/* <FormControl
+        <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 200 },
@@ -79,17 +78,17 @@ export default function UserTableToolbar({
           >
             {roleOptions.map((option) => (
               <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.positionName.includes(option)} />
+                <Checkbox disableRipple size="small" checked={filters.role.includes(option)} />
                 {option}
               </MenuItem>
             ))}
           </Select>
-        </FormControl> */}
+        </FormControl>
 
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
-            value={filters.positionName}
+            value={filters.name}
             onChange={handleFilterName}
             placeholder="Search..."
             InputProps={{
@@ -144,7 +143,7 @@ export default function UserTableToolbar({
   );
 }
 
-UserTableToolbar.propTypes = {
+GroupTableToolbar.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   roleOptions: PropTypes.array,
