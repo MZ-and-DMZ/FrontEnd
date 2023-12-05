@@ -87,7 +87,7 @@ const SecondCreateForm = () => {
   const [selectedTab, setSelectedTab] = useState('aws'); // 기본값은 AWS로 설정
   const [gcpServiceList, setGcpServiceList] = useState([]);
   const [gcpParsedData, setGcpParsedData] = useState([]);
-  const [gcpfilteredServiceList, setGcpFilteredServiceList] = useState([]);
+  const [gcpFilteredServiceList, setGcpFilteredServiceList] = useState([]);
   const [recommendedPolicies, setRecommendedPolicies] = useState(null);
   const [awsServiceList, setAwsServiceList] = useState([]);
   const [filteredServiceList, setFilteredServiceList] = useState([]);
@@ -140,12 +140,15 @@ const SecondCreateForm = () => {
 
   useEffect(() => {
     if (selectedCategory) {
-      const selectedService = awsServiceList.find(
-        (service) => service.actionCrudName === selectedCategory
-      );
-      setMenuList(selectedService?.menuList || []);
-    }
-  }, [selectedCategory, awsServiceList]);
+    const selectedService =
+      selectedTab === 'aws'
+        ? awsServiceList.find((service) => service.actionCrudName === selectedCategory)
+        : gcpServiceList.find((service) => service.actionCrudName === selectedCategory);
+
+    setMenuList(selectedService?.menuList || []);
+  }
+}, [selectedCategory, selectedTab, awsServiceList, gcpServiceList]);
+
 
   // useEffect(() => {
   //   const step2data = [
@@ -167,32 +170,55 @@ const SecondCreateForm = () => {
     }
   };
 
-  const handleMenuClick = (menu) => {
-    setSelectedMenu(menu);
-    setSelectedCrudType('');
-    setSelectedSubCategory(menu);
-    setSelectedPermissions({
-      create: [],
-      read: [],
-      update: [],
-      delete: [],
-    });
-  };
+const handleMenuClick = (menu) => {
+  setSelectedMenu(menu);
+  setSelectedCrudType('');
+  setSelectedSubCategory(menu);
+  setSelectedPermissions({
+    create: [],
+    read: [],
+    update: [],
+    delete: [],
+  });
+
+  const serviceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList; // 추가된 부분
+
+  const selectedService = serviceList.find(
+    (service) => service.actionCrudName === selectedCategory
+  );
+
+  setMenuList(selectedService?.menuList || []);
+};
+
 
   const handleServiceClick = async (selectedService) => {
-    setSelectedCategory(selectedService);
+  setSelectedCategory(selectedService);
 
-    try {
-      const selectedServiceData = parsedData.find(
-        (service) => service.actionCrudName === selectedService
-      );
-      const selectedServiceMenuList = selectedServiceData?.menuList || [];
+  try {
+    const selectedServiceData =
+      selectedTab === 'aws'
+        ? parsedData.find((service) => service.actionCrudName === selectedService)
+        : gcpParsedData.find((service) => service.actionCrudName === selectedService);
 
-      setSelectedSubCategory('');
-      setMenuList(selectedServiceMenuList);
-    } catch (error) {
-      console.error('서비스 메뉴를 가져오는 동안 오류 발생:', error);
-    }
+    const selectedServiceMenuList = selectedServiceData?.menuList || [];
+
+    setSelectedSubCategory('');
+    setMenuList(selectedServiceMenuList);
+  } catch (error) {
+    console.error('서비스 메뉴를 가져오는 동안 오류 발생:', error);
+  }
+
+    // try {
+    //   const selectedServiceData = parsedData.find(
+    //     (service) => service.actionCrudName === selectedService
+    //   );
+    //   const selectedServiceMenuList = selectedServiceData?.menuList || [];
+
+    //   setSelectedSubCategory('');
+    //   setMenuList(selectedServiceMenuList);
+    // } catch (error) {
+    //   console.error('서비스 메뉴를 가져오는 동안 오류 발생:', error);
+    // }
   };
 
   const handleChangePage = (event, newPage) => {
@@ -274,24 +300,29 @@ const SecondCreateForm = () => {
   };
 
   const handleCreatePermissionChange = (event) => {
-    const isChecked = event.target.checked;
+  // 올바른 서비스 목록을 사용하십시오.
+  const currentServiceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList;
+  const isChecked = event.target.checked;
 
-    // 생성 권한 체크 여부 업데이트
-    setCreatePermissionChecked(isChecked);
+  // 생성 권한 체크 여부 업데이트
+  setCreatePermissionChecked(isChecked);
 
-    // 생성 권한을 가져옴
-    const menuData = menuList.find((menu) => menu.menu === selectedSubCategory);
-    const createPermissions = menuData?.createPermissions || [];
+  // 생성 권한을 가져옴
+  const menuData = currentServiceList
+    .find((service) => service.actionCrudName === selectedCategory)
+    ?.menuList.find((menu) => menu.menu === selectedSubCategory);
+  const createPermissions = menuData?.createPermissions || [];
 
-    // 생성 권한에 속한 모든 권한을 선택 여부에 따라 업데이트
-    setSelectedPermissions((prevPermissions) => ({
-      ...prevPermissions,
-      create: isChecked ? createPermissions : [],
-    }));
+  // 생성 권한에 속한 모든 권한을 선택 여부에 따라 업데이트
+  setSelectedPermissions((prevPermissions) => ({
+    ...prevPermissions,
+    create: isChecked ? createPermissions : [],
+  }));
 
-    // selectedMenuData 업데이트
-    setSelectedMenuData(menuData);
-  };
+  // selectedMenuData 업데이트
+  setSelectedMenuData(menuData);
+};
+
 
   const handleUpdatePermissionChange = (event) => {
     const isChecked = event.target.checked;
@@ -581,13 +612,13 @@ const SecondCreateForm = () => {
 
       {selectedCategory && selectedSubCategory && (
         <div>
-          <h4>선택된 권한 :</h4>
+          <h4>선택된 권한</h4>
           <div>
             {Object.keys(selectedPermissions).map(
               (permissionType) =>
                 selectedPermissions[permissionType].length > 0 && (
                   <React.Fragment key={permissionType}>
-                    <h5>{`${permissionType} 권한:`}</h5>
+                    <h5>{`${permissionType} 권한`}</h5>
                     {selectedPermissions[permissionType].map((permission, i) => (
                       <StyledChip
                         key={i}
@@ -602,15 +633,18 @@ const SecondCreateForm = () => {
         </div>
       )}
       <Button
-        onClick={async () => {
-          const recommendedPolicy = await recommendPolicies(selectedPermissions, 'aws'); // csp 설정 바꾸기
-          console.log('recommendedPolicies', recommendedPolicy);
-          setRecommendedPolicies(recommendedPolicy);
-          dispatch(UPDATE_STEP2(recommendedPolicy));
-        }}
-      >
-        {`추천정책:${recommendedPolicies || '없음'}`}
-      </Button>
+  onClick={async () => {
+    // 선택된 탭에 따라 올바른 서비스 목록을 사용하십시오.
+    const currentServiceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList;
+
+    const recommendedPolicy = await recommendPolicies(selectedPermissions, selectedTab.toLowerCase(), currentServiceList);
+    console.log('recommendedPolicies', recommendedPolicy);
+    setRecommendedPolicies(recommendedPolicy);
+    dispatch(UPDATE_STEP2(recommendedPolicy));
+  }}
+>
+  {`추천정책: ${recommendedPolicies || '없음'}`}
+</Button>
     </RootContainer>
   );
 };
