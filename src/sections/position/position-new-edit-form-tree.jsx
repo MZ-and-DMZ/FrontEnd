@@ -186,7 +186,7 @@ const handleMenuClick = (menu) => {
     delete: [],
   });
 
-  const serviceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList; // 추가된 부분
+  const serviceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList; // Tab으로 CSP 구분하기 위해 추가된 부분
 
   const selectedService = serviceList.find(
     (service) => service.actionCrudName === selectedCategory

@@ -13,7 +13,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export default function InvoiceDetailTableToolbar({
+export default function InvoiceTableToolbar({
   filters,
   onFilters,
   //
@@ -24,7 +24,7 @@ export default function InvoiceDetailTableToolbar({
 
   const handleFilterUserName = useCallback(
     (event) => {
-      onFilters('userName', event.target.value);
+      onFilters('userId', event.target.value);
     },
     [onFilters]
   );
@@ -175,7 +175,7 @@ export default function InvoiceDetailTableToolbar({
   );
 }
 
-InvoiceDetailTableToolbar.propTypes = {
+InvoiceTableToolbar.propTypes = {
   dateError: PropTypes.bool,
   filters: PropTypes.object,
   onFilters: PropTypes.func,

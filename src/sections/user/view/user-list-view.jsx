@@ -21,6 +21,7 @@ import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { _roles, _userList, USER_CSP_OPTIONS } from 'src/_mock';
+import { setExceptionUser } from 'src/_mock/_log';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -144,6 +145,30 @@ export default function UserListView() {
     setFilters(defaultFilters);
   }, []);
 
+  const handleExcludeUser = useCallback(() => {
+    // 최소한 하나의 사용자가 선택되었는지 확인
+    if (table.selected.length === 0) {
+      // 사용자가 선택되지 않은 경우 처리
+      return;
+    }
+
+    // 선택된 사용자의 사용자 이름 추출
+    const selectedUserNames = table.selected.map((userId) => {
+      const user = tableData.find((row) => row.id === userId);
+      return user ? user.userName : null;
+    });
+
+    // null 값 제거 (사용자를 찾을 수 없는 경우)
+    const validUserNames = selectedUserNames.filter((userName) => userName !== null);
+
+    // API 함수를 호출하여 사용자를 최적화에서 제외
+    setExceptionUser(validUserNames);
+
+    // 확인 대화 상자 닫기
+    confirm.onFalse();
+  }, [table.selected, tableData, confirm]);
+  
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -248,7 +273,7 @@ export default function UserListView() {
                 </Tooltip>
 
                  <Tooltip title="최적화 대상에서 제외하기">
-                    <IconButton color="primary">
+                    <IconButton color="primary" onClick={confirm.onTrue}>
                       <Iconify icon="icon-park-outline:attention" />
                     </IconButton>
                   </Tooltip>
@@ -342,6 +367,30 @@ export default function UserListView() {
           </Button>
         }
       />
+
+          <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="최적화 대상에서 제외하기"
+        content={
+          <>
+            <strong> {table.selected.length} </strong> 개의 계정이 최적화 대상에서 제외됩니다.
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              handleExcludeUser();
+              confirm.onFalse();
+            }}
+          >
+            확인
+          </Button>
+        }
+      />
+
     </>
   );
 }

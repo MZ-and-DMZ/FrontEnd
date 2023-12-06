@@ -95,14 +95,6 @@ export const getCurrentDuration = async () => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const contentType = response.headers.get('Content-Type');
-
-    if (!contentType || !contentType.includes('application/json')) {
-      // 서버 응답이 JSON이 아닌 경우 처리
-      console.error('서버 응답이 JSON 형식이 아닙니다.');
-      return undefined;
-    }
-
     const data = await response.json();
     console.log('API 응답:', data);
 
@@ -112,6 +104,8 @@ export const getCurrentDuration = async () => {
     return undefined;
   }
 };
+
+
 
 
 
@@ -135,33 +129,58 @@ export const setDuration = async (userInputDuration) => {
   }
 };
 
-// export const excludeUsersFromOptimization = async (selectedUsers) => {
-//   try {
-//     // 최소한 하나의 사용자가 선택되었는지 확인
-//     if (!Array.isArray(selectedUsers) || selectedUsers.length === 0) {
-//       console.warn('최적화에서 제외할 사용자가 선택되지 않았습니다.');
-//       return [];
-//     }
+export async function getUsersExceptionList() {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/list/exception/user`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data.user_exception_list;
+  } catch (error) {
+    console.log(error);
+    return undefined; // 에러가 발생한 경우에도 값을 반환하도록 추가
+  }
+}
 
-//     // 사용자를 최적화 대상에서 제외하기 위해 API 호출
-//     const apiUrl = `http://54.180.76.116:8080/logging/add/exception/user?user_name=${selectedusers}`;
-//     const response = await fetch(apiUrl, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ users: selectedUsers }),
-//     });
+export const deleteExceptionUser = async (userName) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/delete/exception/user?user_name=${userName}`;
 
-//     if (!response.ok) {
-//       const responseData = await response.json();
-//       throw new Error(`사용자를 최적화 대상에서 제외하는데 실패했습니다: ${response.status} - ${responseData.message}`);
-//     }
+    const response = await fetch(apiUrl, {
+      method: 'Delete',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Body에는 필요한 데이터를 전달할 필요가 있을 경우 추가
+    });
 
-//     const responseData = await response.json();
-//     return responseData;
-//   } catch (error) {
-//     console.error('사용자를 최적화 대상에서 제외하는 중 오류 발생:', error.message);
-//     throw error;
-//   }
-// };
+    const data = await response.json();
+    return data;  
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};
+
+export const setExceptionUser = async (userName) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/add/exception/user?user_name=${userName}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'Post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userName }),
+    });
+
+    const data = await response.json();
+    return data;  
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};
