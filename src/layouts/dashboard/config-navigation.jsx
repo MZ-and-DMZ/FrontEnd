@@ -157,7 +157,7 @@ export function useNavData() {
           // 권한 신청
           {
             title: t('권한 신청'),
-            path: paths.dashboard.position.root,
+            path: paths.dashboard.request.root,
             icon: ICONS.kanban,
             children: [
               // 권한 신청
