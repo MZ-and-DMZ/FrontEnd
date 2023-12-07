@@ -21,7 +21,7 @@ import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { _roles, _userList, USER_CSP_OPTIONS } from 'src/_mock';
-import { setExceptionUser } from 'src/_mock/_log';
+import { setAwsExceptionUser, setGcpExceptionUser } from 'src/_mock/_log';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -145,7 +145,8 @@ export default function UserListView() {
     setFilters(defaultFilters);
   }, []);
 
-  const handleExcludeUser = useCallback(() => {
+  // Aws API 연결
+  const handleExcludeAwsUser = useCallback(() => {
     // 최소한 하나의 사용자가 선택되었는지 확인
     if (table.selected.length === 0) {
       // 사용자가 선택되지 않은 경우 처리
@@ -153,16 +154,40 @@ export default function UserListView() {
     }
 
     // 선택된 사용자의 사용자 이름 추출
-    const selectedUserNames = table.selected.map((userId) => {
-      const user = tableData.find((row) => row.id === userId);
-      return user ? user.userName : null;
+    const selectedAwsUserNames = table.selected.map((userId) => {
+      const awsUser = tableData.find((row) => row.id === userId);
+      return awsUser ? awsUser.userName : null;
     });
 
     // null 값 제거 (사용자를 찾을 수 없는 경우)
-    const validUserNames = selectedUserNames.filter((userName) => userName !== null);
+    const validAwsUserNames = selectedAwsUserNames.filter((userName) => userName !== null);
 
     // API 함수를 호출하여 사용자를 최적화에서 제외
-    setExceptionUser(validUserNames);
+    setAwsExceptionUser(validAwsUserNames);
+
+    // 확인 대화 상자 닫기
+    confirm.onFalse();
+  }, [table.selected, tableData, confirm]);
+
+  // Gcp API 연결
+    const handleExcludeGcpUser = useCallback(() => {
+    // 최소한 하나의 사용자가 선택되었는지 확인
+    if (table.selected.length === 0) {
+      // 사용자가 선택되지 않은 경우 처리
+      return;
+    }
+
+    // 선택된 사용자의 사용자 이름 추출
+    const selectedGcpUserNames = table.selected.map((userId) => {
+      const gcpUser = tableData.find((row) => row.id === userId);
+      return gcpUser ? gcpUser.userName : null;
+    });
+
+    // null 값 제거 (사용자를 찾을 수 없는 경우)
+    const validGcpUserNames = selectedGcpUserNames.filter((userName) => userName !== null);
+
+    // API 함수를 호출하여 사용자를 최적화에서 제외
+    setGcpExceptionUser(validGcpUserNames);
 
     // 확인 대화 상자 닫기
     confirm.onFalse();
@@ -382,8 +407,10 @@ export default function UserListView() {
             variant="contained"
             color="primary"
             onClick={() => {
-              handleExcludeUser();
+              handleExcludeAwsUser();
+              handleExcludeGcpUser();
               confirm.onFalse();
+              // window.location.reload();
             }}
           >
             확인

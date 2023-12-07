@@ -87,9 +87,11 @@ export const restoreUser = async (selectedUsers) => {
   }
 };
 
-export const getCurrentDuration = async () => {
+
+// AWS
+export const getAwsCurrentDuration = async () => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/logging/get/duration`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/logging/aws/get/duration`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -105,13 +107,9 @@ export const getCurrentDuration = async () => {
   }
 };
 
-
-
-
-
-export const setDuration = async (userInputDuration) => {
+export const setAwsDuration = async (userInputDuration) => {
   try {
-    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/set/duration?duration=${userInputDuration}`;
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/aws/set/duration?duration=${userInputDuration}`;
 
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -129,9 +127,9 @@ export const setDuration = async (userInputDuration) => {
   }
 };
 
-export async function getUsersExceptionList() {
+export async function getAwsUsersExceptionList() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/list/exception/user`, {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/aws/list/exception/user`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -145,9 +143,9 @@ export async function getUsersExceptionList() {
   }
 }
 
-export const deleteExceptionUser = async (userName) => {
+export const deleteAwsExceptionUser = async (userName) => {
   try {
-    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/delete/exception/user?user_name=${userName}`;
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/aws/delete/exception/user?user_name=${userName}`;
 
     const response = await fetch(apiUrl, {
       method: 'Delete',
@@ -165,9 +163,104 @@ export const deleteExceptionUser = async (userName) => {
   }
 };
 
-export const setExceptionUser = async (userName) => {
+export const setAwsExceptionUser = async (userName) => {
   try {
-    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/add/exception/user?user_name=${userName}`;
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/aws/add/exception/user?user_name=${userName}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'Post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userName }),
+    });
+
+    const data = await response.json();
+    return data;  
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};
+
+// GCP
+export const getGcpCurrentDuration = async () => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/logging/gcp/get/duration`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('API 응답:', data);
+
+    return data.duration;
+  } catch (error) {
+    console.error(`Error fetching current duration: ${error.message}`);
+    return undefined;
+  }
+};
+
+export const setGcpDuration = async (userInputDuration) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/gcp/set/duration?duration=${userInputDuration}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ duration: userInputDuration }),
+    });
+
+    const data = await response.json();
+    return data.duration;  
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};
+
+export async function getGcpUsersExceptionList() {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/gcp/list/exception/member`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data.member_exception_list;
+  } catch (error) {
+    console.log(error);
+    return undefined; // 에러가 발생한 경우에도 값을 반환하도록 추가
+  }
+}
+
+export const deleteGcpExceptionUser = async (userName) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/gcp/delete/exception/member?member_name=${userName}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'Delete',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Body에는 필요한 데이터를 전달할 필요가 있을 경우 추가
+    });
+
+    const data = await response.json();
+    return data;  
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};
+
+export const setGcpExceptionUser = async (userName) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/gcp/add/exception/member?member_name=${userName}&type=user`;
 
     const response = await fetch(apiUrl, {
       method: 'Post',
