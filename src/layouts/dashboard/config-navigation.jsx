@@ -102,7 +102,7 @@ export function useNavData() {
               // { title: t('profile'), path: paths.dashboard.user.root },
               // { title: t('cards'), path: paths.dashboard.user.cards },
               { title: t('사용자'), path: paths.dashboard.user.list },
-              { title: t('그룹'), path: paths.dashboard.user.list },
+              { title: t('그룹'), path: paths.dashboard.group.list },
               { title: t('직무'), path: paths.dashboard.position.list },
               // { title: t('create'), path: paths.dashboard.user.new },
               // { title: t('edit'), path: paths.dashboard.user.demo.edit },

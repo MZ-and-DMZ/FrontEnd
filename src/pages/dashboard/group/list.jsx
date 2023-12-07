@@ -4,7 +4,7 @@ import { GroupListView } from 'src/sections/group/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserListPage() {
+export default function GroupListPage() {
   return (
     <>
       <Helmet>

@@ -5,8 +5,6 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 
 import { LoadingScreen } from 'src/components/loading-screen';
-import RequestCreatePage from 'src/pages/dashboard/request/new';
-import RequestListPage from 'src/pages/dashboard/request/list';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +32,7 @@ const InvoiceListPage = lazy(() => import('src/pages/dashboard/invoice/list'));
 const InvoiceDetailsPage = lazy(() => import('src/pages/dashboard/invoice/details'));
 const InvoiceCreatePage = lazy(() => import('src/pages/dashboard/invoice/new'));
 const InvoiceEditPage = lazy(() => import('src/pages/dashboard/invoice/edit'));
+
 // USER
 // const UserProfilePage = lazy(() => import('src/pages/dashboard/user/profile'));
 // const UserCardsPage = lazy(() => import('src/pages/dashboard/user/cards'));
@@ -42,10 +41,20 @@ const UserListPage = lazy(() => import('src/pages/dashboard/user/list'));
 const UserCreatePage = lazy(() => import('src/pages/dashboard/user/new'));
 const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
 
+// GROUP
+const GroupListPage = lazy(() => import('src/pages/dashboard/group/list'));
+const GroupCreatePage = lazy(() => import('src/pages/dashboard/group/new'));
+const GroupEditPage = lazy(() => import('src/pages/dashboard/group/edit'));
+
 // POSITION
 const PositionListPage = lazy(() => import('src/pages/dashboard/position/list'));
 const PositionCreatePage = lazy(() => import('src/pages/dashboard/position/new'));
 const PositionEditPage = lazy(() => import('src/pages/dashboard/position/edit'));
+
+// REQUEST
+const RequestListPage = lazy(() => import('src/pages/dashboard/request/list'));
+const RequestCreatePage = lazy(() => import('src/pages/dashboard/request/new'));
+
 /*
 // BLOG
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
@@ -119,6 +128,18 @@ export const dashboardRoutes = [
           { path: 'list', element: <UserListPage /> },
           { path: 'new', element: <UserCreatePage /> },
           { path: ':id/edit', element: <UserEditPage /> },
+          // { path: 'account', element: <UserAccountPage /> },
+        ],
+      },
+      {
+        path: 'group',
+        children: [
+          { element: <GroupListPage />, index: true },
+          // { path: 'profile', element: <UserProfilePage /> },
+          // { path: 'cards', element: <UserCardsPage /> },
+          { path: 'list', element: <GroupListPage /> },
+          { path: 'new', element: <GroupCreatePage /> },
+          { path: ':id/edit', element: <GroupEditPage /> },
           // { path: 'account', element: <UserAccountPage /> },
         ],
       },

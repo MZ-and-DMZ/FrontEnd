@@ -39,7 +39,7 @@ import {
 } from 'src/components/table';
 
 import GroupTableRow from '../group-table-row';
-import UserTableToolbar from '../user-table-toolbar';
+import GroupTableToolbar from '../group-table-toolbar';
 import GroupTableFiltersResult from '../group-table-filters-result';
 
 // ----------------------------------------------------------------------
@@ -206,7 +206,7 @@ export default function GroupListView() {
             ))}
           </Tabs>
 
-          <UserTableToolbar
+          <GroupTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
