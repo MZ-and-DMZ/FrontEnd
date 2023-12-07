@@ -88,18 +88,18 @@ const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 // ----------------------------------------------------------------------
 
 export const dashboardRoutes = [
-  {
-    path: '/',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-  },
+  // {
+  //   path: '/',
+  //   element: (
+  //     <AuthGuard>
+  //       <DashboardLayout>
+  //         <Suspense fallback={<LoadingScreen />}>
+  //           <Outlet />
+  //         </Suspense>
+  //       </DashboardLayout>
+  //     </AuthGuard>
+  //   ),
+  // },
   {
     path: 'dashboard',
     element: (
