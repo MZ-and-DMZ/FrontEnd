@@ -13,10 +13,10 @@ import { _positionList } from 'src/_mock';
 import { Button, Step, StepLabel, Stepper, Typography } from '@mui/material';
 
 import { MailView } from 'src/sections/mail/view';
-import PositionNewEditFormInput from '../gcp-new-edit-form-input';
+import PositionNewEditFormInput from '../aws-new-edit-form-input';
 // import PositionNewEditFormTree from '../position-new-edit-form-tree';
-import PositionNewEditFormTable from '../gcp-new-edit-form-table';
-import SecondCreateForm from '../gcp-new-edit-form-tree';
+import PositionNewEditFormTable from '../aws-new-edit-form-table';
+import SecondCreateForm from '../aws-new-edit-form-tree';
 
 // ----------------------------------------------------------------------
 

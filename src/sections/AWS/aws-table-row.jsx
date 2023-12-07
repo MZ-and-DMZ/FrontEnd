@@ -26,7 +26,7 @@ import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import PositionQuickEditForm from './gcp-quick-edit-form';
+import PositionQuickEditForm from './aws-quick-edit-form';
 
 // ----------------------------------------------------------------------
 

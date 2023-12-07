@@ -43,9 +43,9 @@ import {
 } from 'src/components/table';
 import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 
-import PositionTableRow from '../gcp-table-row';
-import PositionTableToolbar from '../gcp-table-toolbar';
-import PositionTableFiltersResult from '../gcp-table-filters-result';
+import PositionTableRow from '../aws-table-row';
+import PositionTableToolbar from '../aws-table-toolbar';
+import PositionTableFiltersResult from '../aws-table-filters-result';
 
 // ----------------------------------------------------------------------
 
