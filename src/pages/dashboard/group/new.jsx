@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-// import { UserCreateView } from 'src/_user/view';
-import { UserCreateView } from 'src/sections/user/view';
+
+import { GroupCreateView } from 'src/sections/group/view';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ export default function UserCreatePage() {
         <title> Dashboard: Create a new user</title>
       </Helmet>
 
-      <UserCreateView />
+      <GroupCreateView />
     </>
   );
 }

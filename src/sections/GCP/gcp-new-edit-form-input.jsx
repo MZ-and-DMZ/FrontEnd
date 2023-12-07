@@ -16,7 +16,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { createPosition, POSITION_CSP_OPTIONS } from 'src/_mock';
 
-import UserCreateView from 'src/_user/view/user-create-view';
+import { UserCreateView } from 'src/sections/user/view/user-create-view';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField, RHFSelect, RHFAutocomplete } from 'src/components/hook-form';

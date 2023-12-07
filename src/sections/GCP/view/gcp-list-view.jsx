@@ -54,7 +54,7 @@ const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
 const TABLE_HEAD = [
   { id: 'positionName', label: '직무', width: 300 },
   { id: 'csp', label: 'CSP', width: 300 },
-  { id: 'isCustom', label: '커스텀 여부', width: 300 },
+  { id: 'isCustom', label: '유형', width: 300 },
   { id: 'policies', label: '정책/역할', width: 500 },
   { id: '', width: 88 },
 ];

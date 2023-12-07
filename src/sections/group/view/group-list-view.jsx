@@ -1,10 +1,6 @@
 import isEqual from 'lodash/isEqual';
+import { useState, useCallback } from 'react';
 
-import { useState, useCallback, useEffect } from 'react';
-
-import { useDispatch } from 'react-redux';
-
-import { Box } from '@mui/system';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -23,7 +19,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _positionList, POSITION_CSP_OPTIONS } from 'src/_mock';
+import { _roles, _userList, USER_CSP_OPTIONS } from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -41,36 +37,34 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
-import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 
-import RequestTableRow from '../request-table-row';
-import RequestTableToolbar from '../request-table-toolbar';
-import RequestTableFiltersResult from '../request-table-filters-result';
+import GroupTableRow from '../group-table-row';
+import UserTableToolbar from '../user-table-toolbar';
+import GroupTableFiltersResult from '../group-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
+const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'positionName', label: '직무', width: 300 },
-  { id: 'csp', label: 'CSP', width: 300 },
-  { id: 'isCustom', label: '유형', width: 300 },
-  { id: 'policies', label: '정책/역할', width: 500 },
+  { id: 'name', label: 'Name' },
+  { id: 'csp', label: 'CSP', width: 180 },
+  { id: 'group', label: '그룹', width: 220 },
+  { id: 'position', label: '직무', width: 500 },
+  { id: 'description', label: '설명', width: 400 },
   { id: '', width: 88 },
 ];
 
 const defaultFilters = {
   name: '',
-  positionName: [],
+  role: [],
   csp: 'all',
 };
 
 // ----------------------------------------------------------------------
 
-export default function RequestListView() {
+export default function GroupListView() {
   const table = useTable();
-
-  const dispatch = useDispatch();
 
   const settings = useSettingsContext();
 
@@ -78,7 +72,7 @@ export default function RequestListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_positionList);
+  const [tableData, setTableData] = useState(_userList);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -93,7 +87,7 @@ export default function RequestListView() {
     table.page * table.rowsPerPage + table.rowsPerPage
   );
 
-  const denseHeight = table.dense ? 32 : 40;
+  const denseHeight = table.dense ? 52 : 72;
 
   const canReset = !isEqual(defaultFilters, filters);
 
@@ -133,12 +127,12 @@ export default function RequestListView() {
 
   const handleEditRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.position.edit(id));
+      router.push(paths.dashboard.user.edit(id));
     },
     [router]
   );
 
-  const handleFilterCSP = useCallback(
+  const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('csp', newValue);
     },
@@ -149,40 +143,25 @@ export default function RequestListView() {
     setFilters(defaultFilters);
   }, []);
 
-  // console.info('Table', tableData);
-  // console.info('table', table);
-  // console.info('dataFiltered', dataFiltered);
-
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="직무"
+          heading="사용자"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: '직무', href: paths.dashboard.position.root },
+            { name: '사용자', href: paths.dashboard.user.root },
             { name: '목록' },
           ]}
           action={
-            <>
-              <Button
-                component={RouterLink}
-                href={paths.dashboard.position.new}
-                variant="contained"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-                sx={{ mr: 1 }}
-              >
-                convert
-              </Button>
-              <Button
-                component={RouterLink}
-                href={paths.dashboard.position.new}
-                variant="contained"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-              >
-                New Position
-              </Button>
-            </>
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.user.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              New User
+            </Button>
           }
           sx={{
             mb: { xs: 3, md: 5 },
@@ -192,7 +171,7 @@ export default function RequestListView() {
         <Card>
           <Tabs
             value={filters.csp}
-            onChange={handleFilterCSP}
+            onChange={handleFilterStatus}
             sx={{
               px: 2.5,
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
@@ -210,35 +189,32 @@ export default function RequestListView() {
                       ((tab.value === 'all' || tab.value === filters.csp) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'aws' && 'success') ||
-                      (tab.value === 'gcp' && 'warning') ||
-                      (tab.value === 'BOch' && 'info') ||
+                      (tab.value === 'AWS' && 'success') ||
+                      (tab.value === 'GCP' && 'warning') ||
+                      (tab.value === 'AWS,GCP' && 'info') ||
                       'default'
                     }
                   >
-                    {tab.value === 'all' && _positionList.length}
-                    {tab.value === 'aws' &&
-                      _positionList.filter((position) => position.csp === 'aws').length}
-
-                    {tab.value === 'gcp' &&
-                      _positionList.filter((position) => position.csp === 'gcp').length}
-                    {tab.value === 'BOch' &&
-                      _positionList.filter((position) => position.csp === 'BOch').length}
+                    {tab.value === 'all' && _userList.length}
+                    {tab.value === 'AWS' && _userList.filter((user) => user.csp === 'AWS').length}
+                    {tab.value === 'GCP' && _userList.filter((user) => user.csp === 'GCP').length}
+                    {tab.value === 'AWS,GCP' &&
+                      _userList.filter((user) => user.csp === 'AWS,GCP').length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
 
-          <RequestTableToolbar
+          <UserTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
-            positionNameOptions={_positionList.map((position) => position.positionName)}
+            roleOptions={_roles}
           />
 
           {canReset && (
-            <RequestTableFiltersResult
+            <GroupTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               //
@@ -293,19 +269,17 @@ export default function RequestListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <RequestTableRow
+                      <GroupTableRow
                         key={row.id}
                         row={{
-                          name: row.positionName,
-                          csp: row.csp.toUpperCase(),
-                          custom: row.isCustom ? 'Custom' : 'Built-In',
-                          policies: row.policies.join(', '),
+                          name: row.userName,
+                          csp: row.csp,
+                          group: row.attachedGroup,
+                          position: row.attachedPosition.join(', '),
+                          description: row.description,
                         }}
                         selected={table.selected.includes(row.id)}
-                        onSelectRow={() => {
-                          table.onSelectRow(row.id);
-                          dispatch(SELECT_POSITION(row));
-                        }}
+                        onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
                       />
@@ -364,7 +338,7 @@ export default function RequestListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, csp, positionName } = filters;
+  const { name, csp, role } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -386,10 +360,8 @@ function applyFilter({ inputData, comparator, filters }) {
     inputData = inputData.filter((user) => user.csp === csp);
   }
 
-  if (positionName && typeof positionName === 'string') {
-    inputData = inputData.filter(
-      (user) => user.positionName.toLowerCase().indexOf(positionName.toLowerCase()) !== -1
-    );
+  if (role.length) {
+    inputData = inputData.filter((user) => role.includes(user.role));
   }
 
   return inputData;
