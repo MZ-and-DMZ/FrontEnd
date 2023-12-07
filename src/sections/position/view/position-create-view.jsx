@@ -27,7 +27,7 @@ export default function PositionCreateView() {
 
   // const currentPosition = useSelector((state) => state.positionSelectedRow);
   const settings = useSettingsContext();
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
   // const [currentPosition, setCurrentPosition] = useState(_positionList);
   // useEffect(() => {
   //   if (convertPosition) {
