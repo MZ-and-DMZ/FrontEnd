@@ -2,11 +2,11 @@ import { Helmet } from 'react-helmet-async';
 
 import { useParams } from 'src/routes/hooks';
 
-import { GroupEditView, GroupListView } from 'src/sections/group/view';
+import { GroupEditView } from 'src/sections/group/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserEditPage() {
+export default function GroupEditPage() {
   const params = useParams();
 
   const { id } = params;
@@ -14,7 +14,7 @@ export default function UserEditPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: User Edit</title>
+        <title> Dashboard: Group Edit</title>
       </Helmet>
 
       <GroupEditView id={`${id}`} />

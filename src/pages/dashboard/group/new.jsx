@@ -4,11 +4,11 @@ import { GroupCreateView } from 'src/sections/group/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserCreatePage() {
+export default function GroupCreatePage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Create a new user</title>
+        <title> Dashboard: Create a new group</title>
       </Helmet>
 
       <GroupCreateView />
