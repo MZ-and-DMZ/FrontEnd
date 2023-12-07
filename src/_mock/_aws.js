@@ -45,4 +45,20 @@ export function _parseActionCrudData(data) {
   }));
 }
 
-
+// CSP별 페이지 : AWS
+export async function getAwsUserList() {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/userlist`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    console.log('AWS User List:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching data from /aws/userlist:', error);
+    throw error;
+  }
+}

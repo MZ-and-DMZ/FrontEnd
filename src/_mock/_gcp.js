@@ -45,4 +45,20 @@ export function _parseGcpActionCrudData(data) {
   }));
 }
 
-
+// CSP별 페이지 : GCP
+export async function getGcpUserList() {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/gcp/userlist`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    console.log('GCP User List:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching data from /gcp/userlist:', error);
+    throw error;
+  }
+}
