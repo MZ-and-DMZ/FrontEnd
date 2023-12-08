@@ -21,6 +21,8 @@ export const parseLoggingList = async () => {
       const parsedList = loggingList.map((user, index) => ({
         id: index,
         userName: user.user_name,
+        memberName:user.member_name,
+        csp: user.csp,
         date: user.date,
         version: user.version,
         actionCount: user.action_count,
@@ -88,24 +90,24 @@ export const restoreUser = async (selectedUsers) => {
 };
 
 
+
+
 // AWS
-export const getAwsCurrentDuration = async () => {
+export async function getAwsCurrentDuration() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/logging/aws/get/duration`);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/aws/get/duration`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     const data = await response.json();
-    console.log('API 응답:', data);
-
     return data.duration;
   } catch (error) {
-    console.error(`Error fetching current duration: ${error.message}`);
-    return undefined;
+    console.log(error);
+    return null;
   }
-};
+}
 
 export const setAwsDuration = async (userInputDuration) => {
   try {
@@ -127,6 +129,7 @@ export const setAwsDuration = async (userInputDuration) => {
   }
 };
 
+// AWS 사용자 중에서 최적화 예외 대상 목록에 추가된 사용자 리스트 가져오는 함수
 export async function getAwsUsersExceptionList() {
   try {
     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/aws/list/exception/user`, {
@@ -184,23 +187,21 @@ export const setAwsExceptionUser = async (userName) => {
 };
 
 // GCP
-export const getGcpCurrentDuration = async () => {
+export async function getGcpCurrentDuration() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/logging/gcp/get/duration`);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/gcp/get/duration`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     const data = await response.json();
-    console.log('API 응답:', data);
-
     return data.duration;
   } catch (error) {
-    console.error(`Error fetching current duration: ${error.message}`);
-    return undefined;
+    console.log(error);
+    return null;
   }
-};
+}
 
 export const setGcpDuration = async (userInputDuration) => {
   try {
@@ -222,6 +223,7 @@ export const setGcpDuration = async (userInputDuration) => {
   }
 };
 
+// GCP 사용자 중에서 최적화 예외 대상 목록에 추가된 사용자 리스트 가져오는 함수 
 export async function getGcpUsersExceptionList() {
   try {
     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/logging/gcp/list/exception/member`, {

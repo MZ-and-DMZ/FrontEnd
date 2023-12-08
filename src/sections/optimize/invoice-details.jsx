@@ -209,7 +209,7 @@ const handleDurationChange = async (provider, duration) => {
 
       // 설정 후 현재 회수 주기 다시 가져와서 업데이트
       const awsDurationData = await getAwsCurrentDuration('AWS');
-      const gcpDurationData = await getAwsCurrentDuration('GCP');
+      const gcpDurationData = await getGcpCurrentDuration('GCP');
 
       setCurrentAwsDuration(awsDurationData);
       setCurrentGcpDuration(gcpDurationData);

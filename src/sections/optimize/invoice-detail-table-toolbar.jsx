@@ -96,7 +96,7 @@ export default function InvoiceTableToolbar({
             fullWidth
             value={filters.userName}
             onChange={handleFilterUserName}
-            placeholder="사용자 이름을 검색하세요..."
+            placeholder="사용자를 검색하세요..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
