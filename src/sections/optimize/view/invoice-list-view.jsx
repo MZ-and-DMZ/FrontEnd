@@ -494,11 +494,14 @@ const getTotalAmount = (status) => {
                         key={row.id}
                         row={{
                           userName: row.userName,
+                          memberName: row.memberName,
                           csp: row.csp,
                           date: row.date,
                           version: row.version,
                           actionCount: row.actionCount,
+                          permissionCount: row.permissionCount,
                           actionList: row.actionList,
+                          permissionList: row.permissionList,
                           // status: row.status
                         }}
                         selected={table.selected.includes(row.id)}

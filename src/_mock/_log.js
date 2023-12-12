@@ -25,7 +25,9 @@ export const parseLoggingList = async () => {
         csp: user.csp,
         date: user.date,
         version: user.version,
+        permissionCount: user.permission_count,
         actionCount: user.action_count,
+        permissionList: user.permission_list || [],
         actionList: user.action_list || [],
       }));
 
