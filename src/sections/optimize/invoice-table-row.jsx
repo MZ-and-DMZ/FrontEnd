@@ -28,10 +28,6 @@ export default function InvoiceTableRow({
   onDeleteRow,
 }) {
   const { userName, memberName, date, version, csp, actionList, permissionList, actionCount, permissionCount } = row;
-  console.log('csp:', csp);
-console.log('memberName:', memberName);
-console.log('permissionCount:', permissionCount);
-console.log('permissionList:', permissionList);
 
   const confirm = useBoolean();
 

@@ -242,9 +242,9 @@ export async function getGcpUsersExceptionList() {
   }
 }
 
-export const deleteGcpExceptionUser = async (userName) => {
+export const deleteGcpExceptionUser = async (memberName) => {
   try {
-    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/gcp/delete/exception/member?member_name=${userName}`;
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/gcp/delete/exception/member?member_name=${memberName}`;
 
     const response = await fetch(apiUrl, {
       method: 'Delete',
@@ -262,16 +262,16 @@ export const deleteGcpExceptionUser = async (userName) => {
   }
 };
 
-export const setGcpExceptionUser = async (userName) => {
+export const setGcpExceptionUser = async (memberName) => {
   try {
-    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/gcp/add/exception/member?member_name=${userName}&type=user`;
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/logging/gcp/add/exception/member?member_name=${memberName}&type=user`;
 
     const response = await fetch(apiUrl, {
       method: 'Post',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userName }),
+      body: JSON.stringify({ memberName }),
     });
 
     const data = await response.json();

@@ -403,19 +403,35 @@ export default function UserListView() {
           </>
         }
         action={
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              handleExcludeAwsUser();
-              handleExcludeGcpUser();
-              confirm.onFalse();
-              // window.location.reload();
-            }}
-          >
-            확인
-          </Button>
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => {
+        // AWS 사용자 여부 확인
+        const isAwsUser = table.selected.some(userId => {
+          const user = _userList.find(u => u.id === userId);
+          return user && user.csp === 'AWS';
+        });
+
+        // GCP 사용자 여부 확인
+        const isGcpUser = table.selected.some(userId => {
+          const user = _userList.find(u => u.id === userId);
+          return user && user.csp === 'GCP';
+        });
+
+        if (isAwsUser) {
+          handleExcludeAwsUser();
+        } else if (isGcpUser) {
+          handleExcludeGcpUser();
         }
+
+        confirm.onFalse();
+        window.location.reload();
+      }}
+    >
+      확인
+    </Button>
+  }
       />
 
     </>

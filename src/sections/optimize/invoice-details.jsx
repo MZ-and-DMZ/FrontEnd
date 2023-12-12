@@ -39,6 +39,7 @@ const InvoiceDetail = () => {
   const [awsUsersData, setAwsUsersData] = useState([]);
   const [gcpUsersData, setGcpUsersData] = useState([]);
   const rowsPerPageOptions = [5, 10, 25];
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
 
@@ -158,7 +159,7 @@ const handleGcpDeleteUser = async (userId) => {
     console.log('deleteResult:', deleteResult);
 
     // 삭제 성공 여부 확인
-    if (deleteResult.message === 'user delete success') {
+    if (deleteResult.message === 'member delete success') {
       console.log(`사용자 ID ${userId}를 성공적으로 삭제했습니다.`);
 
       // 사용자 삭제 후, 권한 최적화 예외 대상을 다시 불러옴 (업데이트된 목록을 반영하기 위해)
@@ -175,6 +176,7 @@ const handleGcpDeleteUser = async (userId) => {
     console.error(`사용자 ID ${userId} 삭제 중 오류 발생: ${error.message}`);
   }
 };
+
 
 const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
