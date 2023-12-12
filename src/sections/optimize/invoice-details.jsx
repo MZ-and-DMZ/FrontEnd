@@ -200,10 +200,16 @@ const handleTabChange = (event, newValue) => {
 
 const handleDurationChange = async (provider, duration) => {
   try {
+    let result;
     if (allowDurationChange) {
       // 권한 회수 기능이 활성화된 경우에만 설정 가능
-      const result = await setAwsDuration(duration, provider);
-      console.log(`${provider}에 대한 최적화 주기가 성공적으로 설정되었습니다: ${result}`);
+      if (provider === 'AWS') {
+        result = await setAwsDuration(duration, provider);
+        console.log(`${provider}에 대한 최적화 주기가 성공적으로 설정되었습니다: ${result}`);
+      } else if (provider === 'GCP') {
+        result = await setGcpDuration(duration, provider);
+        console.log(`${provider}에 대한 최적화 주기가 성공적으로 설정되었습니다: ${result}`);
+      }
 
       // result를 string으로 변환하여 출력
       const stringResult = String(result);
@@ -216,7 +222,7 @@ const handleDurationChange = async (provider, duration) => {
       setCurrentAwsDuration(awsDurationData);
       setCurrentGcpDuration(gcpDurationData);
 
-      // AWS 권한 회수 주기가 며칠로 설정되었습니다. 메시지를 Snackbar로 표시
+      // AWS 또는 GCP 권한 회수 주기가 며칠로 설정되었습니다. 메시지를 Snackbar로 표시
       setSnackbarOpen(true);
       setSnackbarMessage(`${provider} 권한 최적화 주기가 ${duration}일로 설정되었습니다.`);
     } else {
@@ -224,8 +230,7 @@ const handleDurationChange = async (provider, duration) => {
     }
   } catch (error) {
     console.error(`${provider}에 대한 회수 주기를 설정하는 중 오류 발생: ${error}`);
-  }
-};
+  }}
 
   const renderDurationOptions = () => (
     Array.from({ length: 18 }, (_, index) => (index + 1) * 5).map((day) => (
