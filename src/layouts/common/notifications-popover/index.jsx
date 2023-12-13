@@ -206,11 +206,11 @@ export default function NotificationsPopover() {
 
         {renderList}
 
-        <Box sx={{ p: 1 }}>
+        {/* <Box sx={{ p: 1 }}>
           <Button fullWidth size="large">
             View All
           </Button>
-        </Box>
+        </Box> */}
       </Drawer>
     </>
   );
