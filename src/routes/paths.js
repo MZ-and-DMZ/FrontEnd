@@ -107,10 +107,11 @@ export const paths = {
       // booking: `${ROOTS.DASHBOARD}/booking`,
       // file: `${ROOTS.DASHBOARD}/file`,
     },
-    user: {
-      root: `${ROOTS.DASHBOARD}/user`,
-      new: `${ROOTS.DASHBOARD}/user/new`,
-      list: `${ROOTS.DASHBOARD}/user/list`,
+    boch: {
+      root: `${ROOTS.DASHBOARD}/boch`,
+      user: `${ROOTS.DASHBOARD}/boch/user`,
+      position: `${ROOTS.DASHBOARD}/boch/position`,
+      group: `${ROOTS.DASHBOARD}/boch/group`,
       // cards: `${ROOTS.DASHBOARD}/user/cards`,
       // profile: `${ROOTS.DASHBOARD}/user/profile`,
       // account: `${ROOTS.DASHBOARD}/user/account`,
@@ -175,6 +176,42 @@ export const paths = {
         details: `${ROOTS.DASHBOARD}/invoice/${MOCK_ID}`,
         edit: `${ROOTS.DASHBOARD}/invoice/${MOCK_ID}/edit`,
       },
+    },
+    aws: {
+      root: `${ROOTS.DASHBOARD}/aws`,
+      new: `${ROOTS.DASHBOARD}/aws/new`,
+      list: `${ROOTS.DASHBOARD}/aws/list`,
+      // cards: `${ROOTS.DASHBOARD}/user/cards`,
+      // profile: `${ROOTS.DASHBOARD}/user/profile`,
+      // account: `${ROOTS.DASHBOARD}/user/account`,
+      // edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
+      // demo: {
+      //   edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
+      // },
+    },
+    gcp: {
+      root: `${ROOTS.DASHBOARD}/gcp`,
+      new: `${ROOTS.DASHBOARD}/gcp/new`,
+      list: `${ROOTS.DASHBOARD}/gcp/list`,
+      // cards: `${ROOTS.DASHBOARD}/user/cards`,
+      // profile: `${ROOTS.DASHBOARD}/user/profile`,
+      // account: `${ROOTS.DASHBOARD}/user/account`,
+      // edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
+      // demo: {
+      //   edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
+      // },
+    },
+    setting: {
+      root: `${ROOTS.DASHBOARD}/setting`,
+      // new: `${ROOTS.DASHBOARD}/user/new`,
+      list: `${ROOTS.DASHBOARD}/setting/list`,
+      // cards: `${ROOTS.DASHBOARD}/user/cards`,
+      // profile: `${ROOTS.DASHBOARD}/user/profile`,
+      // account: `${ROOTS.DASHBOARD}/user/account`,
+      // edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
+      // demo: {
+      //   edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
+      // },
     },
     // post: {
     //   root: `${ROOTS.DASHBOARD}/post`,
