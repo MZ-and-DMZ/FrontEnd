@@ -56,6 +56,7 @@ import InvoiceTableFiltersResult from '../invoice-table-filters-result';
 
 const TABLE_HEAD = [
   { id: 'userName', label: '사용자 이름' },
+  { id: 'csp', label: 'CSP'},
   { id: 'date', label: 'date' },
   { id: 'version', label: '버전 정보' },
   { id: 'actionCount', label: '할당된 권한', width: 300 },
@@ -493,10 +494,14 @@ const getTotalAmount = (status) => {
                         key={row.id}
                         row={{
                           userName: row.userName,
+                          memberName: row.memberName,
+                          csp: row.csp,
                           date: row.date,
                           version: row.version,
                           actionCount: row.actionCount,
+                          permissionCount: row.permissionCount,
                           actionList: row.actionList,
+                          permissionList: row.permissionList,
                           // status: row.status
                         }}
                         selected={table.selected.includes(row.id)}

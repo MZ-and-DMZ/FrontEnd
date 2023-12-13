@@ -27,7 +27,7 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }) {
-  const { userName, date, version, actionList, actionCount } = row;
+  const { userName, memberName, date, version, csp, actionList, permissionList, actionCount, permissionCount } = row;
 
   const confirm = useBoolean();
 
@@ -47,16 +47,17 @@ export default function InvoiceTableRow({
 
       <TableCell>
         <ListItemText
-          primary={userName}
-          // secondary={date}
-          primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-          secondaryTypographyProps={{
-            mt: 0.5,
-            component: 'span',
-            typography: 'caption',
-          }}
-        />
+      primary={csp === 'aws' ? userName : memberName}
+      primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+      secondaryTypographyProps={{
+        mt: 0.5,
+        component: 'span',
+        typography: 'caption',
+      }}
+    />
       </TableCell>
+      
+      <TableCell>{csp}</TableCell>
 
       <TableCell>
         <ListItemText
@@ -75,40 +76,57 @@ export default function InvoiceTableRow({
       <TableCell>{`Version ${version}`}</TableCell>
       {/* <TableCell>{actionCount}</TableCell> */}
 
-      <TableCell>
-        <ListItemText
-          primary={
-            Array.isArray(actionList) ? (
-              <Select
-                value={actionCount}
-                onChange={(event) => setSelectedAction(event.target.value)}
-                displayEmpty
-                sx={{ minWidth: 120 }}
-              >
-                <MenuItem
-                  key="default"
-                  value={actionCount}
-                >{`할당된 권한 수 : ${actionCount}`}</MenuItem>
-                {actionList.map((action, index) => (
-                  <MenuItem key={index} value={action}>
-                    {`${action}`}
-                  </MenuItem>
-                ))}
-              </Select>
-            ) : (
-              <span>{actionList}</span>
-            )
-          }
-          primaryTypographyProps={{
-            typography: 'body2',
-          }}
-          secondaryTypographyProps={{
-            component: 'span',
-            color: 'text.disabled',
-            mt: 0.5,
-          }}
-        />
-      </TableCell>
+<TableCell>
+  <ListItemText
+    primary={
+      Array.isArray(actionList) ? (
+        <Select
+          value={csp === 'aws' ? actionCount : permissionCount}
+          onChange={(event) => setSelectedAction(event.target.value)}
+          displayEmpty
+          sx={{ minWidth: 120 }}
+        >
+          <MenuItem
+            key="default"
+            value={csp === 'aws' ? actionCount : permissionCount}
+          >
+            {`할당된 권한 수 : ${
+              csp === 'aws' ? actionCount : permissionCount
+            }`}
+          </MenuItem>
+          {(() => {
+            if (csp === 'aws') {
+              return actionList.map((action, index) => (
+                <MenuItem key={index} value={action}>
+                  {`${action}`}
+                </MenuItem>
+              ));
+            } 
+            return permissionList.map((permission, index) => (
+                <MenuItem key={index} value={permission}>
+                  {`${permission}`}
+                </MenuItem>
+              ));
+          })()}
+        </Select>
+      ) : (
+        <span>{csp === 'aws' ? actionList : permissionList}</span>
+      )
+    }
+    primaryTypographyProps={{
+      typography: 'body2',
+    }}
+    secondaryTypographyProps={{
+      component: 'span',
+      color: 'text.disabled',
+      mt: 0.5,
+    }}
+  />
+</TableCell>
+
+
+
+
 
       {/* <TableCell>
           <Label

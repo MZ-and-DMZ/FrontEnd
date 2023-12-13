@@ -1,5 +1,5 @@
 import React, { useState, useEffect, userCallback } from 'react';
-import { setDuration, getCurrentDuration, getUsersExceptionList, deleteExceptionUser } from 'src/_mock/_log';
+import { setAwsDuration, getAwsCurrentDuration, getAwsUsersExceptionList, deleteAwsExceptionUser, setGcpDuration, getGcpCurrentDuration, getGcpUsersExceptionList, deleteGcpExceptionUser } from 'src/_mock/_log';
 // import { _userList } from 'src/_mock';
 
 import Table from '@mui/material/Table';
@@ -25,18 +25,21 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import InvoiceDetailTableToolbar from './invoice-detail-table-toolbar';
 
 const InvoiceDetail = () => {
-  const [awsDuration, setAwsDuration] = useState(5);
-  const [gcpDuration, setGcpDuration] = useState(5);
+  const [awsDuration, settingAwsDuration] = useState(5);
+  const [gcpDuration, settingGcpDuration] = useState(5);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [currentAwsDuration, setCurrentAwsDuration] = useState();
   const [currentGcpDuration, setCurrentGcpDuration] = useState(null);
   const [allowDurationChange, setAllowDurationChange] = useState(false);
   const [tableEnabled, setTableEnabled] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedAwsUsers, setSelectedAwsUsers] = useState([]);
+  const [selectedGcpUsers, setSelectedGcpUsers] = useState([]);
   const [tabValue, setTabValue] = useState(0); // 0: AWS, 1: GCP
-  const [usersData, setUsersData] = useState([]);
+  const [awsUsersData, setAwsUsersData] = useState([]);
+  const [gcpUsersData, setGcpUsersData] = useState([]);
   const rowsPerPageOptions = [5, 10, 25];
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
 
@@ -49,45 +52,80 @@ const InvoiceDetail = () => {
     setPage(0);
   };
 
-
+// AWS API
 useEffect(() => {
-  const fetchCurrentDuration = async () => {
+  const fetchAwsCurrentDuration = async () => {
     try {
-      const awsDurationData = await getCurrentDuration('AWS');
+      const awsDurationData = await getAwsCurrentDuration('AWS');
 
       if (awsDurationData !== undefined) {
         // 아래 부분에서 변경
         const parsedAwsDuration = parseInt(awsDurationData, 10);
 
         setCurrentAwsDuration(parsedAwsDuration);
-        setAwsDuration(parsedAwsDuration);
+        settingAwsDuration(parsedAwsDuration);
       } 
     } catch (error) {
       console.error(`현재 주기를 가져오는 중 오류 발생: ${error.message}`);
     }
   };
 
-  fetchCurrentDuration();
+  fetchAwsCurrentDuration();
 }, []);
 
 useEffect(() => {
-  const fetchUserExceptionList = async () => {
+  const fetchAwsUserExceptionList = async () => {
     try {
-      const users = await getUsersExceptionList();
-      setUsersData(users);
+      const users = await getAwsUsersExceptionList();
+      setAwsUsersData(users);
     } catch (error) {
       console.error('사용자 데이터를 가져오는 중 오류 발생:', error.message);
     }
   };
 
   // 페이지가 로드될 때 사용자 데이터 호출
-  fetchUserExceptionList();
+  fetchAwsUserExceptionList();
 }, []);
 
-const handleDeleteUser = async (userId) => {
+// GCP API
+useEffect(() => {
+  const fetchGcpCurrentDuration = async () => {
+    try {
+      const gcpDurationData = await getGcpCurrentDuration('GCP');
+
+      if (gcpDurationData !== undefined) {
+        // 아래 부분에서 변경
+        const parsedGcpDuration = parseInt(gcpDurationData, 10);
+
+        setCurrentGcpDuration(parsedGcpDuration);
+        settingGcpDuration(parsedGcpDuration);
+      } 
+    } catch (error) {
+      console.error(`현재 주기를 가져오는 중 오류 발생: ${error.message}`);
+    }
+  };
+
+  fetchGcpCurrentDuration();
+}, []);
+
+useEffect(() => {
+  const fetchGcpUserExceptionList = async () => {
+    try {
+      const users = await getGcpUsersExceptionList();
+      setGcpUsersData(users);
+    } catch (error) {
+      console.error('사용자 데이터를 가져오는 중 오류 발생:', error.message);
+    }
+  };
+
+  // 페이지가 로드될 때 사용자 데이터 호출
+  fetchGcpUserExceptionList();
+}, []);
+
+const handleAwsDeleteUser = async (userId) => {
   try {
     // 삭제 API 호출
-    const deleteResult = await deleteExceptionUser(userId);
+    const deleteResult = await deleteAwsExceptionUser(userId);
 
     // 콘솔에 deleteResult 출력
     console.log('deleteResult:', deleteResult);
@@ -97,8 +135,8 @@ const handleDeleteUser = async (userId) => {
       console.log(`사용자 ID ${userId}를 성공적으로 삭제했습니다.`);
 
       // 사용자 삭제 후, 권한 최적화 예외 대상을 다시 불러옴 (업데이트된 목록을 반영하기 위해)
-      const updatedUsers = await getUsersExceptionList();
-      setUsersData(updatedUsers);
+      const updatedAwsUsers = await getAwsUsersExceptionList();
+      setAwsUsersData(updatedAwsUsers);
 
       // 삭제 성공 메시지를 Snackbar로 표시
       setSnackbarOpen(true);
@@ -112,8 +150,32 @@ const handleDeleteUser = async (userId) => {
 };
 
 
+const handleGcpDeleteUser = async (userId) => {
+  try {
+    // 삭제 API 호출
+    const deleteResult = await deleteGcpExceptionUser(userId);
 
+    // 콘솔에 deleteResult 출력
+    console.log('deleteResult:', deleteResult);
 
+    // 삭제 성공 여부 확인
+    if (deleteResult.message === 'member delete success') {
+      console.log(`사용자 ID ${userId}를 성공적으로 삭제했습니다.`);
+
+      // 사용자 삭제 후, 권한 최적화 예외 대상을 다시 불러옴 (업데이트된 목록을 반영하기 위해)
+      const updatedGcpUsers = await getGcpUsersExceptionList();
+      setGcpUsersData(updatedGcpUsers);
+
+      // 삭제 성공 메시지를 Snackbar로 표시
+      setSnackbarOpen(true);
+      setSnackbarMessage(`사용자 ID ${userId}를 성공적으로 삭제했습니다.`);
+    } else {
+      console.error(`사용자 ID ${userId} 삭제 중 오류 발생: ${deleteResult.message}`);
+    }
+  } catch (error) {
+    console.error(`사용자 ID ${userId} 삭제 중 오류 발생: ${error.message}`);
+  }
+};
 
 
 const handleTabChange = (event, newValue) => {
@@ -138,23 +200,29 @@ const handleTabChange = (event, newValue) => {
 
 const handleDurationChange = async (provider, duration) => {
   try {
+    let result;
     if (allowDurationChange) {
       // 권한 회수 기능이 활성화된 경우에만 설정 가능
-      const result = await setDuration(duration, provider);
-      console.log(`${provider}에 대한 최적화 주기가 성공적으로 설정되었습니다: ${result}`);
+      if (provider === 'AWS') {
+        result = await setAwsDuration(duration, provider);
+        console.log(`${provider}에 대한 최적화 주기가 성공적으로 설정되었습니다: ${result}`);
+      } else if (provider === 'GCP') {
+        result = await setGcpDuration(duration, provider);
+        console.log(`${provider}에 대한 최적화 주기가 성공적으로 설정되었습니다: ${result}`);
+      }
 
       // result를 string으로 변환하여 출력
       const stringResult = String(result);
       console.log(`String 형식으로 변환된 결과: ${stringResult}`);
 
       // 설정 후 현재 회수 주기 다시 가져와서 업데이트
-      const awsDurationData = await getCurrentDuration('AWS');
-      const gcpDurationData = await getCurrentDuration('GCP');
+      const awsDurationData = await getAwsCurrentDuration('AWS');
+      const gcpDurationData = await getGcpCurrentDuration('GCP');
 
       setCurrentAwsDuration(awsDurationData);
       setCurrentGcpDuration(gcpDurationData);
 
-      // AWS 권한 회수 주기가 며칠로 설정되었습니다. 메시지를 Snackbar로 표시
+      // AWS 또는 GCP 권한 회수 주기가 며칠로 설정되었습니다. 메시지를 Snackbar로 표시
       setSnackbarOpen(true);
       setSnackbarMessage(`${provider} 권한 최적화 주기가 ${duration}일로 설정되었습니다.`);
     } else {
@@ -162,8 +230,7 @@ const handleDurationChange = async (provider, duration) => {
     }
   } catch (error) {
     console.error(`${provider}에 대한 회수 주기를 설정하는 중 오류 발생: ${error}`);
-  }
-};
+  }}
 
   const renderDurationOptions = () => (
     Array.from({ length: 18 }, (_, index) => (index + 1) * 5).map((day) => (
@@ -177,11 +244,19 @@ const handleDurationChange = async (provider, duration) => {
     setSnackbarOpen(false);
   };
 
-  const handleUserSelect = (user) => {
-  if (selectedUsers.includes(user)) {
-    setSelectedUsers(selectedUsers.filter((selectedUser) => selectedUser !== user));
+  const handleAwsUserSelect = (awsUser) => {
+  if (selectedAwsUsers.includes(awsUser)) {
+    setSelectedAwsUsers(selectedAwsUsers.filter((selectedAwsUser) => selectedAwsUser !== awsUser));
   } else {
-    setSelectedUsers([...selectedUsers, user]);
+    setSelectedAwsUsers([...selectedAwsUsers, awsUser]);
+  }
+};
+
+  const handleGcpUserSelect = (gcpUser) => {
+  if (selectedGcpUsers.includes(gcpUser)) {
+    setSelectedGcpUsers(selectedGcpUsers.filter((selectedGcpUser) => selectedGcpUser !== gcpUser));
+  } else {
+    setSelectedGcpUsers([...selectedGcpUsers, gcpUser]);
   }
 };
 
@@ -230,7 +305,7 @@ const handleFiltersChange = (filterKey, value) => {
           <Select
           id="awsDuration"
           value={awsDuration}
-          onChange={(e) => setAwsDuration(parseInt(e.target.value, 10))}
+          onChange={(e) => settingAwsDuration(parseInt(e.target.value, 10))}
           disabled={!allowDurationChange}
         >
           {renderDurationOptions()}
@@ -239,38 +314,8 @@ const handleFiltersChange = (filterKey, value) => {
         <Button onClick={() => handleDurationChange('AWS', awsDuration)} variant="contained" color="primary" disabled={!allowDurationChange}>
           적용
         </Button>
-      </Box>
-      )}
 
-        {tabValue === 1 && ( 
-        <Box marginTop={2}>
-        <Typography variant="h5" gutterBottom>
-          GCP 권한 최적화 주기 설정
-        </Typography>
-        
-        <Typography variant="body1" gutterBottom>
-            현재 GCP 권한 최적화 주기: {`${currentGcpDuration}일`}
-          </Typography>
-
-        <Select
-          id="gcpDuration"
-          value={gcpDuration}
-          onChange={(e) => setGcpDuration(parseInt(e.target.value, 10))}
-          disabled={!allowDurationChange}
-        >
-          {renderDurationOptions()}
-        </Select> 
-        <Button onClick={() => handleDurationChange('GCP', gcpDuration)} variant="contained" color="primary" disabled={!allowDurationChange}>
-          적용
-        </Button>
-      </Box>
-
-      
- )}
-
-
-
-      <Box marginTop={5} >
+            <Box marginTop={5} >
       <Typography variant="h4" gutterBottom>
         권한 최적화 예외 대상
       </Typography>
@@ -295,12 +340,12 @@ const handleFiltersChange = (filterKey, value) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {usersData.map((user) => (
+        {awsUsersData.map((user) => (
           <TableRow key={user._id}>
             <TableCell>
               <Checkbox
-                checked={selectedUsers.includes(user._id)}
-                onChange={() => handleUserSelect(user._id)}
+                checked={selectedAwsUsers.includes(user._id)}
+                onChange={() => handleAwsUserSelect(user._id)}
                 disabled={!tableEnabled}
               />
             </TableCell>
@@ -309,7 +354,7 @@ const handleFiltersChange = (filterKey, value) => {
             <TableCell>{user.position}</TableCell>
             <TableCell>{user.updateTime}</TableCell>
             <TableCell>
-              <Button variant="outlined" color="primary" onClick={() => handleDeleteUser(user._id)} disabled={!tableEnabled}>
+              <Button variant="outlined" color="primary" onClick={() => handleAwsDeleteUser(user._id)} disabled={!tableEnabled}>
                 제거
               </Button>
             </TableCell>
@@ -322,13 +367,106 @@ const handleFiltersChange = (filterKey, value) => {
         <TablePagination
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"
-        count={usersData.length}
+        count={awsUsersData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      </Box>    
       </Box>
+      )}
+
+        {tabValue === 1 && ( 
+        <Box marginTop={2}>
+        <Typography variant="h5" gutterBottom>
+          GCP 권한 최적화 주기 설정
+        </Typography>
+        
+        <Typography variant="body1" gutterBottom>
+            현재 GCP 권한 최적화 주기: {`${currentGcpDuration}일`}
+          </Typography>
+
+        <Select
+          id="gcpDuration"
+          value={gcpDuration}
+          onChange={(e) => settingGcpDuration(parseInt(e.target.value, 10))}
+          disabled={!allowDurationChange}
+        >
+          {renderDurationOptions()}
+        </Select> 
+        <Button onClick={() => handleDurationChange('GCP', gcpDuration)} variant="contained" color="primary" disabled={!allowDurationChange}>
+          적용
+        </Button>
+
+            <Box marginTop={5} >
+      <Typography variant="h4" gutterBottom>
+        권한 최적화 예외 대상
+      </Typography>
+      <TableContainer>
+
+        <InvoiceDetailTableToolbar
+        filters={filters}
+        onFilters={handleFiltersChange}
+        dateError={false} // Set as needed
+        serviceOptions={[]} // Set as needed
+      />
+
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>선택</TableCell>
+          <TableCell>사용자</TableCell>
+          <TableCell>그룹</TableCell>
+          <TableCell>직무</TableCell>
+          <TableCell>업데이트 날짜</TableCell>
+          <TableCell>작업</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {gcpUsersData.map((user) => (
+          <TableRow key={user._id}>
+            <TableCell>
+              <Checkbox
+                checked={selectedGcpUsers.includes(user._id)}
+                onChange={() => handleGcpUserSelect(user._id)}
+                disabled={!tableEnabled}
+              />
+            </TableCell>
+            <TableCell>{user._id}</TableCell>
+            <TableCell>{user.type}</TableCell>
+            <TableCell>{user.position}</TableCell>
+            <TableCell>{user.updateTime}</TableCell>
+            <TableCell>
+              <Button variant="outlined" color="primary" onClick={() => handleGcpDeleteUser(user._id)} disabled={!tableEnabled}>
+                제거
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+
+        <TablePagination
+        rowsPerPageOptions={rowsPerPageOptions}
+        component="div"
+        count={gcpUsersData.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+      </Box>      
+
+      </Box>
+
+      
+ )}
+
+
+
+
       
       <Snackbar
         open={snackbarOpen}

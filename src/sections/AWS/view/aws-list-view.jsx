@@ -1,7 +1,10 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
 
-import Stack from '@mui/material/Stack';
+import { useState, useCallback, useEffect } from 'react';
+
+import { useDispatch } from 'react-redux';
+
+import { Box } from '@mui/system';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -20,8 +23,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _roles, _userList, USER_CSP_OPTIONS } from 'src/_mock';
-import { setAwsExceptionUser, setGcpExceptionUser } from 'src/_mock/_log';
+import { _positionList, POSITION_CSP_OPTIONS } from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -39,34 +41,36 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
+import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 
-import UserTableRow from '../user-table-row';
-import UserTableToolbar from '../user-table-toolbar';
-import UserTableFiltersResult from '../user-table-filters-result';
+import PositionTableRow from '../aws-table-row';
+import PositionTableToolbar from '../aws-table-toolbar';
+import PositionTableFiltersResult from '../aws-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_CSP_OPTIONS];
+const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
-  { id: 'csp', label: 'CSP', width: 180 },
-  { id: 'group', label: '그룹', width: 220 },
-  { id: 'position', label: '직무', width: 500 },
-  { id: 'description', label: '설명', width: 400 },
+  { id: 'positionName', label: '직무', width: 300 },
+  { id: 'csp', label: 'CSP', width: 300 },
+  { id: 'isCustom', label: '유형', width: 300 },
+  { id: 'policies', label: '정책/역할', width: 500 },
   { id: '', width: 88 },
 ];
 
 const defaultFilters = {
   name: '',
-  role: [],
+  positionName: [],
   csp: 'all',
 };
 
 // ----------------------------------------------------------------------
 
-export default function UserListView() {
+export default function PositionListView() {
   const table = useTable();
+
+  const dispatch = useDispatch();
 
   const settings = useSettingsContext();
 
@@ -74,7 +78,7 @@ export default function UserListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState(_positionList);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -89,7 +93,7 @@ export default function UserListView() {
     table.page * table.rowsPerPage + table.rowsPerPage
   );
 
-  const denseHeight = table.dense ? 52 : 72;
+  const denseHeight = table.dense ? 32 : 40;
 
   const canReset = !isEqual(defaultFilters, filters);
 
@@ -129,12 +133,12 @@ export default function UserListView() {
 
   const handleEditRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.user.edit(id));
+      router.push(paths.dashboard.position.edit(id));
     },
     [router]
   );
 
-  const handleFilterStatus = useCallback(
+  const handleFilterCSP = useCallback(
     (event, newValue) => {
       handleFilters('csp', newValue);
     },
@@ -145,74 +149,40 @@ export default function UserListView() {
     setFilters(defaultFilters);
   }, []);
 
-  // Aws API 연결
-  const handleExcludeAwsUser = useCallback(() => {
-    // 최소한 하나의 사용자가 선택되었는지 확인
-    if (table.selected.length === 0) {
-      // 사용자가 선택되지 않은 경우 처리
-      return;
-    }
-
-    // 선택된 사용자의 사용자 이름 추출
-    const selectedAwsUserNames = table.selected.map((userId) => {
-      const awsUser = tableData.find((row) => row.id === userId);
-      return awsUser ? awsUser.userName : null;
-    });
-
-    // null 값 제거 (사용자를 찾을 수 없는 경우)
-    const validAwsUserNames = selectedAwsUserNames.filter((userName) => userName !== null);
-
-    // API 함수를 호출하여 사용자를 최적화에서 제외
-    setAwsExceptionUser(validAwsUserNames);
-
-    // 확인 대화 상자 닫기
-    confirm.onFalse();
-  }, [table.selected, tableData, confirm]);
-
-  // Gcp API 연결
-    const handleExcludeGcpUser = useCallback(() => {
-    // 최소한 하나의 사용자가 선택되었는지 확인
-    if (table.selected.length === 0) {
-      // 사용자가 선택되지 않은 경우 처리
-      return;
-    }
-
-    // 선택된 사용자의 사용자 이름 추출
-    const selectedGcpUserNames = table.selected.map((userId) => {
-      const gcpUser = tableData.find((row) => row.id === userId);
-      return gcpUser ? gcpUser.userName : null;
-    });
-
-    // null 값 제거 (사용자를 찾을 수 없는 경우)
-    const validGcpUserNames = selectedGcpUserNames.filter((userName) => userName !== null);
-
-    // API 함수를 호출하여 사용자를 최적화에서 제외
-    setGcpExceptionUser(validGcpUserNames);
-
-    // 확인 대화 상자 닫기
-    confirm.onFalse();
-  }, [table.selected, tableData, confirm]);
-  
+  // console.info('Table', tableData);
+  // console.info('table', table);
+  // console.info('dataFiltered', dataFiltered);
 
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="사용자"
+          heading="직무"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: '사용자', href: paths.dashboard.user.root },
+            { name: '직무', href: paths.dashboard.position.root },
             { name: '목록' },
           ]}
           action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.user.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              New User
-            </Button>
+            <>
+              <Button
+                component={RouterLink}
+                href={paths.dashboard.position.new}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+                sx={{ mr: 1 }}
+              >
+                convert
+              </Button>
+              <Button
+                component={RouterLink}
+                href={paths.dashboard.position.new}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+              >
+                New Position
+              </Button>
+            </>
           }
           sx={{
             mb: { xs: 3, md: 5 },
@@ -222,7 +192,7 @@ export default function UserListView() {
         <Card>
           <Tabs
             value={filters.csp}
-            onChange={handleFilterStatus}
+            onChange={handleFilterCSP}
             sx={{
               px: 2.5,
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
@@ -240,34 +210,35 @@ export default function UserListView() {
                       ((tab.value === 'all' || tab.value === filters.csp) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'AWS' && 'success') ||
-                      (tab.value === 'GCP' && 'warning') ||
-                      (tab.value === 'AWS,GCP' && 'info') ||
+                      (tab.value === 'aws' && 'success') ||
+                      (tab.value === 'gcp' && 'warning') ||
+                      (tab.value === 'BOch' && 'info') ||
                       'default'
                     }
                   >
-                    {tab.value === 'all' && _userList.length}
-                    {tab.value === 'AWS' &&
-                      _userList.filter((user) => user.csp === 'AWS').length}
-                    {tab.value === 'GCP' &&
-                      _userList.filter((user) => user.csp === 'GCP').length}
-                    {tab.value === 'AWS,GCP' &&
-                      _userList.filter((user) => user.csp === 'AWS,GCP').length}
+                    {tab.value === 'all' && _positionList.length}
+                    {tab.value === 'aws' &&
+                      _positionList.filter((position) => position.csp === 'aws').length}
+
+                    {tab.value === 'gcp' &&
+                      _positionList.filter((position) => position.csp === 'gcp').length}
+                    {tab.value === 'BOch' &&
+                      _positionList.filter((position) => position.csp === 'BOch').length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
 
-          <UserTableToolbar
+          <PositionTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
-            roleOptions={_roles}
+            positionNameOptions={_positionList.map((position) => position.positionName)}
           />
 
           {canReset && (
-            <UserTableFiltersResult
+            <PositionTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               //
@@ -290,19 +261,11 @@ export default function UserListView() {
                 )
               }
               action={
-                <Stack direction="row">
                 <Tooltip title="Delete">
                   <IconButton color="primary" onClick={confirm.onTrue}>
                     <Iconify icon="solar:trash-bin-trash-bold" />
                   </IconButton>
                 </Tooltip>
-
-                 <Tooltip title="최적화 대상에서 제외하기">
-                    <IconButton color="primary" onClick={confirm.onTrue}>
-                      <Iconify icon="icon-park-outline:attention" />
-                    </IconButton>
-                  </Tooltip>
-                  </Stack>
               }
             />
 
@@ -330,17 +293,19 @@ export default function UserListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <UserTableRow
+                      <PositionTableRow
                         key={row.id}
                         row={{
-                          name: row.userName,
-                          csp: row.csp,
-                          group: row.attachedGroup,
-                          position: row.attachedPosition.join(', '),
-                          description: row.description,
+                          name: row.positionName,
+                          csp: row.csp.toUpperCase(),
+                          custom: row.isCustom ? 'Custom' : 'Built-In',
+                          policies: row.policies.join(', '),
                         }}
                         selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
+                        onSelectRow={() => {
+                          table.onSelectRow(row.id);
+                          dispatch(SELECT_POSITION(row));
+                        }}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
                       />
@@ -392,48 +357,6 @@ export default function UserListView() {
           </Button>
         }
       />
-
-          <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="최적화 대상에서 제외하기"
-        content={
-          <>
-            <strong> {table.selected.length} </strong> 개의 계정이 최적화 대상에서 제외됩니다.
-          </>
-        }
-        action={
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={() => {
-        // AWS 사용자 여부 확인
-        const isAwsUser = table.selected.some(userId => {
-          const user = _userList.find(u => u.id === userId);
-          return user && user.csp === 'AWS';
-        });
-
-        // GCP 사용자 여부 확인
-        const isGcpUser = table.selected.some(userId => {
-          const user = _userList.find(u => u.id === userId);
-          return user && user.csp === 'GCP';
-        });
-
-        if (isAwsUser) {
-          handleExcludeAwsUser();
-        } else if (isGcpUser) {
-          handleExcludeGcpUser();
-        }
-
-        confirm.onFalse();
-        window.location.reload();
-      }}
-    >
-      확인
-    </Button>
-  }
-      />
-
     </>
   );
 }
@@ -441,7 +364,7 @@ export default function UserListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, csp, role } = filters;
+  const { name, csp, positionName } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -463,8 +386,10 @@ function applyFilter({ inputData, comparator, filters }) {
     inputData = inputData.filter((user) => user.csp === csp);
   }
 
-  if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+  if (positionName && typeof positionName === 'string') {
+    inputData = inputData.filter(
+      (user) => user.positionName.toLowerCase().indexOf(positionName.toLowerCase()) !== -1
+    );
   }
 
   return inputData;

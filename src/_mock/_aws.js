@@ -45,6 +45,7 @@ export function _parseActionCrudData(data) {
   }));
 }
 
+
 export async function getAwsTreeData() {
   // service list는 string list로 나옴
   // action crud는 _id에 service 명칭이 들어가 있고, 그 아래에 children으로 menu list가 있고
@@ -54,6 +55,7 @@ export async function getAwsTreeData() {
 
   try {
     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/actioncrud`, {
+      
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -89,5 +91,29 @@ export async function getAwsTreeData() {
   } catch (error) {
     console.error('Error fetching data from /aws/treedata:', error);
     throw error;
+       
   }
 }
+
+  
+// // CSP별 페이지 : AWS
+// export async function getAwsUserList() {
+//   try {
+//     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/userlist`, {
+      
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//     const data = await response.json();
+//     console.log('AWS User List:', data);
+//     return data;
+//   } catch (error) {
+//     console.error('Error fetching data from /aws/userlist:', error);
+//     throw error;
+       
+//   }
+// }
+
+ 
