@@ -17,3 +17,4 @@ export * from './_calendar';
 export * from './_position';
 export * from './_awsPolicies';
 export * from './_gcpRoles';
+export * from './_notification';

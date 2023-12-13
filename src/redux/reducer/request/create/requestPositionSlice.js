@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { _notifications } from 'src/_mock';
+// import { _notifications } from 'src/_mock';
+import { _notificationList } from 'src/_mock/_notification';
 
-const initialState = _notifications;
+const initialState = _notificationList;
 
 const requestPositionSlice = createSlice({
   name: 'requestPosition',

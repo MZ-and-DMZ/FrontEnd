@@ -75,7 +75,7 @@ export default function PositionCreateView() {
           return policy.name;
         }
         if (policy.csp === 'gcp') {
-          return policy.gcpName;
+          return policy.name;
         }
         return '';
       }),

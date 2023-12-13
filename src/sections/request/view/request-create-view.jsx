@@ -10,7 +10,7 @@ import { object } from 'prop-types';
 
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-import { _positionList, createPosition } from 'src/_mock';
+import { PostNewNotification, _positionList, createPosition } from 'src/_mock';
 
 import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 import { INIT_ROWS } from 'src/redux/reducer/user/create/attachedPositionSlice';
@@ -52,7 +52,7 @@ export default function RequestCreateView() {
 
       dispatch(SELECT_POSITION({})); // 초기화
       dispatch(INIT_ROWS([])); // 초기화
-    }; // cleanup,
+    }; // cleanup
   }, [dispatch]);
 
   const [positionData, setPositionData] = useState({
@@ -77,7 +77,8 @@ export default function RequestCreateView() {
           return policy.name;
         }
         if (policy.csp === 'gcp') {
-          return policy.gcpName;
+          // return policy.gcpName;
+          return policy.name;
         }
         return '';
       }),
@@ -151,16 +152,26 @@ export default function RequestCreateView() {
               if (activeStep === steps.length - 1) {
                 dispatch(
                   REQUEST_POSITION({
-                    ...positionData,
                     id: 12341253253543,
-                    avatarUrl: null,
+                    avatarUrl: false,
                     type: 'friend',
                     category: 'Communication',
                     isUnRead: true,
                     createdAt: new Date(),
-                    title: `<p>${positionData.positionName}</p>`,
+                    title: `<p><strong>철수</strong> (이)가 <strong>${positionData.positionName}</strong> 권한을 요청했습니다`,
+                    detail: {
+                      ...positionData,
+                    },
                   })
                 );
+                PostNewNotification({
+                  type: 'friend',
+                  title: `<p><strong>철수</strong> (이)가 <strong>${positionData.positionName}</strong> 권한을 요청했습니다`,
+                  content: 'Communication',
+                  detail: {
+                    ...positionData,
+                  },
+                });
               }
             }}
           >
