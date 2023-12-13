@@ -169,10 +169,10 @@ export default function PositionListView() {
                 component={RouterLink}
                 href={paths.dashboard.position.new}
                 variant="contained"
-                startIcon={<Iconify icon="mingcute:add-line" />}
+                startIcon={<Iconify icon="ic:outline-change-circle" />}
                 sx={{ mr: 1 }}
               >
-                convert
+                Convert
               </Button>
               <Button
                 component={RouterLink}

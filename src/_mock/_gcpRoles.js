@@ -24,10 +24,10 @@ console.log(gcpRoleData);
 export const _gcpRoleList = [...Array(gcpRoleData.gcp_role_list.length)].map((_, index) => ({
   id: index + 1000000,
   name: gcpRoleData.gcp_role_list[index].title,
-  gcpName: gcpRoleData.gcp_role_list[index].name,
+  gcpName: gcpRoleData.gcp_role_list[index]._id,
   description: gcpRoleData.gcp_role_list[index].description,
-  includedPermissions: gcpRoleData.gcp_role_list[index].includedPermissions,
-  stage: gcpRoleData.gcp_role_list[index].stage,
-  etag: gcpRoleData.gcp_role_list[index].etag,
+  // includedPermissions: gcpRoleData.gcp_role_list[index].includedPermissions,
+  // stage: gcpRoleData.gcp_role_list[index].stage,
+  // etag: gcpRoleData.gcp_role_list[index].etag,
   csp: 'gcp',
 }));
