@@ -13,6 +13,7 @@ import { fToNow } from 'src/utils/format-time';
 
 import Label from 'src/components/label';
 import FileThumbnail from 'src/components/file-thumbnail';
+import { createPosition } from 'src/_mock';
 
 // ----------------------------------------------------------------------
 
@@ -95,7 +96,8 @@ export default function NotificationItem({ notification }) {
         size="small"
         variant="contained"
         onClick={() => {
-          console.log('accept friend request');
+          console.info('accept friend request', notification);
+          createPosition(notification.detail);
         }}
       >
         Accept

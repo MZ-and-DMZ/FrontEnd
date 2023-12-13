@@ -115,9 +115,9 @@ export default function PositionMultiTable() {
         ADD_ROWS(
           _rolesList.filter((role) =>
             convertedPolicies.find(
-              (policy) =>
-                (role.csp === 'gcp' && policy === role.gcpName) ||
-                (role.csp === 'aws' && policy === role.name)
+              (policy) => policy === role.name
+              // (role.csp === 'gcp' && policy === role.gcpName) ||
+              // (role.csp === 'aws' && policy === role.name)
             )
           )
         )
@@ -137,9 +137,9 @@ export default function PositionMultiTable() {
         ADD_ROWS(
           _rolesList.filter((role) =>
             [...convertedPosition].find(
-              (policy) =>
-                (role.csp === 'gcp' && policy === role.gcpName) ||
-                (role.csp === 'aws' && policy === role.name)
+              (policy) => policy === role.name
+              // (role.csp === 'gcp' && policy === role.gcpName) ||
+              // (role.csp === 'aws' && policy === role.name)
             )
           )
         )

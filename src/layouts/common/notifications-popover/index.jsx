@@ -30,27 +30,11 @@ import {
   REQUEST_POSITION,
 } from 'src/redux/reducer/request/create/requestPositionSlice';
 
+import { CheckReadNotification } from 'src/_mock/_notification';
+
 import NotificationItem from './notification-item';
 
 // ----------------------------------------------------------------------
-
-const TABS = [
-  {
-    value: 'all',
-    label: 'All',
-    count: 22,
-  },
-  {
-    value: 'unread',
-    label: 'Unread',
-    count: 12,
-  },
-  {
-    value: 'archived',
-    label: 'Archived',
-    count: 10,
-  },
-];
 
 // ----------------------------------------------------------------------
 
@@ -73,6 +57,24 @@ export default function NotificationsPopover() {
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
+  const TABS = [
+    {
+      value: 'all',
+      label: 'All',
+      count: notifications.length,
+    },
+    {
+      value: 'unread',
+      label: 'Unread',
+      count: totalUnRead,
+    },
+    {
+      value: 'archived',
+      label: 'Archived',
+      count: notifications.length - totalUnRead,
+    },
+  ];
+
   const handleMarkAllAsRead = () => {
     dispatch(
       REQUEST_POSITION(
@@ -87,7 +89,7 @@ export default function NotificationsPopover() {
   const renderHead = (
     <Stack direction="row" alignItems="center" sx={{ py: 2, pl: 2.5, pr: 1, minHeight: 68 }}>
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
-        Notificationsssssssssssss
+        알림
       </Typography>
 
       {!!totalUnRead && (
@@ -95,8 +97,9 @@ export default function NotificationsPopover() {
           <IconButton
             color="primary"
             onClick={() => {
-              console.log('click');
               dispatch(READ_NOTIFICATION());
+              const res = CheckReadNotification();
+              console.log('click', res);
             }}
           >
             <Iconify icon="eva:done-all-fill" />

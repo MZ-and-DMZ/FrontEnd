@@ -145,15 +145,14 @@ const SecondCreateForm = () => {
 
   useEffect(() => {
     if (selectedCategory) {
-    const selectedService =
-      selectedTab === 'aws'
-        ? awsServiceList.find((service) => service.actionCrudName === selectedCategory)
-        : gcpServiceList.find((service) => service.actionCrudName === selectedCategory);
+      const selectedService =
+        selectedTab === 'aws'
+          ? awsServiceList.find((service) => service.actionCrudName === selectedCategory)
+          : gcpServiceList.find((service) => service.actionCrudName === selectedCategory);
 
-    setMenuList(selectedService?.menuList || []);
-  }
-}, [selectedCategory, selectedTab, awsServiceList, gcpServiceList]);
-
+      setMenuList(selectedService?.menuList || []);
+    }
+  }, [selectedCategory, selectedTab, awsServiceList, gcpServiceList]);
 
   // useEffect(() => {
   //   const step2data = [
@@ -168,50 +167,49 @@ const SecondCreateForm = () => {
 
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
-    if(tab === 'aws'){
+    if (tab === 'aws') {
       setFilteredServiceList(awsServiceList);
-    } else if (tab === 'gcp'){
+    } else if (tab === 'gcp') {
       setFilteredServiceList(gcpServiceList);
     }
   };
 
-const handleMenuClick = (menu) => {
-  setSelectedMenu(menu);
-  setSelectedCrudType('');
-  setSelectedSubCategory(menu);
-  setSelectedPermissions({
-    create: [],
-    read: [],
-    update: [],
-    delete: [],
-  });
+  const handleMenuClick = (menu) => {
+    setSelectedMenu(menu);
+    setSelectedCrudType('');
+    setSelectedSubCategory(menu);
+    setSelectedPermissions({
+      create: [],
+      read: [],
+      update: [],
+      delete: [],
+    });
 
-  const serviceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList; // Tab으로 CSP 구분하기 위해 추가된 부분
+    const serviceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList; // Tab으로 CSP 구분하기 위해 추가된 부분
 
-  const selectedService = serviceList.find(
-    (service) => service.actionCrudName === selectedCategory
-  );
+    const selectedService = serviceList.find(
+      (service) => service.actionCrudName === selectedCategory
+    );
 
-  setMenuList(selectedService?.menuList || []);
-};
-
+    setMenuList(selectedService?.menuList || []);
+  };
 
   const handleServiceClick = async (selectedService) => {
-  setSelectedCategory(selectedService);
+    setSelectedCategory(selectedService);
 
-  try {
-    const selectedServiceData =
-      selectedTab === 'aws'
-        ? parsedData.find((service) => service.actionCrudName === selectedService)
-        : gcpParsedData.find((service) => service.actionCrudName === selectedService);
+    try {
+      const selectedServiceData =
+        selectedTab === 'aws'
+          ? parsedData.find((service) => service.actionCrudName === selectedService)
+          : gcpParsedData.find((service) => service.actionCrudName === selectedService);
 
-    const selectedServiceMenuList = selectedServiceData?.menuList || [];
+      const selectedServiceMenuList = selectedServiceData?.menuList || [];
 
-    setSelectedSubCategory('');
-    setMenuList(selectedServiceMenuList);
-  } catch (error) {
-    console.error('서비스 메뉴를 가져오는 동안 오류 발생:', error);
-  }
+      setSelectedSubCategory('');
+      setMenuList(selectedServiceMenuList);
+    } catch (error) {
+      console.error('서비스 메뉴를 가져오는 동안 오류 발생:', error);
+    }
 
     // try {
     //   const selectedServiceData = parsedData.find(
@@ -235,7 +233,7 @@ const handleMenuClick = (menu) => {
     setPageAws(0);
   };
 
-    // 메뉴 목록 테이블에 대한 함수
+  // 메뉴 목록 테이블에 대한 함수
   const handleChangePageMenu = (event, newPage) => {
     setPageMenu(newPage);
   };
@@ -315,29 +313,28 @@ const handleMenuClick = (menu) => {
   };
 
   const handleCreatePermissionChange = (event) => {
-  // 올바른 서비스 목록을 사용하십시오.
-  const currentServiceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList;
-  const isChecked = event.target.checked;
+    // 올바른 서비스 목록을 사용하십시오.
+    const currentServiceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList;
+    const isChecked = event.target.checked;
 
-  // 생성 권한 체크 여부 업데이트
-  setCreatePermissionChecked(isChecked);
+    // 생성 권한 체크 여부 업데이트
+    setCreatePermissionChecked(isChecked);
 
-  // 생성 권한을 가져옴
-  const menuData = currentServiceList
-    .find((service) => service.actionCrudName === selectedCategory)
-    ?.menuList.find((menu) => menu.menu === selectedSubCategory);
-  const createPermissions = menuData?.createPermissions || [];
+    // 생성 권한을 가져옴
+    const menuData = currentServiceList
+      .find((service) => service.actionCrudName === selectedCategory)
+      ?.menuList.find((menu) => menu.menu === selectedSubCategory);
+    const createPermissions = menuData?.createPermissions || [];
 
-  // 생성 권한에 속한 모든 권한을 선택 여부에 따라 업데이트
-  setSelectedPermissions((prevPermissions) => ({
-    ...prevPermissions,
-    create: isChecked ? createPermissions : [],
-  }));
+    // 생성 권한에 속한 모든 권한을 선택 여부에 따라 업데이트
+    setSelectedPermissions((prevPermissions) => ({
+      ...prevPermissions,
+      create: isChecked ? createPermissions : [],
+    }));
 
-  // selectedMenuData 업데이트
-  setSelectedMenuData(menuData);
-};
-
+    // selectedMenuData 업데이트
+    setSelectedMenuData(menuData);
+  };
 
   const handleUpdatePermissionChange = (event) => {
     const isChecked = event.target.checked;
@@ -381,7 +378,7 @@ const handleMenuClick = (menu) => {
 
   return (
     <RootContainer>
-    <Tabs value={selectedTab} onChange={(event, newValue) => handleTabChange(newValue)}>
+      <Tabs value={selectedTab} onChange={(event, newValue) => handleTabChange(newValue)}>
         <Tab label="AWS" value="aws" />
         <Tab label="GCP" value="gcp" />
       </Tabs>
@@ -426,8 +423,6 @@ const handleMenuClick = (menu) => {
             onPageChange={handleChangePageAws}
             onRowsPerPageChange={handleChangeRowsPerPageAws}
           />
-
-
         </TableContainer>
       </StyledFormControl>
 
@@ -492,20 +487,21 @@ const handleMenuClick = (menu) => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList && gcpServiceList
-                    .find((service) => service.actionCrudName === selectedCategory)
-                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
-                    .map((menu, index) => (
-                      <TableCell key={index}>
-                        {menu && menu.createPermissions.length > 0 ? (
-                          menu.createPermissions.map((permission, i) => (
-                            <StyledChip key={i} label={permission} />
-                          ))
-                        ) : (
-                          <StyledChip label="없음" />
-                        )}
-                      </TableCell>
-                    ))}
+                  {awsServiceList &&
+                    gcpServiceList
+                      .find((service) => service.actionCrudName === selectedCategory)
+                      ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                      .map((menu, index) => (
+                        <TableCell key={index}>
+                          {menu && menu.createPermissions.length > 0 ? (
+                            menu.createPermissions.map((permission, i) => (
+                              <StyledChip key={i} label={permission} />
+                            ))
+                          ) : (
+                            <StyledChip label="없음" />
+                          )}
+                        </TableCell>
+                      ))}
                 </TableRow>
               </TableBody>
             </Table>
@@ -530,20 +526,21 @@ const handleMenuClick = (menu) => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList && gcpServiceList
-                    .find((service) => service.actionCrudName === selectedCategory)
-                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
-                    .map((menu, index) => (
-                      <TableCell key={index}>
-                        {menu && menu.readPermissions.length > 0 ? (
-                          menu.readPermissions.map((permission, i) => (
-                            <StyledChip key={i} label={permission} />
-                          ))
-                        ) : (
-                          <StyledChip label="없음" />
-                        )}
-                      </TableCell>
-                    ))}
+                  {awsServiceList &&
+                    gcpServiceList
+                      .find((service) => service.actionCrudName === selectedCategory)
+                      ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                      .map((menu, index) => (
+                        <TableCell key={index}>
+                          {menu && menu.readPermissions.length > 0 ? (
+                            menu.readPermissions.map((permission, i) => (
+                              <StyledChip key={i} label={permission} />
+                            ))
+                          ) : (
+                            <StyledChip label="없음" />
+                          )}
+                        </TableCell>
+                      ))}
                 </TableRow>
               </TableBody>
             </Table>
@@ -568,20 +565,21 @@ const handleMenuClick = (menu) => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList && gcpServiceList
-                    .find((service) => service.actionCrudName === selectedCategory)
-                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
-                    .map((menu, index) => (
-                      <TableCell key={index}>
-                        {menu && menu.updatePermissions.length > 0 ? (
-                          menu.updatePermissions.map((permission, i) => (
-                            <StyledChip key={i} label={permission} />
-                          ))
-                        ) : (
-                          <StyledChip label="없음" />
-                        )}
-                      </TableCell>
-                    ))}
+                  {awsServiceList &&
+                    gcpServiceList
+                      .find((service) => service.actionCrudName === selectedCategory)
+                      ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                      .map((menu, index) => (
+                        <TableCell key={index}>
+                          {menu && menu.updatePermissions.length > 0 ? (
+                            menu.updatePermissions.map((permission, i) => (
+                              <StyledChip key={i} label={permission} />
+                            ))
+                          ) : (
+                            <StyledChip label="없음" />
+                          )}
+                        </TableCell>
+                      ))}
                 </TableRow>
               </TableBody>
             </Table>
@@ -606,20 +604,21 @@ const handleMenuClick = (menu) => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList && gcpServiceList
-                    .find((service) => service.actionCrudName === selectedCategory)
-                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
-                    .map((menu, index) => (
-                      <TableCell key={index}>
-                        {menu && menu.deletePermissions.length > 0 ? (
-                          menu.deletePermissions.map((permission, i) => (
-                            <StyledChip key={i} label={permission} />
-                          ))
-                        ) : (
-                          <StyledChip label="없음" />
-                        )}
-                      </TableCell>
-                    ))}
+                  {awsServiceList &&
+                    gcpServiceList
+                      .find((service) => service.actionCrudName === selectedCategory)
+                      ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                      .map((menu, index) => (
+                        <TableCell key={index}>
+                          {menu && menu.deletePermissions.length > 0 ? (
+                            menu.deletePermissions.map((permission, i) => (
+                              <StyledChip key={i} label={permission} />
+                            ))
+                          ) : (
+                            <StyledChip label="없음" />
+                          )}
+                        </TableCell>
+                      ))}
                 </TableRow>
               </TableBody>
             </Table>
@@ -637,11 +636,7 @@ const handleMenuClick = (menu) => {
                   <React.Fragment key={permissionType}>
                     <h5>{`${permissionType} 권한`}</h5>
                     {selectedPermissions[permissionType].map((permission, i) => (
-                      <StyledChip
-                        key={i}
-                        label={`${permission}`}
-                        permissionType={permissionType}
-                      />
+                      <StyledChip key={i} label={`${permission}`} permissionType={permissionType} />
                     ))}
                   </React.Fragment>
                 )
@@ -650,18 +645,20 @@ const handleMenuClick = (menu) => {
         </div>
       )}
       <Button
-  onClick={async () => {
-    // 선택된 탭에 따라 올바른 서비스 목록을 사용하십시오.
-    const currentServiceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList;
+        onClick={async () => {
+          // 선택된 탭에 따라 올바른 서비스 목록을 사용하십시오.
 
-    const recommendedPolicy = await recommendPolicies(selectedPermissions, selectedTab.toLowerCase(), currentServiceList);
-    console.log('recommendedPolicies', recommendedPolicy);
-    setRecommendedPolicies(recommendedPolicy);
-    dispatch(UPDATE_STEP2(recommendedPolicy));
-  }}
->
-  {`추천정책: ${recommendedPolicies || '없음'}`}
-</Button>
+          const recommendedPolicy = await recommendPolicies(
+            selectedPermissions,
+            selectedTab.toLowerCase()
+          );
+          console.log('recommendedPolicies', recommendedPolicy);
+          setRecommendedPolicies(recommendedPolicy);
+          dispatch(UPDATE_STEP2(recommendedPolicy));
+        }}
+      >
+        {`추천정책: ${recommendedPolicies || '없음'}`}
+      </Button>
     </RootContainer>
   );
 };
