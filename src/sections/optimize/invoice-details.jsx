@@ -31,7 +31,7 @@ const InvoiceDetail = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [currentAwsDuration, setCurrentAwsDuration] = useState();
   const [currentGcpDuration, setCurrentGcpDuration] = useState(null);
-  const [allowDurationChange, setAllowDurationChange] = useState(false);
+  const [allowDurationChange, setAllowDurationChange] = useState(true);
   const [tableEnabled, setTableEnabled] = useState(false);
   const [selectedAwsUsers, setSelectedAwsUsers] = useState([]);
   const [selectedGcpUsers, setSelectedGcpUsers] = useState([]);
