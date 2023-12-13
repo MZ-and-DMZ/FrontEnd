@@ -107,14 +107,16 @@ export const paths = {
       // booking: `${ROOTS.DASHBOARD}/booking`,
       // file: `${ROOTS.DASHBOARD}/file`,
     },
-    boch: {
-      root: `${ROOTS.DASHBOARD}/boch`,
-      user: `${ROOTS.DASHBOARD}/boch/user`,
-      position: `${ROOTS.DASHBOARD}/boch/position`,
-      group: `${ROOTS.DASHBOARD}/boch/group`,
+
+    user: {
+      root: `${ROOTS.DASHBOARD}/user`,
+      new: `${ROOTS.DASHBOARD}/user/new`,
+      list: `${ROOTS.DASHBOARD}/user/list`,
       // cards: `${ROOTS.DASHBOARD}/user/cards`,
       // profile: `${ROOTS.DASHBOARD}/user/profile`,
       // account: `${ROOTS.DASHBOARD}/user/account`,
+      group: `${ROOTS.DASHBOARD}/user/group`,
+      position: `${ROOTS.DASHBOARD}/user/position`,
       edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
@@ -145,6 +147,7 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/position/${MOCK_ID}/edit`,
       },
     },
+    
     request: {
       root: `${ROOTS.DASHBOARD}/request`,
       new: `${ROOTS.DASHBOARD}/request/new`,

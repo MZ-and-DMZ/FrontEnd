@@ -96,14 +96,14 @@ export function useNavData() {
           // USER
           {
             title: t('BOch'),
-            path: paths.dashboard.boch.root,
+            path: paths.dashboard.user.root,
             icon: ICONS.user,
             children: [
               // { title: t('profile'), path: paths.dashboard.user.root },
               // { title: t('cards'), path: paths.dashboard.user.cards },
-              { title: t('사용자'), path: paths.dashboard.boch.user },
-              { title: t('그룹'), path: paths.dashboard.boch.group },
-              { title: t('직무'), path: paths.dashboard.boch.position },
+              { title: t('사용자'), path: paths.dashboard.user.list },
+              { title: t('그룹'), path: paths.dashboard.user.group },
+              { title: t('직무'), path: paths.dashboard.user.position },
               // { title: t('create'), path: paths.dashboard.user.new },
               // { title: t('edit'), path: paths.dashboard.user.demo.edit },
               // { title: t('account'), path: paths.dashboard.user.account },
