@@ -45,4 +45,49 @@ export function _parseActionCrudData(data) {
   }));
 }
 
+export async function getAwsTreeData() {
+  // service list는 string list로 나옴
+  // action crud는 _id에 service 명칭이 들어가 있고, 그 아래에 children으로 menu list가 있고
+  // 그 아래에 menu 가 실제 서비스고 crud가 아 아래에 있음
+  // 사실 service list는 없어도 되고 action crud만 있으면 됨
+  //
 
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/actioncrud`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    console.log('AWS Tree Data:', data);
+
+    return (data?.aws_action_crud || []).map((item) => ({
+      name: item._id,
+      children: (item.menu_list || []).map((menu) => ({
+        name: menu.menu,
+        children: [
+          {
+            name: 'Create',
+            children: menu.c?.map((action) => ({ name: action, children: [] })) || [],
+          },
+          {
+            name: 'Read',
+            children: menu.r?.map((action) => ({ name: action, children: [] })) || [],
+          },
+          {
+            name: 'Update',
+            children: menu.u?.map((action) => ({ name: action, children: [] })) || [],
+          },
+          {
+            name: 'Delete',
+            children: menu.d?.map((action) => ({ name: action, children: [] })) || [],
+          },
+        ],
+      })),
+    }));
+  } catch (error) {
+    console.error('Error fetching data from /aws/treedata:', error);
+    throw error;
+  }
+}

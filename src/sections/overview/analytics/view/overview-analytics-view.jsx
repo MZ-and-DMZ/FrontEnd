@@ -20,36 +20,42 @@ import AnalyticsWidgetSummary from '../analytics-widget-summary';
 import AnalyticsTrafficBySite from '../analytics-traffic-by-site';
 import AnalyticsCurrentSubject from '../analytics-current-subject';
 import AnalyticsConversionRates from '../analytics-conversion-rates';
+import AnalyticsPermissionTreeChart from '../analytics-permission-tree-chart';
 
 // ----------------------------------------------------------------------
 
 export default function OverviewAnalyticsView() {
   const settings = useSettingsContext();
 
+  const graph_data = [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43];
+  const last_graph_data = [23, 11, 22, 27, 13, 22, 15, 21, 44, 22, 30];
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Typography
-        variant="h4"
+        // variant="h6"
+        variant="body1"
         sx={{
+          // mb: { xs: 3, md: 5 },
           mb: { xs: 3, md: 5 },
         }}
       >
-        Hi, Welcome back 👋
+        {/* Hi, Welcome back 👋 */}
+        Analytics, 정책의 권한 구조와 최적화 관련 통계를 볼 수 있습니다.
       </Typography>
 
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Weekly Sales"
-            total={714000}
+            title="신규 권한 요청"
+            total={714}
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
           />
         </Grid>
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="New Users"
-            total={1352831}
+            title="신규 사용자"
+            total={135}
             color="info"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
           />
@@ -57,8 +63,8 @@ export default function OverviewAnalyticsView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Item Orders"
-            total={1723315}
+            title="신규 권한 승인"
+            total={652}
             color="warning"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
           />
@@ -66,16 +72,16 @@ export default function OverviewAnalyticsView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Bug Reports"
-            total={234}
+            title="권한 삭제"
+            total={23264}
             color="error"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
           />
         </Grid>
 
-        <Grid xs={12} md={6} lg={8}>
+        <Grid xs={12} md={6} lg={12}>
           <AnalyticsWebsiteVisits
-            title="Website Visits"
+            title="권한 통계"
             subheader="(+43%) than last year"
             chart={{
               labels: [
@@ -93,29 +99,36 @@ export default function OverviewAnalyticsView() {
               ],
               series: [
                 {
-                  name: 'Team A',
+                  name: '남은 권한',
                   type: 'column',
                   fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
+                  // data: [23, 11, 22, 27, 13, 22, 15, 21, 44, 22, 30],
+                  data: last_graph_data.map((item, index) => item * (11 - index).toFixed(0)),
                 },
                 {
-                  name: 'Team B',
+                  name: '전체 권한',
+                  // type: 'area',
                   type: 'area',
                   fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
+                  data: graph_data.map((item, index) => item * (11 - index).toFixed(0)),
                 },
                 {
-                  name: 'Team C',
-                  type: 'line',
-                  fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
+                  name: '미사용 및 삭제 권한',
+                  // type: 'line',
+                  type: 'area',
+                  // fill: 'solid',
+                  fill: 'gradient',
+                  // data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
+                  data: graph_data.map((item, index) =>
+                    (item * (11 - index) - last_graph_data[index] * (11 - index)).toFixed(0)
+                  ),
                 },
               ],
             }}
           />
         </Grid>
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AnalyticsCurrentVisits
             title="Current Visits"
             chart={{
@@ -127,10 +140,10 @@ export default function OverviewAnalyticsView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={8}>
-          <AnalyticsConversionRates
+        <Grid xs={12} md={6} lg={12}>
+          <AnalyticsPermissionTreeChart
             title="Conversion Rates"
             subheader="(+43%) than last year"
             chart={{
@@ -148,9 +161,27 @@ export default function OverviewAnalyticsView() {
               ],
             }}
           />
+          {/* <AnalyticsConversionRates
+            title="Conversion Rates"
+            subheader="(+43%) than last year"
+            chart={{
+              series: [
+                { label: 'Italy', value: 400 },
+                { label: 'Japan', value: 430 },
+                { label: 'China', value: 448 },
+                { label: 'Canada', value: 470 },
+                { label: 'France', value: 540 },
+                { label: 'Germany', value: 580 },
+                { label: 'South Korea', value: 690 },
+                { label: 'Netherlands', value: 1100 },
+                { label: 'United States', value: 1200 },
+                { label: 'United Kingdom', value: 1380 },
+              ],
+            }}
+          /> */}
         </Grid>
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AnalyticsCurrentSubject
             title="Current Subject"
             chart={{
@@ -162,19 +193,19 @@ export default function OverviewAnalyticsView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={8}>
+        {/* <Grid xs={12} md={6} lg={8}>
           <AnalyticsNews title="News" list={_analyticPosts} />
-        </Grid>
+        </Grid> */}
 
         <Grid xs={12} md={6} lg={4}>
           <AnalyticsOrderTimeline title="Order Timeline" list={_analyticOrderTimeline} />
         </Grid>
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AnalyticsTrafficBySite title="Traffic by Site" list={_analyticTraffic} />
-        </Grid>
+        </Grid> */}
 
         <Grid xs={12} md={6} lg={8}>
           <AnalyticsTasks title="Tasks" list={_analyticTasks} />
