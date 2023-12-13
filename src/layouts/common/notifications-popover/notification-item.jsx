@@ -91,7 +91,13 @@ export default function NotificationItem({ notification }) {
 
   const friendAction = (
     <Stack spacing={1} direction="row" sx={{ mt: 1.5 }}>
-      <Button size="small" variant="contained">
+      <Button
+        size="small"
+        variant="contained"
+        onClick={() => {
+          console.log('accept friend request');
+        }}
+      >
         Accept
       </Button>
       <Button size="small" variant="outlined">
