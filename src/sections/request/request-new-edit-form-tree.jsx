@@ -11,6 +11,8 @@ import {
   Input,
   TableContainer,
   Paper,
+  Tab,
+  Tabs,
   Table,
   TableHead,
   TableRow,
@@ -28,6 +30,7 @@ import styled from '@emotion/styled';
 
 import { recommendPolicies } from 'src/_mock';
 import { getAwsServiceList, getActionCrudData, _parseActionCrudData } from 'src/_mock/_aws';
+import { getGcpServiceList, getGcpActionCrudData, _parseGcpActionCrudData } from 'src/_mock/_gcp';
 import { UPDATE_STEP2 } from 'src/redux/reducer/position/create/step2Slice';
 
 const RootContainer = styled('div')({
@@ -72,7 +75,7 @@ const TableWrapper = styled(Box)({
   marginTop: (theme) => theme.spacing(2),
 });
 
-const SecondRequestForm = () => {
+const SecondCreateForm = () => {
   const step2 = useSelector((state) => state.step2);
   const [selectedPermissions, setSelectedPermissions] = useState({
     create: [],
@@ -80,6 +83,11 @@ const SecondRequestForm = () => {
     update: [],
     delete: [],
   });
+
+  const [selectedTab, setSelectedTab] = useState('aws'); // 기본값은 AWS로 설정
+  const [gcpServiceList, setGcpServiceList] = useState([]);
+  const [gcpParsedData, setGcpParsedData] = useState([]);
+  const [gcpFilteredServiceList, setGcpFilteredServiceList] = useState([]);
   const [recommendedPolicies, setRecommendedPolicies] = useState(null);
   const [awsServiceList, setAwsServiceList] = useState([]);
   const [filteredServiceList, setFilteredServiceList] = useState([]);
@@ -97,7 +105,12 @@ const SecondRequestForm = () => {
   const [updatePermissionChecked, setUpdatePermissionChecked] = useState(false);
   const [deletePermissionChecked, setDeletePermissionChecked] = useState(false);
 
-  const [page, setPage] = useState(0);
+  const [pageAws, setPageAws] = useState(0);
+  const [rowsPerPageAws, setRowsPerPageAws] = useState(5);
+
+  const [pageMenu, setPageMenu] = useState(0);
+  const [rowsPerPageMenu, setRowsPerPageMenu] = useState(5);
+
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const dispatch = useDispatch();
@@ -114,6 +127,17 @@ const SecondRequestForm = () => {
       } catch (error) {
         console.error('AWS 서비스 목록을 불러오는 동안 오류 발생:', error);
       }
+
+      try {
+        const gcpMiddleClassification = await getGcpActionCrudData();
+        const parsedGcpDataResult = _parseGcpActionCrudData(gcpMiddleClassification);
+
+        setGcpServiceList(parsedGcpDataResult);
+        setGcpFilteredServiceList(parsedGcpDataResult);
+        setGcpParsedData(parsedGcpDataResult);
+      } catch (error) {
+        console.error('GCP 데이터를 불러오는 동안 오류 발생:', error);
+      }
     };
 
     fetchData();
@@ -121,12 +145,14 @@ const SecondRequestForm = () => {
 
   useEffect(() => {
     if (selectedCategory) {
-      const selectedService = awsServiceList.find(
-        (service) => service.actionCrudName === selectedCategory
-      );
+      const selectedService =
+        selectedTab === 'aws'
+          ? awsServiceList.find((service) => service.actionCrudName === selectedCategory)
+          : gcpServiceList.find((service) => service.actionCrudName === selectedCategory);
+
       setMenuList(selectedService?.menuList || []);
     }
-  }, [selectedCategory, awsServiceList]);
+  }, [selectedCategory, selectedTab, awsServiceList, gcpServiceList]);
 
   // useEffect(() => {
   //   const step2data = [
@@ -139,6 +165,15 @@ const SecondRequestForm = () => {
   //   console.log('step2data', step2data);
   // }, [selectedPermissions, dispatch]);
 
+  const handleTabChange = (tab) => {
+    setSelectedTab(tab);
+    if (tab === 'aws') {
+      setFilteredServiceList(awsServiceList);
+    } else if (tab === 'gcp') {
+      setFilteredServiceList(gcpServiceList);
+    }
+  };
+
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
     setSelectedCrudType('');
@@ -149,15 +184,25 @@ const SecondRequestForm = () => {
       update: [],
       delete: [],
     });
+
+    const serviceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList; // Tab으로 CSP 구분하기 위해 추가된 부분
+
+    const selectedService = serviceList.find(
+      (service) => service.actionCrudName === selectedCategory
+    );
+
+    setMenuList(selectedService?.menuList || []);
   };
 
   const handleServiceClick = async (selectedService) => {
     setSelectedCategory(selectedService);
 
     try {
-      const selectedServiceData = parsedData.find(
-        (service) => service.actionCrudName === selectedService
-      );
+      const selectedServiceData =
+        selectedTab === 'aws'
+          ? parsedData.find((service) => service.actionCrudName === selectedService)
+          : gcpParsedData.find((service) => service.actionCrudName === selectedService);
+
       const selectedServiceMenuList = selectedServiceData?.menuList || [];
 
       setSelectedSubCategory('');
@@ -165,15 +210,37 @@ const SecondRequestForm = () => {
     } catch (error) {
       console.error('서비스 메뉴를 가져오는 동안 오류 발생:', error);
     }
+
+    // try {
+    //   const selectedServiceData = parsedData.find(
+    //     (service) => service.actionCrudName === selectedService
+    //   );
+    //   const selectedServiceMenuList = selectedServiceData?.menuList || [];
+
+    //   setSelectedSubCategory('');
+    //   setMenuList(selectedServiceMenuList);
+    // } catch (error) {
+    //   console.error('서비스 메뉴를 가져오는 동안 오류 발생:', error);
+    // }
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangePageAws = (event, newPage) => {
+    setPageAws(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 5));
-    setPage(0);
+  const handleChangeRowsPerPageAws = (event) => {
+    setRowsPerPageAws(parseInt(event.target.value, 5));
+    setPageAws(0);
+  };
+
+  // 메뉴 목록 테이블에 대한 함수
+  const handleChangePageMenu = (event, newPage) => {
+    setPageMenu(newPage);
+  };
+
+  const handleChangeRowsPerPageMenu = (event) => {
+    setRowsPerPageMenu(parseInt(event.target.value, 5));
+    setPageMenu(0);
   };
 
   const handleSearch = (event) => {
@@ -246,13 +313,17 @@ const SecondRequestForm = () => {
   };
 
   const handleCreatePermissionChange = (event) => {
+    // 올바른 서비스 목록을 사용하십시오.
+    const currentServiceList = selectedTab === 'aws' ? awsServiceList : gcpServiceList;
     const isChecked = event.target.checked;
 
     // 생성 권한 체크 여부 업데이트
     setCreatePermissionChecked(isChecked);
 
     // 생성 권한을 가져옴
-    const menuData = menuList.find((menu) => menu.menu === selectedSubCategory);
+    const menuData = currentServiceList
+      .find((service) => service.actionCrudName === selectedCategory)
+      ?.menuList.find((menu) => menu.menu === selectedSubCategory);
     const createPermissions = menuData?.createPermissions || [];
 
     // 생성 권한에 속한 모든 권한을 선택 여부에 따라 업데이트
@@ -307,6 +378,11 @@ const SecondRequestForm = () => {
 
   return (
     <RootContainer>
+      <Tabs value={selectedTab} onChange={(event, newValue) => handleTabChange(newValue)}>
+        <Tab label="AWS" value="aws" />
+        <Tab label="GCP" value="gcp" />
+      </Tabs>
+
       <StyledFormControl>
         <TextField
           fullWidth
@@ -326,14 +402,9 @@ const SecondRequestForm = () => {
             </TableHead>
             <TableBody>
               {filteredServiceList
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .slice(pageAws * rowsPerPage, pageAws * rowsPerPage + rowsPerPage)
                 .map((service, index) => (
-                  <TableRow
-                    key={index}
-                    selected={selectedCategory === service.actionCrudName}
-                    // set height 15px
-                    sx={{ height: '15px' }}
-                  >
+                  <TableRow key={index} selected={selectedCategory === service.actionCrudName}>
                     <TableCell>
                       <Button onClick={() => handleServiceClick(service.actionCrudName)}>
                         {service.actionCrudName}
@@ -347,10 +418,10 @@ const SecondRequestForm = () => {
             rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
             count={filteredServiceList.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPage={rowsPerPageAws}
+            page={pageAws}
+            onPageChange={handleChangePageAws}
+            onRowsPerPageChange={handleChangeRowsPerPageAws}
           />
         </TableContainer>
       </StyledFormControl>
@@ -361,7 +432,7 @@ const SecondRequestForm = () => {
             fullWidth
             value={searchMenuQuery}
             onChange={handleMenuSearch}
-            placeholder="메뉴 검색..."
+            placeholder="기능 검색..."
             InputProps={{
               startAdornment: <InputAdornment position="start">검색</InputAdornment>,
             }}
@@ -371,12 +442,12 @@ const SecondRequestForm = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>메뉴 목록</TableCell>
+                  <TableCell>기능 목록</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {menuList
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .slice(pageMenu * rowsPerPage, pageMenu * rowsPerPage + rowsPerPage)
                   .map((menu, index) => (
                     <TableRow key={index} selected={selectedSubCategory === menu.menu}>
                       <TableCell>
@@ -390,10 +461,10 @@ const SecondRequestForm = () => {
               rowsPerPageOptions={[5, 10, 25, 50]}
               component="div"
               count={menuList.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPage={rowsPerPageMenu}
+              page={pageMenu}
+              onPageChange={handleChangePageMenu}
+              onRowsPerPageChange={handleChangeRowsPerPageMenu}
             />
           </TableContainer>
         </TableWrapper>
@@ -416,20 +487,21 @@ const SecondRequestForm = () => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList
-                    .find((service) => service.actionCrudName === selectedCategory)
-                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
-                    .map((menu, index) => (
-                      <TableCell key={index}>
-                        {menu && menu.createPermissions.length > 0 ? (
-                          menu.createPermissions.map((permission, i) => (
-                            <StyledChip key={i} label={permission} />
-                          ))
-                        ) : (
-                          <StyledChip label="없음" />
-                        )}
-                      </TableCell>
-                    ))}
+                  {awsServiceList &&
+                    gcpServiceList
+                      .find((service) => service.actionCrudName === selectedCategory)
+                      ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                      .map((menu, index) => (
+                        <TableCell key={index}>
+                          {menu && menu.createPermissions.length > 0 ? (
+                            menu.createPermissions.map((permission, i) => (
+                              <StyledChip key={i} label={permission} />
+                            ))
+                          ) : (
+                            <StyledChip label="없음" />
+                          )}
+                        </TableCell>
+                      ))}
                 </TableRow>
               </TableBody>
             </Table>
@@ -454,20 +526,21 @@ const SecondRequestForm = () => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList
-                    .find((service) => service.actionCrudName === selectedCategory)
-                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
-                    .map((menu, index) => (
-                      <TableCell key={index}>
-                        {menu && menu.readPermissions.length > 0 ? (
-                          menu.readPermissions.map((permission, i) => (
-                            <StyledChip key={i} label={permission} />
-                          ))
-                        ) : (
-                          <StyledChip label="없음" />
-                        )}
-                      </TableCell>
-                    ))}
+                  {awsServiceList &&
+                    gcpServiceList
+                      .find((service) => service.actionCrudName === selectedCategory)
+                      ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                      .map((menu, index) => (
+                        <TableCell key={index}>
+                          {menu && menu.readPermissions.length > 0 ? (
+                            menu.readPermissions.map((permission, i) => (
+                              <StyledChip key={i} label={permission} />
+                            ))
+                          ) : (
+                            <StyledChip label="없음" />
+                          )}
+                        </TableCell>
+                      ))}
                 </TableRow>
               </TableBody>
             </Table>
@@ -492,20 +565,21 @@ const SecondRequestForm = () => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList
-                    .find((service) => service.actionCrudName === selectedCategory)
-                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
-                    .map((menu, index) => (
-                      <TableCell key={index}>
-                        {menu && menu.updatePermissions.length > 0 ? (
-                          menu.updatePermissions.map((permission, i) => (
-                            <StyledChip key={i} label={permission} />
-                          ))
-                        ) : (
-                          <StyledChip label="없음" />
-                        )}
-                      </TableCell>
-                    ))}
+                  {awsServiceList &&
+                    gcpServiceList
+                      .find((service) => service.actionCrudName === selectedCategory)
+                      ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                      .map((menu, index) => (
+                        <TableCell key={index}>
+                          {menu && menu.updatePermissions.length > 0 ? (
+                            menu.updatePermissions.map((permission, i) => (
+                              <StyledChip key={i} label={permission} />
+                            ))
+                          ) : (
+                            <StyledChip label="없음" />
+                          )}
+                        </TableCell>
+                      ))}
                 </TableRow>
               </TableBody>
             </Table>
@@ -530,20 +604,21 @@ const SecondRequestForm = () => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {awsServiceList
-                    .find((service) => service.actionCrudName === selectedCategory)
-                    ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
-                    .map((menu, index) => (
-                      <TableCell key={index}>
-                        {menu && menu.deletePermissions.length > 0 ? (
-                          menu.deletePermissions.map((permission, i) => (
-                            <StyledChip key={i} label={permission} />
-                          ))
-                        ) : (
-                          <StyledChip label="없음" />
-                        )}
-                      </TableCell>
-                    ))}
+                  {awsServiceList &&
+                    gcpServiceList
+                      .find((service) => service.actionCrudName === selectedCategory)
+                      ?.menuList.filter((menu) => menu.menu === selectedSubCategory)
+                      .map((menu, index) => (
+                        <TableCell key={index}>
+                          {menu && menu.deletePermissions.length > 0 ? (
+                            menu.deletePermissions.map((permission, i) => (
+                              <StyledChip key={i} label={permission} />
+                            ))
+                          ) : (
+                            <StyledChip label="없음" />
+                          )}
+                        </TableCell>
+                      ))}
                 </TableRow>
               </TableBody>
             </Table>
@@ -553,19 +628,15 @@ const SecondRequestForm = () => {
 
       {selectedCategory && selectedSubCategory && (
         <div>
-          <h4>선택된 권한 :</h4>
+          <h4>선택된 권한</h4>
           <div>
             {Object.keys(selectedPermissions).map(
               (permissionType) =>
                 selectedPermissions[permissionType].length > 0 && (
                   <React.Fragment key={permissionType}>
-                    <h5>{`${permissionType} 권한:`}</h5>
+                    <h5>{`${permissionType} 권한`}</h5>
                     {selectedPermissions[permissionType].map((permission, i) => (
-                      <StyledChip
-                        key={i}
-                        label={`${permissionType}: ${permission}`}
-                        permissionType={permissionType}
-                      />
+                      <StyledChip key={i} label={`${permission}`} permissionType={permissionType} />
                     ))}
                   </React.Fragment>
                 )
@@ -575,16 +646,21 @@ const SecondRequestForm = () => {
       )}
       <Button
         onClick={async () => {
-          const recommendedPolicy = await recommendPolicies(selectedPermissions, 'aws'); // csp 설정 바꾸기
+          // 선택된 탭에 따라 올바른 서비스 목록을 사용하십시오.
+
+          const recommendedPolicy = await recommendPolicies(
+            selectedPermissions,
+            selectedTab.toLowerCase()
+          );
           console.log('recommendedPolicies', recommendedPolicy);
           setRecommendedPolicies(recommendedPolicy);
           dispatch(UPDATE_STEP2(recommendedPolicy));
         }}
       >
-        {`추천정책:${recommendedPolicies || '없음'}`}
+        {`추천정책: ${recommendedPolicies || '없음'}`}
       </Button>
     </RootContainer>
   );
 };
 
-export default SecondRequestForm;
+export default SecondCreateForm;

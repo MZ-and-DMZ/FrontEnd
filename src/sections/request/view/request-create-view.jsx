@@ -19,8 +19,9 @@ import { REQUEST_POSITION } from 'src/redux/reducer/request/create/requestPositi
 import { MailView } from 'src/sections/mail/view';
 import PositionNewEditFormInput from '../request-new-edit-form-input';
 // import PositionNewEditFormTree from '../position-new-edit-form-tree';
-import RequestNewEditFormTable from '../request-new-edit-form-table';
 import SecondRequestForm from '../request-new-edit-form-tree';
+import RequestNewEditFormTable from '../request-new-edit-form-table';
+
 
 // ----------------------------------------------------------------------
 
