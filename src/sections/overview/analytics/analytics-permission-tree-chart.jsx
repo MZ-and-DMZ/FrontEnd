@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Tree, AnimatedTree } from 'react-tree-graph';
 import 'react-tree-graph/dist/style.css';
 
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -14,7 +15,6 @@ import { fNumber } from 'src/utils/format-number';
 import Chart, { useChart } from 'src/components/chart';
 
 import { getAwsTreeData } from 'src/_mock/_aws';
-import { filter } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -59,6 +59,59 @@ export default function AnalyticsPermissionTreeChart({ title, subheader, chart, 
       ],
     },
   ]);
+
+  const mock_data2 = {
+    name: 'ec2',
+    children: [
+      {
+        name: '인스턴스',
+        children: [
+          {
+            name: 'Create',
+            children: [
+              { name: 'ec2:ImportInstance' },
+              { name: 'ec2:RunInstances' },
+              { name: 'ec2:StartInstances' },
+            ],
+          },
+          {
+            name: 'Update',
+            children: [
+              { name: 'ec2:DescribeFleetInstances' },
+              { name: 'ec2:DescribeInstanceTopology' },
+              { name: 'ec2:DescribeReservedInstancesListings' },
+              { name: 'ec2:DescribeReservedInstancesModifications' },
+              { name: 'ec2:DescribeReservedInstancesOfferings' },
+              { name: 'ec2:GetInstanceUefiData' },
+              { name: 'ec2:DescribeInstanceAttribute' },
+              { name: 'ec2:DescribeInstances' },
+            ],
+          },
+          {
+            name: 'Read',
+            children: [
+              { name: 'ec2:ConfirmProductInstance' },
+              { name: 'ec2:ModifyInstanceMetadataOptions' },
+              { name: 'ec2:ModifyInstanceMaintenanceOptions' },
+              { name: 'ec2:BundleInstance' },
+              { name: 'ec2:ModifyInstanceEventStartTime' },
+              { name: 'ec2:ModifyInstanceAttribute' },
+              { name: 'ec2:ResetInstanceAttribute' },
+              { name: 'ec2:MonitorInstances' },
+              { name: 'ec2:RebootInstances' },
+              { name: 'ec2:StopInstances' },
+              { name: 'ec2:UnmonitorInstances' },
+              { name: 'ec2:ModifyInstancePlacement' },
+            ],
+          },
+          {
+            name: 'Delete',
+            children: [{ name: 'ec2:TerminateInstances' }],
+          },
+        ],
+      },
+    ],
+  };
   useEffect(() => {
     async function _getTreeData() {
       await getAwsTreeData().then((res) => {
@@ -95,7 +148,7 @@ export default function AnalyticsPermissionTreeChart({ title, subheader, chart, 
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
-
+      <TextField defaultValue="Ec2FullAccess">Ec2FullAccess</TextField>
       <Box sx={{ mx: 3 }}>
         {/* <Tree data={data} height={400} width={400} /> */}
         <AnimatedTree
@@ -103,9 +156,9 @@ export default function AnalyticsPermissionTreeChart({ title, subheader, chart, 
           //   name: 'aws',
           //   children: data,
           // }}
-          data={data.find((i) => i.name === 'ec2')}
-          // data={mock_data}
-          height={3000}
+          // data={data.find((i) => i.name === 'ec2')}
+          data={mock_data2}
+          height={1000}
           width={800}
         />
       </Box>
