@@ -17,9 +17,11 @@ const requestPositionSlice = createSlice({
         ...notification,
         isUnRead: false,
       })),
+    INIT_NOTIFICATION: (state, action) => action.payload,
   },
 });
 
-export const { REQUEST_POSITION, READ_NOTIFICATION } = requestPositionSlice.actions;
+export const { REQUEST_POSITION, READ_NOTIFICATION, INIT_NOTIFICATION } =
+  requestPositionSlice.actions;
 
 export default requestPositionSlice.reducer;

@@ -12,6 +12,34 @@ async function NotificationData() {
     console.log(error);
   }
 }
+export async function NotificationList() {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/notification/list`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return [...Array(data.notification_list.length)].map((_, index) => ({
+      id: data.notification_list[index]._id,
+      title: data.notification_list[index].title,
+      type: data.notification_list[index].type,
+      content: data.notification_list[index].content,
+      isUnRead: !data.notification_list[index].isRead,
+      category: 'Cummunications',
+      createdAt: data.notification_list[index].createtime.$date,
+      detail: {
+        positionName: data.notification_list[index].detail.positionName,
+        description: data.notification_list[index].detail.description,
+        csp: data.notification_list[index].detail.csp,
+        policies: data.notification_list[index].detail.policies,
+      },
+    }));
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const notificationData = await NotificationData();
 
@@ -73,6 +101,23 @@ export async function PostNewNotification(notification) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(json_body),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ----------------------------------------------------------------------
+// patch read notification
+export async function PatchReadNotification(id) {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/notification/hide/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     const data = await response.json();
     return data;

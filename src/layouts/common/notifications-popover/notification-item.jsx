@@ -1,3 +1,5 @@
+import { useDispatch } from 'react-redux';
+
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -13,11 +15,17 @@ import { fToNow } from 'src/utils/format-time';
 
 import Label from 'src/components/label';
 import FileThumbnail from 'src/components/file-thumbnail';
-import { createPosition } from 'src/_mock';
+import { NotificationList, PatchReadNotification, createPosition } from 'src/_mock';
+import {
+  INIT_NOTIFICATION,
+  READ_NOTIFICATION,
+} from 'src/redux/reducer/request/create/requestPositionSlice';
 
 // ----------------------------------------------------------------------
 
 export default function NotificationItem({ notification }) {
+  const dispatch = useDispatch();
+
   const renderAvatar = (
     <ListItemAvatar>
       {notification.avatarUrl ? (
@@ -98,6 +106,11 @@ export default function NotificationItem({ notification }) {
         onClick={() => {
           console.info('accept friend request', notification);
           createPosition(notification.detail);
+          PatchReadNotification(notification.id)
+            .then(NotificationList)
+            .then((res) => {
+              dispatch(INIT_NOTIFICATION(res));
+            });
         }}
       >
         Accept
