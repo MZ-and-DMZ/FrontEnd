@@ -45,6 +45,7 @@ export const POSITION_CSP_OPTIONS = [
   { value: 'BOch', label: 'BOch' },
   // { value: 'rejected', label: 'Rejected' },
 ];
+
 const positionData = await PositionData();
 
 export const _positionList = [...Array(positionData.position_list.length)].map((_, index) => ({

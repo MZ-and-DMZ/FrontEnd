@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
-import { Button, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { Button, Dialog, DialogContent, DialogTitle, DialogActions, Step, StepLabel, Stepper, Typography } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
@@ -13,6 +14,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { _positionList, createPosition } from 'src/_mock';
 import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 import { INIT_ROWS } from 'src/redux/reducer/user/create/attachedPositionSlice';
+import { RouterLink } from 'src/routes/components';
 
 import { MailView } from 'src/sections/mail/view';
 import PositionNewEditFormInput from '../position-new-edit-form-input';
@@ -23,7 +25,9 @@ import SecondCreateForm from '../position-new-edit-form-tree';
 // ----------------------------------------------------------------------
 
 export default function PositionCreateView() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isModalOpen, setModalOpen] = useState(false);
 
   // const currentPosition = useSelector((state) => state.positionSelectedRow);
   const settings = useSettingsContext();
@@ -41,6 +45,10 @@ export default function PositionCreateView() {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
   };
 
   useEffect(() => {
@@ -124,35 +132,53 @@ export default function PositionCreateView() {
         }}
       />
 
-      {/* <Box sx={{ width: '100%' }}> */}
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStep === steps.length ? (
-        <div>
-          <Typography sx={{ mt: 2, mb: 1 }}>새로운 직무가 생성되었습니다.</Typography>
-        </div>
-      ) : (
-        <>
-          {stepPage}
-          <Button disabled={activeStep === 0} onClick={handleBack}>
-            Back
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              handleNext();
-              if (activeStep === steps.length - 1) {
-                createPosition(positionData);
-              }
-            }}
-          >
-            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-          </Button>
+<Stepper activeStep={activeStep} alternativeLabel>
+      {steps.map((label, index) => (
+        <Step key={label}>
+          <StepLabel>{label}</StepLabel>
+        </Step>
+      ))}
+    </Stepper>
+    {activeStep === steps.length ? (
+      <Dialog open={isModalOpen} onClose={handleCloseModal}>
+      <DialogTitle sx={{ fontSize: 18 }}>
+        알림
+      </DialogTitle>
+      <DialogContent>
+        <Typography sx={{ mt: 2, mb: 1 }}>
+          새로운 직무가 생성되었습니다.
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button 
+        component={RouterLink}
+        href={paths.dashboard.position.list}
+        variant="contained"
+        color = "primary"
+        >
+          닫기
+        </Button>
+      </DialogActions>
+    </Dialog>
+    ) : (
+      <>
+        {stepPage}
+          <Button disabled={activeStep === 0} onClick={handleBack} color = "primary">
+          Back
+        </Button>
+        <Button
+          color = "primary"
+          variant="contained"
+          onClick={() => {
+            handleNext();
+            if (activeStep === steps.length - 1) {
+              createPosition(positionData);
+              setModalOpen(true);
+            }
+          }}
+        >
+          {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+        </Button>
         </>
       )}
       {/* </Box> */}
