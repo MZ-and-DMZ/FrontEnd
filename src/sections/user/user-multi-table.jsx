@@ -25,7 +25,7 @@ const columns = [
     field: 'csp',
     type: 'singleSelect',
     headerName: '',
-    valueOptions: ['aws', 'gcp', 'aws, gcp'],
+    valueOptions: ['aws', 'gcp'],
     align: 'center',
     headerAlign: 'center',
     width: 40,

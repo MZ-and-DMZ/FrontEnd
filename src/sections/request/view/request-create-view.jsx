@@ -22,7 +22,6 @@ import PositionNewEditFormInput from '../request-new-edit-form-input';
 import SecondRequestForm from '../request-new-edit-form-tree';
 import RequestNewEditFormTable from '../request-new-edit-form-table';
 
-
 // ----------------------------------------------------------------------
 
 export default function RequestCreateView() {
@@ -159,7 +158,7 @@ export default function RequestCreateView() {
                     category: 'Communication',
                     isUnRead: true,
                     createdAt: new Date(),
-                    title: `<p><strong>철수</strong> (이)가 <strong>${positionData.positionName}</strong> 권한을 요청했습니다`,
+                    title: `<p><strong>신입</strong> (이)가 <strong>${positionData.positionName}</strong> 권한을 요청했습니다`,
                     detail: {
                       ...positionData,
                     },
@@ -167,7 +166,7 @@ export default function RequestCreateView() {
                 );
                 PostNewNotification({
                   type: 'friend',
-                  title: `<p><strong>철수</strong> (이)가 <strong>${positionData.positionName}</strong> 권한을 요청했습니다`,
+                  title: `<p><strong>신입</strong> (이)가 <strong>${positionData.positionName}</strong> 권한을 요청했습니다`,
                   content: 'Communication',
                   detail: {
                     ...positionData,

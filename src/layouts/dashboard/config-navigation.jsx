@@ -53,7 +53,7 @@ export function useNavData() {
       // OVERVIEW
       // ----------------------------------------------------------------------
       {
-        subheader: t('overview'),
+        subheader: t('대시보드'),
         items: [
           // {
           //   title: t('app'),
@@ -66,7 +66,7 @@ export function useNavData() {
           //   icon: ICONS.ecommerce,
           // },
           {
-            title: t('analytics'),
+            title: t('통계'),
             path: paths.dashboard.general.analytics,
             icon: ICONS.analytics,
           },
@@ -155,15 +155,15 @@ export function useNavData() {
           },
 
           // 권한 신청
-          {
-            title: t('권한 신청'),
-            path: paths.dashboard.request.root,
-            icon: ICONS.kanban,
-            children: [
-              // 권한 신청
-              { title: t('신규 권한 신청'), path: paths.dashboard.request.new },
-            ],
-          },
+          // {
+          //   title: t('권한 신청'),
+          //   path: paths.dashboard.request.root,
+          //   icon: ICONS.kanban,
+          //   children: [
+          //     // 권한 신청
+          //     { title: t('신규 권한 신청'), path: paths.dashboard.request.new },
+          //   ],
+          // },
           /*
           // BLOG
           {
