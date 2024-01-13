@@ -49,11 +49,14 @@ import UserTableFiltersResult from '../user-table-filters-result';
 const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
+  { id: 'name', label: '이름', width: 180 },
+  { id: 'department', label: '부서', width: 200 },
+  { id: 'duty', label: '직책', width: 200 },
   { id: 'csp', label: 'CSP', width: 180 },
-  { id: 'group', label: '그룹', width: 220 },
-  { id: 'position', label: '직무', width: 500 },
-  { id: 'description', label: '설명', width: 400 },
+  { id: 'group', label: '그룹', width: 180 },
+  { id: 'position', label: '직무', width: 200 },
+  { id: 'lastLoginTime', label: '최근 접속', width: 200 },
+  { id: 'isMfaEnabled', label: 'MFA 연동 여부', width: 200 },
   { id: '', width: 88 },
 ];
 
@@ -334,10 +337,14 @@ export default function UserListView() {
                         key={row.id}
                         row={{
                           name: row.userName,
+                          department: row.department,
+                          duty: row.duty,
                           csp: row.csp,
                           group: row.attachedGroup,
                           position: row.attachedPosition.join(', '),
-                          description: row.description,
+                          lastLoginTime: row.lastLoginTime,
+                          isMfaEnabled: row.isMfaEnabled,
+                          awsAccount: row.awsAccount,
                         }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}

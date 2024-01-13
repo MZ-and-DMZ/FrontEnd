@@ -1,8 +1,15 @@
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Collapse from '@mui/material/Collapse';
+import Stack from '@mui/material/Stack';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
@@ -21,9 +28,11 @@ import UserQuickEditForm from './user-quick-edit-form';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, group, position, description, csp } = row;
+  const { name, group, position, duty, department, isMfaEnabled, lastLoginTime, csp, awsAccount } = row;
 
   const confirm = useBoolean();
+
+  const collapse = useBoolean();
 
   const quickEdit = useBoolean();
 
@@ -33,16 +42,13 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
     quickEdit.onTrue(); // TableRow를 클릭하면 UserQuickEditForm 열기
   };
 
-  return (
-    <>
-      <TableRow hover selected={selected}>
+  const renderUserListView = (
+          <TableRow hover selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} /> */}
-
           <ListItemText
             primary={name}
             // secondary={email}
@@ -53,6 +59,10 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
             }}
           />
         </TableCell>
+
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{department}</TableCell>
+
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{duty}</TableCell>
 
         <TableCell>
           <Label
@@ -72,12 +82,33 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{position}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{description}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{lastLoginTime}</TableCell>
 
-        
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {isMfaEnabled}
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={isMfaEnabled}  // isMfaEnabled가 true일 때 버튼 비활성화
+          >
+            {isMfaEnabled ? 'MFA 연동 완료' : 'MFA 연동 요청'}
+          </Button>
+        </TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Quick Edit" placement="top" arrow>
+          <IconButton
+            color={collapse.value ? 'inherit' : 'default'}
+            onClick={collapse.onToggle}
+            sx={{
+              ...(collapse.value && {
+                bgcolor: 'action.hover',
+              }),
+            }}
+          >
+            <Iconify icon="eva:arrow-ios-downward-fill" />
+          </IconButton>
+
+          {/* <Tooltip title="Quick Edit" placement="top" arrow>
             <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
               <Iconify icon="solar:pen-bold" />
             </IconButton>
@@ -85,13 +116,65 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          </IconButton> */}
         </TableCell>
       </TableRow>
+  );
 
-      <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
+  const renderUserDetailView = (
+    <TableRow>
+      <TableCell colSpan={10}>
+        <Collapse in={collapse.value} timeout="auto" unmountOnExit>
+          <Stack spacing={2} direction="row" sx={{ mt: 1 }}>
+            {Array.isArray(row.awsAccount) && (
+              <Table>
+                <TableBody>
+                  {row.awsAccount.map((awsAcc) => (
+                    <div key={awsAcc.id}>
+                      <TableRow>
+                        <TableCell>
+                          <Stack direction="row" spacing={2}>
+                            <Typography variant="subtitle1">Key Id:</Typography>
+                            <Typography variant="body1">{awsAcc.managedKeys?.keyId}</Typography>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                              <Typography variant="subtitle3">생성일:</Typography>
+                              <Typography variant="body3">{awsAcc.managedKeys?.createDate}</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="subtitle3">만료일:</Typography>
+                              <Typography variant="body3">{awsAcc.managedKeys?.keyExpirationDate}</Typography>
+                            </Grid>
+                          </Grid>
+                        </TableCell>
+                      </TableRow>
+                      <Divider />
+                    </div>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </Stack>
+        </Collapse>
+      </TableCell>
+    </TableRow>
+  );
 
-      <CustomPopover
+  return (
+    <>
+    {renderUserListView}
+    {renderUserDetailView}
+    <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} /> 
+
+
+      
+
+      {/* <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
@@ -117,9 +200,9 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <Iconify icon="solar:pen-bold" />
           Edit
         </MenuItem>
-      </CustomPopover>
+      </CustomPopover> */}
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
@@ -129,7 +212,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
             Delete
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }

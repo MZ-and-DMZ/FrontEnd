@@ -20,7 +20,27 @@ export const _userList = [...Array(userData.user_list.length)].map((_, index) =>
   // id: index,
   userName: userData.user_list[index].userName,
   description: userData.user_list[index].description,
-  awsAccount: userData.user_list[index].awsAccount,
+  isMfaEnabled: userData.user_list[index].isMfaEnabled,
+  lastLoginTime: userData.user_list[index].lastLoginTime,
+  department: userData.user_list[index].department,
+  duty: userData.user_list[index].duty,
+  awsAccount: Array.isArray(userData.user_list[index].awsAccount)
+    ? userData.user_list[index].awsAccount.map((awsAcc) => ({
+        id: awsAcc.id,
+        lastLoginTime: awsAcc.lastLoginTime?.$date,
+        isMfaEnabled: awsAcc.isMfaEnabled,
+        managedKeys: {
+          keyId: awsAcc.managedKeys?.keyId,
+          createDate: awsAcc.managedKeys?.createDate?.$date,
+          keyExpirationDate: awsAcc.managedKeys?.keyExpirationDate?.$date,
+        },
+        usedKeys: {
+          keyId: awsAcc.usedKeys?.keyId,
+          createDate: awsAcc.usedKeys?.createDate?.$date,
+          keyExpirationDate: awsAcc.usedKeys?.keyExpirationDate?.$date,
+        },
+      }))
+    : null,
   gcpAccount: userData.user_list[index].gcpAccount,
   attachedPosition: userData.user_list[index].attachedPosition,
   attachedGroup: userData.user_list[index].attachedGroup,
