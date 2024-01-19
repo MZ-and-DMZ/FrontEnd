@@ -177,17 +177,18 @@ export function useNavData() {
               { title: t('edit'), path: paths.dashboard.post.demo.edit },
             ],
           },
+          */
 
           // JOB
           {
-            title: t('job'),
+            title: t('컴플라이언스'),
             path: paths.dashboard.job.root,
             icon: ICONS.job,
             children: [
-              { title: t('list'), path: paths.dashboard.job.root },
-              { title: t('details'), path: paths.dashboard.job.demo.details },
-              { title: t('create'), path: paths.dashboard.job.new },
-              { title: t('edit'), path: paths.dashboard.job.demo.edit },
+              { title: t('AWS'), path: paths.dashboard.job.root },
+              // { title: t('details'), path: paths.dashboard.job.demo.details },
+              { title: t('GCP'), path: paths.dashboard.job.new },
+              // { title: t('edit'), path: paths.dashboard.job.demo.edit },
             ],
           },
 
