@@ -12,7 +12,7 @@ import Iconify from 'src/components/iconify';
 export default function MailHeader({ onOpenNav, onOpenMail, ...other }) {
   return (
     <Stack spacing={2} direction="row" alignItems="center" sx={{ py: 1 }} {...other}>
-      <Stack direction="row" alignItems="center">
+      {/* <Stack direction="row" alignItems="center">
         <IconButton onClick={onOpenNav}>
           <Iconify icon="fluent:mail-24-filled" />
         </IconButton>
@@ -22,7 +22,7 @@ export default function MailHeader({ onOpenNav, onOpenMail, ...other }) {
             <Iconify icon="solar:chat-round-dots-bold" />
           </IconButton>
         )}
-      </Stack>
+      </Stack> */}
 
       <TextField
         fullWidth

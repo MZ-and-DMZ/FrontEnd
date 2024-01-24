@@ -36,7 +36,7 @@ export default function Editor({
 
   return (
     <>
-      <StyledEditor
+      {/* <StyledEditor
         sx={{
           ...(error && {
             border: (theme) => `solid 1px ${theme.palette.error.main}`,
@@ -55,7 +55,7 @@ export default function Editor({
           placeholder="Write something awesome..."
           {...other}
         />
-      </StyledEditor>
+      </StyledEditor> */}
 
       {helperText && helperText}
     </>

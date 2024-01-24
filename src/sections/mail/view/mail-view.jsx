@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
@@ -8,34 +8,48 @@ import { paths } from 'src/routes/paths';
 import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
-import { useResponsive } from 'src/hooks/use-responsive';
+// import { useResponsive } from 'src/hooks/use-responsive';
 
-import { useGetMail, useGetMails, useGetLabels } from 'src/api/mail';
+// import { useGetMail, useGetMails, useGetLabels } from 'src/api/mail';
 
-import EmptyContent from 'src/components/empty-content';
+import { _gcpCheckList } from 'src/_mock/_complience';
+
+// import EmptyContent from 'src/components/empty-content';
 import { useSettingsContext } from 'src/components/settings';
-import { LoadingScreen } from 'src/components/loading-screen';
+// import { LoadingScreen } from 'src/components/loading-screen';
 
 import MailNav from '../mail-nav';
-import MailList from '../mail-list';
+import IdList from '../mail-list';
 import MailHeader from '../mail-header';
 import MailCompose from '../mail-compose';
 import MailDetails from '../mail-details';
 
+
 // ----------------------------------------------------------------------
 
-const LABEL_INDEX = 'inbox';
+// const LABEL_INDEX = 'inbox';
 
 export default function MailView() {
-  const router = useRouter();
+  // const router = useRouter();
 
   const searchParams = useSearchParams();
 
-  const selectedLabelId = searchParams.get('label') || LABEL_INDEX;
 
-  const selectedMailId = searchParams.get('id') || '';
 
-  const mdUp = useResponsive('up', 'md');
+  const [selectedId, setSelectedId] = useState('');
+  
+  const [selectedType, setSelectedType] = useState('');
+
+  const [selectedCompliance, selectedCompliances] = useState('');
+
+  const [selectedDescription, setSelectedDescription] = useState('');
+
+
+  // const selectedLabelId = searchParams.get('label') || LABEL_INDEX;
+
+  // const selectedMailId = searchParams.get('id') || '';
+
+  // const mdUp = useResponsive('up', 'md');
 
   const settings = useSettingsContext();
 
@@ -43,129 +57,178 @@ export default function MailView() {
 
   const openMail = useBoolean();
 
-  const openCompose = useBoolean();
+  // const openCompose = useBoolean();
 
-  const { labels, labelsLoading } = useGetLabels();
+  // const { labels, labelsLoading } = useGetLabels();
+  // const [selectedId, setSelectedId] = useState('');
 
-  const { mails, mailsLoading, mailsError, mailsEmpty } = useGetMails(selectedLabelId);
+  // const { mails, mailsLoading, mailsError, mailsEmpty } = useGetMails(selectedLabelId);
 
-  const { mail, mailLoading, mailError } = useGetMail(selectedMailId);
+  // const { mail, mailLoading, mailError } = useGetMail(selectedMailId);
 
-  const firstMailId = mails.allIds[0] || '';
+  // const firstMailId = mails.allIds[0] || '';
 
-  const handleToggleCompose = useCallback(() => {
-    if (openNav.value) {
-      openNav.onFalse();
+  // const handleToggleCompose = useCallback(() => {
+  //   if (openNav.value) {
+  //     openNav.onFalse();
+  //   }
+  //   openCompose.onToggle();
+  // }, [openCompose, openNav]);
+
+  // const handleCSPChange = (csp) => {
+  //   setSelectedCSP(csp);
+  // }
+
+  const handleClickType = (type) => {
+    const selectedTypeObj = _gcpCheckList.find((item) => item.type === type);
+
+    if (selectedTypeObj) {
+      setSelectedType(selectedTypeObj.type);
+      setSelectedId(selectedTypeObj.id);
+      console.log('Selected Type:', selectedTypeObj.type);
+      console.log('Selected ID: ', selectedTypeObj.id);
     }
-    openCompose.onToggle();
-  }, [openCompose, openNav]);
+  };
 
-  const handleClickLabel = useCallback(
-    (labelId) => {
-      if (!mdUp) {
-        openNav.onFalse();
-      }
+  const handleClickId = (id) => {
+    // setSelectedId(id);
+    console.log('Selected ID: ', id);
+  };
 
-      if (labelId) {
-        const href =
-          labelId !== LABEL_INDEX
-            ? `${paths.dashboard.mail}?label=${labelId}`
-            : paths.dashboard.mail;
-        router.push(href);
-      }
-    },
-    [openNav, router, mdUp]
-  );
+  const handleClickDescription = (description) => {
+    setSelectedDescription(description);
+    console.log('Selected Description: ', description);
+  }
 
-  const handleClickMail = useCallback(
-    (mailId) => {
-      if (!mdUp) {
-        openMail.onFalse();
-      }
 
-      const href =
-        selectedLabelId !== LABEL_INDEX
-          ? `${paths.dashboard.mail}?id=${mailId}&label=${selectedLabelId}`
-          : `${paths.dashboard.mail}?id=${mailId}`;
+//   const handleClickLabel = (labelId) => {
+//     const selectedLabel = _gcpCheckList.find((item) => item.type === labelId);
+//   if (selectedLabel) {
+//     console.log('Selected Label ID:', selectedLabel.type);
+//   }
+// };
 
-      router.push(href);
-    },
-    [openMail, router, selectedLabelId, mdUp]
-  );
+// const handleClickId = (typeId) => {
+//   const selectedId = _gcpCheckList.find((item) => item.id === typeId);
+//   if (selectedId) {
+//     console.log('Selected Type ID: ', selectedId.id)
+//   }
+// };
+  // const selectedLabel = _gcpCheckList.find((label) => label.id === id);
+  // if (selectedLabel) {
+  //   const description = selectedLabel.description;
+  //   console.log(`Description for id ${id}: ${description}`);
+  // }
 
-  useEffect(() => {
-    if (mailsError || mailError) {
-      router.push(paths.dashboard.mail);
-    }
-  }, [mailError, mailsError, router]);
+  // const handleClickLabel = useCallback(
+  //   (labelId) => {
+  //     if (!mdUp) {
+  //       openNav.onFalse();
+  //     }
 
-  useEffect(() => {
-    if (!selectedMailId && firstMailId) {
-      handleClickMail(firstMailId);
-    }
-  }, [firstMailId, handleClickMail, selectedMailId]);
+  //     if (labelId) {
+  //       const href =
+  //         labelId !== LABEL_INDEX
+  //           ? `${paths.dashboard.mail}?label=${labelId}`
+  //           : paths.dashboard.mail;
+  //       router.push(href);
+  //     }
+  //   },
+  //   [openNav, router, mdUp]
+  // );
 
-  useEffect(() => {
-    if (openCompose.value) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-  }, [openCompose.value]);
+  // const handleClickMail = useCallback(
+  //   (mailId) => {
+  //     if (!mdUp) {
+  //       openMail.onFalse();
+  //     }
 
-  const renderLoading = (
-    <LoadingScreen
-      sx={{
-        borderRadius: 1.5,
-        bgcolor: 'background.default',
-      }}
-    />
-  );
+  //     const href =
+  //       selectedLabelId !== LABEL_INDEX
+  //         ? `${paths.dashboard.mail}?id=${mailId}&label=${selectedLabelId}`
+  //         : `${paths.dashboard.mail}?id=${mailId}`;
 
-  const renderEmpty = (
-    <EmptyContent
-      title={`Nothing in ${selectedLabelId}`}
-      description="This folder is empty"
-      imgUrl="/assets/icons/empty/ic_folder_empty.svg"
-      sx={{
-        borderRadius: 1.5,
-        maxWidth: { md: 320 },
-        bgcolor: 'background.default',
-      }}
-    />
-  );
+  //     router.push(href);
+  //   },
+  //   [openMail, router, selectedLabelId, mdUp]
+  // );
+
+  // useEffect(() => {
+  //   if (mailsError || mailError) {
+  //     router.push(paths.dashboard.mail);
+  //   }
+  // }, [mailError, mailsError, router]);
+
+  // useEffect(() => {
+  //   if (!selectedMailId && firstMailId) {
+  //     handleClickMail(firstMailId);
+  //   }
+  // }, [firstMailId, handleClickMail, selectedMailId]);
+
+  // useEffect(() => {
+  //   if (openCompose.value) {
+  //     document.body.style.overflow = 'hidden';
+  //   } else {
+  //     document.body.style.overflow = '';
+  //   }
+  // }, [openCompose.value]);
+
+  // const renderLoading = (
+  //   <LoadingScreen
+  //     sx={{
+  //       borderRadius: 1.5,
+  //       bgcolor: 'background.default',
+  //     }}
+  //   />
+  // );
+
+  // const renderEmpty = (
+  //   <EmptyContent
+  //     title={`Nothing in ${selectedLabelId}`}
+  //     description="This folder is empty"
+  //     imgUrl="/assets/icons/empty/ic_folder_empty.svg"
+  //     sx={{
+  //       borderRadius: 1.5,
+  //       maxWidth: { md: 320 },
+  //       bgcolor: 'background.default',
+  //     }}
+  //   />
+  // );
+  
 
   const renderMailNav = (
     <MailNav
-      loading={labelsLoading}
+      types={_gcpCheckList.map((item) => item.type)}  // Pass all types to MailNav
       openNav={openNav.value}
       onCloseNav={openNav.onFalse}
-      //
-      labels={labels}
-      selectedLabelId={selectedLabelId}
-      handleClickLabel={handleClickLabel}
-      //
-      onToggleCompose={handleToggleCompose}
+      handleClickType={handleClickType}
+      selectedType={selectedType}
     />
   );
 
-  const renderMailList = (
-    <MailList
-      mails={mails}
-      loading={mailsLoading}
-      //
+  const renderIdList = (
+    <IdList
       openMail={openMail.value}
       onCloseMail={openMail.onFalse}
-      onClickMail={handleClickMail}
-      //
-      selectedLabelId={selectedLabelId}
-      selectedMailId={selectedMailId}
+      handleClickId={handleClickId}
+      selectedId={selectedId}
+      // selectedMailId={selectedMailId}
     />
   );
 
   const renderMailDetails = (
     <>
-      {mailsEmpty ? (
+     <MailDetails
+      // laws={_gcpCheckList.map((item) => item.law)}
+      selectedCompliances={_gcpCheckList.filter((item) => item.id)}
+      selectedDescription={selectedDescription}
+      handleClickDescription={handleClickDescription}
+      // compliances={{
+      //   law: selectedCompliance?.law, // 선택된 항목의 law 데이터
+      //   standard: selectedCompliance?.standard, // 선택된 항목의 standard 데이터
+      // }}
+    />
+      {/* {mailsEmpty ? (
         <EmptyContent
           imgUrl="/assets/icons/empty/ic_email_disabled.svg"
           sx={{
@@ -178,10 +241,9 @@ export default function MailView() {
         />
       ) : (
         <MailDetails
-          mail={mail}
-          renderLabel={(id) => labels.filter((label) => label.id === id)[0]}
-        />
-      )}
+        renderLabel={(id) => _gcpCheckList.find((label) => label.id === id)}
+      />
+      )} */}
     </>
   );
 
@@ -194,7 +256,7 @@ export default function MailView() {
             mb: { xs: 3, md: 5 },
           }}
         >
-          Mail
+          컴플라이언스
         </Typography>
 
         <Stack
@@ -207,12 +269,12 @@ export default function MailView() {
             bgcolor: 'background.neutral',
           }}
         >
-          {!mdUp && (
+          {/* {!mdUp && (
             <MailHeader
               onOpenNav={openNav.onTrue}
               onOpenMail={mailsEmpty ? null : openMail.onTrue}
             />
-          )}
+          )} */}
 
           <Stack
             spacing={1}
@@ -223,15 +285,17 @@ export default function MailView() {
             }}
           >
             {renderMailNav}
+            {renderIdList}
+            {renderMailDetails}
 
-            {mailsEmpty ? renderEmpty : renderMailList}
+            {/* {mailsEmpty ? renderEmpty : renderMailList}
 
-            {mailLoading ? renderLoading : renderMailDetails}
+            {mailLoading ? renderLoading : renderMailDetails} */}
           </Stack>
         </Stack>
       </Container>
 
-      {openCompose.value && <MailCompose onCloseCompose={openCompose.onFalse} />}
+      {/* {openCompose.value && <MailCompose onCloseCompose={openCompose.onFalse} />} */}
     </>
   );
 }

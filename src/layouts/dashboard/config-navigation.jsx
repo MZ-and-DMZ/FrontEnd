@@ -180,17 +180,17 @@ export function useNavData() {
           */
 
           // JOB
-          {
-            title: t('컴플라이언스'),
-            path: paths.dashboard.job.root,
-            icon: ICONS.job,
-            children: [
-              { title: t('AWS'), path: paths.dashboard.job.root },
-              // { title: t('details'), path: paths.dashboard.job.demo.details },
-              { title: t('GCP'), path: paths.dashboard.job.new },
-              // { title: t('edit'), path: paths.dashboard.job.demo.edit },
-            ],
-          },
+          // {
+          //   title: t('컴플라이언스'),
+          //   path: paths.dashboard.job.root,
+          //   icon: ICONS.job,
+          //   children: [
+          //     { title: t('AWS'), path: paths.dashboard.job.root },
+          //     // { title: t('details'), path: paths.dashboard.job.demo.details },
+          //     { title: t('GCP'), path: paths.dashboard.job.new },
+          //     // { title: t('edit'), path: paths.dashboard.job.demo.edit },
+          //   ],
+          // },
 
           /*
 
@@ -214,14 +214,17 @@ export function useNavData() {
             icon: ICONS.folder,
           },
 
+          */
+
           // MAIL
           {
-            title: t('mail'),
+            title: t('컴플라이언스'),
             path: paths.dashboard.mail,
             icon: ICONS.mail,
-            info: <Label color="error">+32</Label>,
+            // info: <Label color="error">+32</Label>,
           },
 
+          /*
           // CHAT
           {
             title: t('chat'),

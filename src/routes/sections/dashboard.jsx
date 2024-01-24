@@ -77,12 +77,14 @@ const TourCreatePage = lazy(() => import('src/pages/dashboard/tour/new'));
 const TourEditPage = lazy(() => import('src/pages/dashboard/tour/edit'));
 // FILE MANAGER
 const FileManagerPage = lazy(() => import('src/pages/dashboard/file-manager'));
-// APP
-const ChatPage = lazy(() => import('src/pages/dashboard/chat'));
-const MailPage = lazy(() => import('src/pages/dashboard/mail'));
-const CalendarPage = lazy(() => import('src/pages/dashboard/calendar'));
-const KanbanPage = lazy(() => import('src/pages/dashboard/kanban'));
 */
+
+// APP
+// const ChatPage = lazy(() => import('src/pages/dashboard/chat'));
+const MailPage = lazy(() => import('src/pages/dashboard/mail'));
+// const CalendarPage = lazy(() => import('src/pages/dashboard/calendar'));
+// const KanbanPage = lazy(() => import('src/pages/dashboard/kanban'));
+
 
 // TEST RENDER PAGE BY ROLE
 const PermissionDeniedPage = lazy(() => import('src/pages/dashboard/permission'));
@@ -233,14 +235,15 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: <TourEditPage /> },
         ],
       },
-      { path: 'file-manager', element: <FileManagerPage /> },
-      { path: 'mail', element: <MailPage /> },
-      { path: 'chat', element: <ChatPage /> },
-      { path: 'calendar', element: <CalendarPage /> },
-      { path: 'kanban', element: <KanbanPage /> },
-      { path: 'permission', element: <PermissionDeniedPage /> },
-      { path: 'blank', element: <BlankPage /> },
       */
+      // { path: 'file-manager', element: <FileManagerPage /> },
+      { path: 'mail', element: <MailPage /> },
+      // { path: 'chat', element: <ChatPage /> },
+      // { path: 'calendar', element: <CalendarPage /> },
+      // { path: 'kanban', element: <KanbanPage /> },
+      // { path: 'permission', element: <PermissionDeniedPage /> },
+      // { path: 'blank', element: <BlankPage /> },
+      
     ],
   },
 ];

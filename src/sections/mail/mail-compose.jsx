@@ -68,7 +68,7 @@ export default function MailCompose({ onCloseCompose }) {
             p: (theme) => theme.spacing(1.5, 1, 1.5, 2),
           }}
         >
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          {/* <Typography variant="h6" sx={{ flexGrow: 1 }}>
             New Message
           </Typography>
 
@@ -78,10 +78,10 @@ export default function MailCompose({ onCloseCompose }) {
 
           <IconButton onClick={onCloseCompose}>
             <Iconify icon="mingcute:close-line" />
-          </IconButton>
+          </IconButton> */}
         </Stack>
 
-        <InputBase
+        {/* <InputBase
           placeholder="To"
           endAdornment={
             <Stack direction="row" spacing={0.5} sx={{ typography: 'subtitle2' }}>
@@ -108,16 +108,16 @@ export default function MailCompose({ onCloseCompose }) {
             height: 48,
             borderBottom: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.08)}`,
           }}
-        />
+        /> */}
 
-        <InputBase
+        {/* <InputBase
           placeholder="Subject"
           sx={{
             px: 2,
             height: 48,
             borderBottom: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.08)}`,
           }}
-        />
+        /> */}
 
         <Stack spacing={2} flexGrow={1} sx={{ p: 2 }}>
           <Editor
@@ -140,7 +140,7 @@ export default function MailCompose({ onCloseCompose }) {
             }}
           />
 
-          <Stack direction="row" alignItems="center">
+          {/* <Stack direction="row" alignItems="center">
             <Stack direction="row" alignItems="center" flexGrow={1}>
               <IconButton>
                 <Iconify icon="solar:gallery-add-bold" />
@@ -158,7 +158,7 @@ export default function MailCompose({ onCloseCompose }) {
             >
               Send
             </Button>
-          </Stack>
+          </Stack> */}
         </Stack>
       </Paper>
     </Portal>

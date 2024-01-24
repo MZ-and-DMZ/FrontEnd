@@ -90,7 +90,7 @@ const CONTENT = `
 <h6>Job Description</h6>
 <br/>
 
-<p>Occaecati est et illo quibusdam accusamus qui. Incidunt aut et molestiae ut facere aut. Est quidem iusto praesentium excepturi harum nihil tenetur facilis. Ut omnis voluptates nihil accusantium doloribus eaque debitis.</p>
+<p>관리자 계정은 GCP 리소스에 대한 모든 권한을 보유한 계정이지만 권한 제어가 불가능하기 때문에 명확한 목적 이외에는 사용 제한이 필요함</p>
 
 <br/>
 <br/>

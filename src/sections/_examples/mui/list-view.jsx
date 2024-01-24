@@ -104,13 +104,13 @@ export default function ListView() {
                   <ListItemIcon>
                     <Iconify icon="solar:inbox-in-bold" width={24} />
                   </ListItemIcon>
-                  <ListItemText primary="Inbox" />
+                  <ListItemText primary="관리자 계정 관리" />
                 </ListItemButton>
                 <ListItemButton>
                   <ListItemIcon>
                     <Iconify icon="fluent:mail-24-filled" width={24} />
                   </ListItemIcon>
-                  <ListItemText primary="Drafts" />
+                  <ListItemText primary="서비스 계정 관리" />
                 </ListItemButton>
               </List>
 
@@ -121,7 +121,7 @@ export default function ListView() {
                   <ListItemText primary="Trash" />
                 </ListItemButton>
                 <ListItemLink href="#simple-list">
-                  <ListItemText primary="Spam" />
+                  <ListItemText primary="관리자 권한 관리" />
                 </ListItemLink>
               </List>
             </Paper>
