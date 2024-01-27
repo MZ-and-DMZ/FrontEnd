@@ -3,7 +3,7 @@ async function getGcpCheckList() {
         const response = await fetch(`${process.env.REACT_APP_MOCK_API}/compliance/gcp/check/list`);
         const gcpData = await response.json();
 
-        if (!gcpData.gcp_check_list) {
+        if (!gcpData.gcp_compliance_list) {
             console.warn('GCP check list is not available in the response:', gcpData);
         } else { console.log('gcpData',gcpData)}
 
@@ -17,7 +17,7 @@ async function getGcpCheckList() {
 
 const gcpCheckListData = await getGcpCheckList();
 
-const gcpCheckList = gcpCheckListData.gcp_check_list || [];
+const gcpCheckList = gcpCheckListData.gcp_compliance_list || [];
 if (gcpCheckList.length === 0) {
     console.warn('GCP check list is empty.');
 }
@@ -26,6 +26,7 @@ export const _gcpCheckList = gcpCheckList.map((item, index) => ({
     id: item._id,
     type: item.type,
     csp: item.csp,
+    date: item.date,
     description: item.description,
     standard: item.standard,
     laws: Array.isArray(item.law)

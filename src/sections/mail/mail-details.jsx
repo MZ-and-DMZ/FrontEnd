@@ -36,6 +36,7 @@ export default function MailDetails() {
             selected={selectedItem}
             description={item.description}
             law={item.laws}
+            date={item.date}
           />
         ))}
 
