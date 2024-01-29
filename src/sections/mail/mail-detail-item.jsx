@@ -22,19 +22,21 @@ export default function MailDetailItem({ compliances, selectedItem, selected, de
     setExpanded((prevExpanded) => !prevExpanded);
   };
 
-  const dateObject = new Date(date);
+  let formattedDate = '점검'
+  if ((date !== undefined)){
+    const dateObject = new Date(date);
 
-  // 날짜, 시간, 분, 초 추출
-  const year = dateObject.getFullYear();
-  const month = String(dateObject.getMonth() + 1).padStart(2, '0');
-  const day = String(dateObject.getDate()).padStart(2, '0');
-  const hours = String(dateObject.getHours()).padStart(2, '0');
-  const minutes = String(dateObject.getMinutes()).padStart(2, '0');
-  const seconds = String(dateObject.getSeconds()).padStart(2, '0');
+    // 날짜, 시간, 분, 초 추출
+    const year = dateObject.getFullYear();
+    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObject.getDate()).padStart(2, '0');
+    const hours = String(dateObject.getHours()).padStart(2, '0');
+    const minutes = String(dateObject.getMinutes()).padStart(2, '0');
+    const seconds = String(dateObject.getSeconds()).padStart(2, '0');
 
-  // 포맷팅된 문자열 생성
-  const formattedDate = `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}초`;
-
+    // 포맷팅된 문자열 생성
+    formattedDate = `점검 일시 : ${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}초`;
+  }
 
   console.log(law);
   console.log(date);
@@ -71,7 +73,7 @@ export default function MailDetailItem({ compliances, selectedItem, selected, de
           <Typography variant="body2">근거 조항 : {law}</Typography> 
 
           <Button variant="outlined" color="primary">
-            <>점검 일시 : {formattedDate}</>
+            <>{formattedDate}</>
           </Button>
 
           <Button variant="outlined" color="error" onClick={confirm.onTrue}>

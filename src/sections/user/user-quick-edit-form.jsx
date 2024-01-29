@@ -145,11 +145,11 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
 
         <DialogActions>
           <Button variant="outlined" onClick={onClose}>
-            Cancel
+            취소
           </Button>
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Update
+            수정
           </LoadingButton>
         </DialogActions>
       </FormProvider>
