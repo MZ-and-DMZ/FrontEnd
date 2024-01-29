@@ -74,7 +74,7 @@ export default function MailDetailItem({ compliances, selectedItem, selected, de
             <>점검 일시 : {formattedDate}</>
           </Button>
 
-          <Button variant="outlined" color="secondary" onClick={confirm.onTrue}>
+          <Button variant="outlined" color="error" onClick={confirm.onTrue}>
             조치
           </Button>
 
