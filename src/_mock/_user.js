@@ -1,3 +1,5 @@
+import { current } from "@reduxjs/toolkit";
+
 async function UserData() {
   try {
     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/users/list`);
@@ -21,36 +23,49 @@ export const _userList = [...Array(userData.user_list.length)].map((_, index) =>
   userName: userData.user_list[index].userName,
   description: userData.user_list[index].description,
   isMfaEnabled: userData.user_list[index].isMfaEnabled,
+  isImportantPerson: userData.user_list[index].isImportantPerson,
   lastLoginTime: userData.user_list[index].lastLoginTime,
   department: userData.user_list[index].department,
   duty: userData.user_list[index].duty,
-  awsAccount: Array.isArray(userData.user_list[index].awsAccount)
-    ? userData.user_list[index].awsAccount.map((awsAcc) => ({
-        id: awsAcc.id,
-        lastLoginTime: awsAcc.lastLoginTime?.$date,
-        isMfaEnabled: awsAcc.isMfaEnabled,
-        managedKeys: {
-          keyId: awsAcc.managedKeys?.keyId,
-          createDate: awsAcc.managedKeys?.createDate?.$date,
-          keyExpirationDate: awsAcc.managedKeys?.keyExpirationDate?.$date,
-        },
-        usedKeys: {
-          keyId: awsAcc.usedKeys?.keyId,
-          createDate: awsAcc.usedKeys?.createDate?.$date,
-          keyExpirationDate: awsAcc.usedKeys?.keyExpirationDate?.$date,
-        },
-      }))
-    : null,
+  awsAccount: userData.user_list[index].awsAccount,
+  // awsAccount: Array.isArray(userData.user_list[index].awsAccount)
+  //   ? userData.user_list[index].awsAccount.map((awsAcc) => ({
+  //       id: awsAcc.id,
+  //       lastLoginTime: awsAcc.lastLoginTime?.$date,
+  //       isMfaEnabled: awsAcc.isMfaEnabled,
+  //       managedKeys: {
+  //         keyId: awsAcc.managedKeys?.keyId,
+  //         createDate: awsAcc.managedKeys?.createDate?.$date,
+  //         keyExpirationDate: awsAcc.managedKeys?.keyExpirationDate?.$date,
+  //       },
+  //       usedKeys: {
+  //         keyId: awsAcc.usedKeys?.keyId,
+  //         createDate: awsAcc.usedKeys?.createDate?.$date,
+  //         keyExpirationDate: awsAcc.usedKeys?.keyExpirationDate?.$date,
+  //       },
+  //     }))
+  //   : null,
   gcpAccount: userData.user_list[index].gcpAccount,
   attachedPosition: userData.user_list[index].attachedPosition,
   attachedGroup: userData.user_list[index].attachedGroup,
   updatetime: userData.user_list[index].updatetime,
+  device: userData.user_list[index].device,
   csp:
     (userData.user_list[index].awsAccount && userData.user_list[index].gcpAccount && 'AWS,GCP') ||
     (userData.user_list[index].awsAccount && 'AWS') ||
     (userData.user_list[index].gcpAccount && 'GCP') ||
     'none',
 }));
+
+// _userList.forEach((user) => {
+//   console.log(user.lastLoginTime);
+//   console.log(user.gcpAccount);
+// });
+// console.log(_userList);
+// console.log(_userList.lastLoginTime);
+// console.log(_userList.gcpAccount);
+
+// console.log(userData.device);
 
 export function editUserData(currentUser, _reduxList) {
   const jsondata = JSON.stringify({
@@ -69,6 +84,7 @@ export function editUserData(currentUser, _reduxList) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
+      device: _reduxList.device,
       department: _reduxList.department,
       duty: _reduxList.duty,
       description: _reduxList.description,
@@ -84,6 +100,7 @@ export function editUserData(currentUser, _reduxList) {
   console.log(_reduxList.map((item) => item.positionName));
 }
 
+
 export function createUserData(_reduxList) {
   const jsondata = JSON.stringify({
     userName: _reduxList.userName,
@@ -91,6 +108,7 @@ export function createUserData(_reduxList) {
     awsAccount: _reduxList.awsAccount,
     gcpAccount: _reduxList.gcpAccount,
     attachedPosition: _reduxList.attachedPosition,
+    device: _reduxList.device,
     attachedGroup: [],
     duty: _reduxList.duty,
     department: _reduxList.department,
@@ -119,4 +137,72 @@ export function createUserData(_reduxList) {
   })
     .then((res) => res.json())
     .then((res) => console.log('Success:', res));
+}
+
+export async function _userDetailList(userName) {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/users/${userName}`);
+    const userDetailData = await response.json();
+
+    if (!userDetailData) {
+      console.warn(`User data not available for ${userName}`);
+      return null;
+    }
+
+    const {
+      device,
+      department,
+      duty,
+      description,
+      awsAccount,
+      gcpAccount,
+      attachedPosition,
+      attachedGroup,
+      updatetime,
+      isMfaEnabled,
+      isRetire,
+      lastLoginTime,
+      isImportantPerson,
+      userName: userUserName,
+    } = userDetailData;
+
+    const awsKeys = awsAccount?.managedKeys || [];
+    const usedAwsKeys = awsAccount?.usedKeys || [];
+    const gcpKeys = gcpAccount?.managedKeys || [];
+    const usedGcpKeys = gcpAccount?.usedKeys || [];
+
+    return {
+      device,
+      department,
+      duty,
+      description,
+      awsKeys,
+      usedAwsKeys,
+      gcpKeys,
+      usedGcpKeys,
+      attachedPosition,
+      attachedGroup,
+      updatetime,
+      isMfaEnabled,
+      isRetire,
+      lastLoginTime,
+      isImportantPerson,
+      userName: userUserName,
+    };
+
+  } catch (error) {
+    console.error('Error fetching user detail data:', error);
+    throw error;
+  }
+}
+
+
+// _userDetailData 테스트용 코드
+const userNameToCheck = 'alice'; 
+
+try {
+  const userDetailData = await _userDetailList(userNameToCheck);
+  console.log('Parsed User Detail Data:', userDetailData);
+} catch (error) {
+  console.error('Error occurred while fetching user detail data:', error);
 }

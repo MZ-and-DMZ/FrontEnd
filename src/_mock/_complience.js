@@ -3,7 +3,7 @@ async function getGcpCheckList() {
         const response = await fetch(`${process.env.REACT_APP_MOCK_API}/compliance/gcp/check/list`);
         const gcpData = await response.json();
 
-        if (!gcpData.gcp_check_list) {
+        if (!gcpData.gcp_compliance_list) {
             console.warn('GCP check list is not available in the response:', gcpData);
         } else { console.log('gcpData',gcpData)}
 
@@ -17,7 +17,7 @@ async function getGcpCheckList() {
 
 const gcpCheckListData = await getGcpCheckList();
 
-const gcpCheckList = gcpCheckListData.gcp_check_list || [];
+const gcpCheckList = gcpCheckListData.gcp_compliance_list || [];
 if (gcpCheckList.length === 0) {
     console.warn('GCP check list is empty.');
 }
@@ -38,7 +38,7 @@ async function getAwsCheckList() {
         const response = await fetch(`${process.env.REACT_APP_MOCK_API}/compliance/aws/check/list`);
         const awsData = await response.json();
 
-        if (!awsData.aws_check_list) {
+        if (!awsData.aws_compliance_list) {
             console.warn('AWS check list is not available in the response:', awsData);
         } else { console.log('awsData',awsData)}
 
@@ -52,7 +52,7 @@ async function getAwsCheckList() {
 
 const awsCheckListData = await getAwsCheckList();
 
-const awsCheckList = awsCheckListData.aws_check_list || [];
+const awsCheckList = awsCheckListData.aws_compliance_list || [];
 if (awsCheckList.length === 0) {
     console.warn('AWS check list is empty.');
 }

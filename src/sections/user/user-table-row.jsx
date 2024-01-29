@@ -8,7 +8,6 @@ import TableBody from '@mui/material/TableBody';
 import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import Collapse from '@mui/material/Collapse';
 import Stack from '@mui/material/Stack';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
@@ -32,15 +31,13 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
   const confirm = useBoolean();
 
-  const collapse = useBoolean();
-
   const quickEdit = useBoolean();
 
   const popover = usePopover();
 
-  const handleTableRowClick = () => {
-    quickEdit.onTrue(); // TableRow를 클릭하면 UserQuickEditForm 열기
-  };
+  // const handleTableRowClick = () => {
+  //   quickEdit.onTrue(); 
+  // };
 
   const renderUserListView = (
           <TableRow hover selected={selected}>
@@ -96,6 +93,12 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         </TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
+          </TableCell>
+
+        {/* <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <IconButton
             color={collapse.value ? 'inherit' : 'default'}
             onClick={collapse.onToggle}
@@ -106,7 +109,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
             }}
           >
             <Iconify icon="eva:arrow-ios-downward-fill" />
-          </IconButton>
+          </IconButton> */}
 
           {/* <Tooltip title="Quick Edit" placement="top" arrow>
             <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
@@ -117,58 +120,59 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton> */}
-        </TableCell>
+        {/* </TableCell> */}
       </TableRow>
   );
 
-  const renderUserDetailView = (
-    <TableRow>
-      <TableCell colSpan={10}>
-        <Collapse in={collapse.value} timeout="auto" unmountOnExit>
-          <Stack spacing={2} direction="row" sx={{ mt: 1 }}>
-            {Array.isArray(row.awsAccount) && (
-              <Table>
-                <TableBody>
-                  {row.awsAccount.map((awsAcc) => (
-                    <div key={awsAcc.id}>
-                      <TableRow>
-                        <TableCell>
-                          <Stack direction="row" spacing={2}>
-                            <Typography variant="subtitle1">Key Id:</Typography>
-                            <Typography variant="body1">{awsAcc.managedKeys?.keyId}</Typography>
-                          </Stack>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>
-                          <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle3">생성일:</Typography>
-                              <Typography variant="body3">{awsAcc.managedKeys?.createDate}</Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography variant="subtitle3">만료일:</Typography>
-                              <Typography variant="body3">{awsAcc.managedKeys?.keyExpirationDate}</Typography>
-                            </Grid>
-                          </Grid>
-                        </TableCell>
-                      </TableRow>
-                      <Divider />
-                    </div>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </Stack>
-        </Collapse>
-      </TableCell>
-    </TableRow>
-  );
+  // user detail 아코디언 버전 아카이브
+  // const renderUserDetailView = (
+  //   <TableRow>
+  //     <TableCell colSpan={10}>
+  //       <Collapse in={collapse.value} timeout="auto" unmountOnExit>
+  //         <Stack spacing={2} direction="row" sx={{ mt: 1 }}>
+  //           {Array.isArray(row.awsAccount) && (
+  //             <Table>
+  //               <TableBody>
+  //                 {row.awsAccount.map((awsAcc) => (
+  //                   <div key={awsAcc.id}>
+  //                     <TableRow>
+  //                       <TableCell>
+  //                         <Stack direction="row" spacing={2}>
+  //                           <Typography variant="subtitle1">Key Id:</Typography>
+  //                           <Typography variant="body1">{awsAcc.managedKeys?.keyId}</Typography>
+  //                         </Stack>
+  //                       </TableCell>
+  //                     </TableRow>
+  //                     <TableRow>
+  //                       <TableCell>
+  //                         <Grid container spacing={2}>
+  //                           <Grid item xs={6}>
+  //                             <Typography variant="subtitle3">생성일:</Typography>
+  //                             <Typography variant="body3">{awsAcc.managedKeys?.createDate}</Typography>
+  //                           </Grid>
+  //                           <Grid item xs={6}>
+  //                             <Typography variant="subtitle3">만료일:</Typography>
+  //                             <Typography variant="body3">{awsAcc.managedKeys?.keyExpirationDate}</Typography>
+  //                           </Grid>
+  //                         </Grid>
+  //                       </TableCell>
+  //                     </TableRow>
+  //                     <Divider />
+  //                   </div>
+  //                 ))}
+  //               </TableBody>
+  //             </Table>
+  //           )}
+  //         </Stack>
+  //       </Collapse>
+  //     </TableCell>
+  //   </TableRow>
+  // );
 
   return (
     <>
     {renderUserListView}
-    {renderUserDetailView}
+    {/* {renderUserDetailView} */}
     <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} /> 
 
 
