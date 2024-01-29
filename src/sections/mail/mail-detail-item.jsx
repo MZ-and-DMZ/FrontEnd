@@ -55,7 +55,7 @@ export default function MailDetailItem({ compliances, selectedItem, selected, de
             점검
           </Button>
 
-          <Button variant="outlined" color="error">
+          <Button variant="outlined" color="secondary">
             조치
           </Button>
 
