@@ -26,6 +26,7 @@ export const _gcpCheckList = gcpCheckList.map((item, index) => ({
     id: item._id,
     type: item.type,
     csp: item.csp,
+    date: item.date,
     description: item.description,
     standard: item.standard,
     laws: Array.isArray(item.law)
