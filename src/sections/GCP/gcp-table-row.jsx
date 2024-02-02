@@ -52,10 +52,10 @@ export default function GCPTableRow({ row, selected, onEditRow, onSelectRow, onD
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+      {/* <TableCell sx={{ display: 'flex', alignItems: 'center' }}> */}
         {/* <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} /> */}
 
-        <ListItemText
+        {/* <ListItemText
           primary={name}
           // secondary={custom}
           primaryTypographyProps={{ typography: 'body2' }}
@@ -64,7 +64,8 @@ export default function GCPTableRow({ row, selected, onEditRow, onSelectRow, onD
             color: 'text.disabled',
           }}
         />
-      </TableCell>
+      </TableCell> */}
+      <TableCell sx={{whiteSpace: 'nowrap' }}>{name}</TableCell>
 
       {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
 
