@@ -16,12 +16,12 @@ import { useRouter } from 'src/routes/hooks';
 
 import { createPosition, POSITION_CSP_OPTIONS } from 'src/_mock';
 
-import { UserCreateView } from 'src/sections/user/view/user-create-view';
+// import { UserCreateView } from 'src/sections/user/view/user-create-view';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField, RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
 
-export default function PositionNewEditForm({ currentPosition }) {
+export default function AWSNewEditForm({ currentPosition }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
@@ -106,10 +106,10 @@ export default function PositionNewEditForm({ currentPosition }) {
         <Grid xs={12}>
           <Card sx={{ p: 3 }}>
             <Grid container spacing={2}>
-              <Grid xs={3}>
-                <RHFTextField name="positionName" label="Position Name" />
+              <Grid xs={12}>
+                <RHFTextField name="positionName" label="AWS User Name" />
               </Grid>
-              <Grid xs={1}>
+              {/* <Grid xs={1}>
                 <RHFAutocomplete
                   name="csp"
                   label="Cloud"
@@ -120,7 +120,7 @@ export default function PositionNewEditForm({ currentPosition }) {
               </Grid>
               <Grid xs={8}>
                 <RHFTextField name="description" label="Description" />
-              </Grid>
+              </Grid> */}
             </Grid>
           </Card>
         </Grid>
@@ -129,6 +129,6 @@ export default function PositionNewEditForm({ currentPosition }) {
   );
 }
 
-PositionNewEditForm.propTypes = {
+AWSNewEditForm.propTypes = {
   currentPosition: PropTypes.object,
 };

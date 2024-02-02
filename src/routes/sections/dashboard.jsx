@@ -33,6 +33,16 @@ const InvoiceDetailsPage = lazy(() => import('src/pages/dashboard/invoice/detail
 const InvoiceCreatePage = lazy(() => import('src/pages/dashboard/invoice/new'));
 const InvoiceEditPage = lazy(() => import('src/pages/dashboard/invoice/edit'));
 
+// AWS
+const AWSListPage = lazy(() => import('src/pages/dashboard/aws/list'));
+// const AWSDetailsPage = lazy(() => import('src/pages/dashboard/aws/details'));
+const AWSCreatePage = lazy(() => import('src/pages/dashboard/aws/new'));
+
+// GCP
+const GCPListPage = lazy(() => import('src/pages/dashboard/gcp/list'));
+// const GCPDetailsPage = lazy(() => import('src/pages/dashboard/gcp/details'));
+const GCPCreatePage = lazy(() => import('src/pages/dashboard/gcp/new'));
+
 // USER
 // const UserProfilePage = lazy(() => import('src/pages/dashboard/user/profile'));
 // const UserCardsPage = lazy(() => import('src/pages/dashboard/user/cards'));
@@ -199,6 +209,24 @@ export const dashboardRoutes = [
           { path: ':id', element: <InvoiceDetailsPage /> },
           { path: ':id/edit', element: <InvoiceEditPage /> },
           { path: 'new', element: <InvoiceCreatePage /> },
+        ],
+      },
+      {
+        path: 'aws',
+        children: [
+          { element: <AWSListPage />, index: true },
+          { path: 'list', element: <AWSListPage /> },
+          // { path: ':id', element: <AWSDetailsPage /> },
+          { path: 'new', element: <AWSCreatePage /> },
+        ],
+      },
+      {
+        path: 'gcp',
+        children: [
+          { element: <GCPListPage />, index: true },
+          { path: 'list', element: <GCPListPage /> },
+          // { path: ':id', element: <GCPDetailsPage /> },
+          { path: 'new', element: <GCPCreatePage /> },
         ],
       },
 

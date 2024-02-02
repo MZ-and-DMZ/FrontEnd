@@ -30,8 +30,8 @@ import PositionQuickEditForm from './aws-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
-export default function PositionTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, csp, custom, policies } = row;
+export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+  const { name, groups, isMfaEnabled, AttachedPolicies } = row;
 
   const confirm = useBoolean();
 
@@ -41,81 +41,94 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
 
   const popover = usePopover();
 
-  const dispatch = useDispatch();
+  const handleTableRowClick = () => {
+    quickEdit.onTrue(); // TableRow를 클릭하면 UserQuickEditForm 열기
+  };
 
-  const renderPrimary = (
-    <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
+  const renderUserListView = (
+          <TableRow hover selected={selected}>
+        <TableCell padding="checkbox">
+          <Checkbox checked={selected} onClick={onSelectRow} />
+        </TableCell>
+
+        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+          <ListItemText
+            primary={name}
+            // secondary={email}
+            primaryTypographyProps={{ typography: 'body2' }}
+            secondaryTypographyProps={{
+              component: 'span',
+              color: 'text.disabled',
+            }}
+          />
+        </TableCell>
+
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{groups}</TableCell>
+
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{isMfaEnabled}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+        {AttachedPolicies.split(',').slice(0, 3).join(', ')}
       </TableCell>
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        {/* <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} /> */}
+        {/* <TableCell>
+          <Label
+            variant="soft"
+            color={
+              (csp === 'AWS' && 'success') ||
+              (csp === 'GCP' && 'warning') ||
+              (csp === 'AWS,GCP' && 'info') ||
+              'default'
+            }
+          >
+            {csp}
+          </Label>
+        </TableCell> */}
 
-        <ListItemText
-          primary={name}
-          // secondary={custom}
-          primaryTypographyProps={{ typography: 'body2' }}
-          secondaryTypographyProps={{
-            component: 'span',
-            color: 'text.disabled',
-          }}
-        />
-      </TableCell>
+        {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>{group}</TableCell>
 
-      {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{position}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell> */}
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{lastLoginTime}</TableCell>
 
-      <TableCell>
-        <Label
-          variant="soft"
-          color={
-            (csp === 'AWS' && 'success') ||
-            (csp === 'GCP' && 'warning') ||
-            (csp === 'AWS, GCP' && 'error') ||
-            'default'
-          }
-        >
-          {csp}
-        </Label>
-      </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {isMfaEnabled}
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={isMfaEnabled}  // isMfaEnabled가 true일 때 버튼 비활성화
+          >
+            {isMfaEnabled ? 'MFA 연동 완료' : 'MFA 연동 요청'}
+          </Button>
+        </TableCell> */}
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{custom}</TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {policies.split(',').slice(0, 3).join(', ')}
-      </TableCell>
-
-      <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        <IconButton
-          color={collapse.value ? 'inherit' : 'default'}
-          onClick={collapse.onToggle}
-          sx={{
-            ...(collapse.value && {
-              bgcolor: 'action.hover',
-            }),
-          }}
-        >
-          <Iconify icon="eva:arrow-ios-downward-fill" />
-        </IconButton>
-
-        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-          <Iconify icon="eva:more-vertical-fill" />
-        </IconButton>
-      </TableCell>
-
-      <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        {/* <Tooltip title="Quick Edit" placement="top" arrow>
-          <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
-            <Iconify icon="solar:pen-bold" />
+        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+          <IconButton
+            color={collapse.value ? 'inherit' : 'default'}
+            onClick={collapse.onToggle}
+            sx={{
+              ...(collapse.value && {
+                bgcolor: 'action.hover',
+              }),
+            }}
+          >
+            <Iconify icon="eva:arrow-ios-downward-fill" />
           </IconButton>
-        </Tooltip> */}
-      </TableCell>
-    </TableRow>
+
+          {/* <Tooltip title="Quick Edit" placement="top" arrow>
+            <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
+              <Iconify icon="solar:pen-bold" />
+            </IconButton>
+          </Tooltip>
+
+          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton> */}
+        </TableCell>
+      </TableRow>
   );
 
-  const renderSecondary = (
+const renderUserDetailView = (
     <TableRow>
       <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
         <Collapse
@@ -125,7 +138,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
           sx={{ bgcolor: 'background.neutral' }}
         >
           <Stack component={Paper} sx={{ m: 1.5 }}>
-            {policies.split(',').map((policy, index) => (
+            {AttachedPolicies.split(',').map((policy, index) => (
               <Stack
                 key={index}
                 direction="row"
@@ -154,7 +167,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
               </Stack>
             ))}
 
-            <Stack
+            {/* <Stack
               direction="row"
               alignItems="center"
               sx={{
@@ -167,47 +180,29 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
                 textAlign: 'center',
               }}
             >
-              <ListItemText
+              { <ListItemText
                 primary={`${name} 직무에 할당된 정책 수: ${policies.split(',').length}개`}
                 primaryTypographyProps={{
                   typography: 'body2',
                 }}
-              />
-            </Stack>
+              /> }
+            </Stack> */}
           </Stack>
         </Collapse>
       </TableCell>
     </TableRow>
   );
 
-  // if (selected) {
-  //   console.info('selected row', row);
-  //   console.info('selected', selected);
-  //   dispatch(SELECT_ROW(row));
-  // } else {
-  //   dispatch(SELECT_ROW({}));
-  // }
-
-  // useEffect(() => {
-  //   if (selected) {
-  //     console.info('selected row', row);
-  //     console.info('selected', selected);
-  //     dispatch(SELECT_ROW(row));
-  //   } else {
-  //     console.info('selected', selected);
-  //     console.info('selected row', row);
-  //     // dispatch(SELECT_ROW({}));
-  //   }
-  // }, [selected, row, dispatch]);
-
   return (
     <>
-      {renderPrimary}
+    {renderUserListView}
+    {renderUserDetailView}
+    {/* <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />  */}
 
-      {renderSecondary}
-      <PositionQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
 
-      <CustomPopover
+      
+
+      {/* <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
@@ -233,9 +228,9 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
           <Iconify icon="solar:pen-bold" />
           Edit
         </MenuItem>
-      </CustomPopover>
+      </CustomPopover> */}
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
@@ -245,12 +240,12 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
             Delete
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }
 
-PositionTableRow.propTypes = {
+UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,

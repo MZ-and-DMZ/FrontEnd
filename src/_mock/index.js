@@ -18,3 +18,6 @@ export * from './_position';
 export * from './_awsPolicies';
 export * from './_gcpRoles';
 export * from './_notification';
+
+export * from './_aws';
+export * from './_gcp';

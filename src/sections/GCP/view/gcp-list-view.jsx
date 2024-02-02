@@ -23,7 +23,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _positionList, POSITION_CSP_OPTIONS } from 'src/_mock';
+import { _GcpUserList, GCP_OPTIONS } from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -43,31 +43,29 @@ import {
 } from 'src/components/table';
 import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 
-import PositionTableRow from '../gcp-table-row';
-import PositionTableToolbar from '../gcp-table-toolbar';
-import PositionTableFiltersResult from '../gcp-table-filters-result';
+import GCPTableRow from '../gcp-table-row';
+// import PositionTableToolbar from '../gcp-table-toolbar';
+import GCPTableFiltersResult from '../gcp-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
+// const CSP_OPTIONS = [{ value: 'gcp', label: 'GCP' }, ...POSITION_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'positionName', label: '직무', width: 300 },
-  { id: 'csp', label: 'CSP', width: 300 },
-  { id: 'isCustom', label: '유형', width: 300 },
-  { id: 'policies', label: '정책/역할', width: 500 },
+  { id: 'name', label: '사용자', width: 300 },
+  { id: 'type', label: '타입', width: 300 },
+  // { id: 'isCustom', label: '유형', width: 300 },
+  { id: 'roleList', label: '역할', width: 500 },
   { id: '', width: 88 },
 ];
 
 const defaultFilters = {
   name: '',
-  positionName: [],
-  csp: 'all',
 };
 
 // ----------------------------------------------------------------------
 
-export default function PositionListView() {
+export default function GCPListView() {
   const table = useTable();
 
   const dispatch = useDispatch();
@@ -78,7 +76,7 @@ export default function PositionListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_positionList);
+  const [tableData, setTableData] = useState(_GcpUserList);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -138,12 +136,12 @@ export default function PositionListView() {
     [router]
   );
 
-  const handleFilterCSP = useCallback(
-    (event, newValue) => {
-      handleFilters('csp', newValue);
-    },
-    [handleFilters]
-  );
+  // const handleFilterCSP = useCallback(
+  //   (event, newValue) => {
+  //     handleFilters('csp', newValue);
+  //   },
+  //   [handleFilters]
+  // );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
@@ -157,30 +155,30 @@ export default function PositionListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="직무"
+          heading="사용자"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: '직무', href: paths.dashboard.position.root },
+            { name: 'GCP', href: paths.dashboard.gcp.root },
             { name: '목록' },
           ]}
           action={
             <>
-              <Button
+              {/* <Button
                 component={RouterLink}
-                href={paths.dashboard.position.new}
+                href={paths.dashboard.gcp.new}
                 variant="contained"
                 startIcon={<Iconify icon="ic:outline-change-circle" />}
                 sx={{ mr: 1 }}
               >
                 Convert
-              </Button>
+              </Button> */}
               <Button
                 component={RouterLink}
-                href={paths.dashboard.position.new}
+                href={paths.dashboard.gcp.new}
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
-                New Position
+                New GCP User
               </Button>
             </>
           }
@@ -192,13 +190,13 @@ export default function PositionListView() {
         <Card>
           <Tabs
             value={filters.csp}
-            onChange={handleFilterCSP}
+            // onChange={handleFilterCSP}
             sx={{
               px: 2.5,
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
-            {CSP_OPTIONS.map((tab) => (
+            {GCP_OPTIONS.map((tab) => (
               <Tab
                 key={tab.value}
                 iconPosition="end"
@@ -207,38 +205,29 @@ export default function PositionListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.csp) && 'filled') || 'soft'
+                      ((tab.value === 'GCP' || tab.value === filters.csp) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'aws' && 'success') ||
                       (tab.value === 'gcp' && 'warning') ||
-                      (tab.value === 'BOch' && 'info') ||
                       'default'
                     }
                   >
-                    {tab.value === 'all' && _positionList.length}
-                    {tab.value === 'aws' &&
-                      _positionList.filter((position) => position.csp === 'aws').length}
-
-                    {tab.value === 'gcp' &&
-                      _positionList.filter((position) => position.csp === 'gcp').length}
-                    {tab.value === 'BOch' &&
-                      _positionList.filter((position) => position.csp === 'BOch').length}
+                    {_GcpUserList.length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
 
-          <PositionTableToolbar
+          {/* <PositionTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
-            positionNameOptions={_positionList.map((position) => position.positionName)}
-          />
+            positionNameOptions={_GcpUserList.map((position) => position.positionName)}
+          /> */}
 
           {canReset && (
-            <PositionTableFiltersResult
+            <GCPTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               //
@@ -293,13 +282,12 @@ export default function PositionListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <PositionTableRow
+                      <GCPTableRow
                         key={row.id}
                         row={{
-                          name: row.positionName,
-                          csp: row.csp.toUpperCase(),
-                          custom: row.isCustom ? 'Custom' : 'Built-In',
-                          policies: row.policies.join(', '),
+                          name: row.userName,
+                          type: row.type,
+                          roleList: row.roleList.join(', '),
                         }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => {
