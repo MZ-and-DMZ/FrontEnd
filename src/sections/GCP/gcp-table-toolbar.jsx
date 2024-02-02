@@ -17,7 +17,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export default function PositionTableToolbar({
+export default function GCPTableToolbar({
   filters,
   onFilters,
   //
@@ -54,7 +54,7 @@ export default function PositionTableToolbar({
           pr: { xs: 2.5, md: 1 },
         }}
       >
-        <FormControl
+        {/* <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 200 },
@@ -81,7 +81,7 @@ export default function PositionTableToolbar({
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl> */}
 
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
@@ -141,7 +141,7 @@ export default function PositionTableToolbar({
   );
 }
 
-PositionTableToolbar.propTypes = {
+GCPTableToolbar.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   positionNameOptions: PropTypes.array,

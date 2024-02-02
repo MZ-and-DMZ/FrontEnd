@@ -17,12 +17,13 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export default function PositionTableToolbar({
+export default function AWSTableToolbar({
   filters,
   onFilters,
   //
   positionNameOptions,
 }) {
+  console.log(filters);
   const popover = usePopover();
 
   const handleFilterName = useCallback(
@@ -32,13 +33,13 @@ export default function PositionTableToolbar({
     [onFilters]
   );
 
-  const handleFilterPositionName = useCallback(
-    (event) => {
-      onFilters(
-        'positionName', event.target.value);
-    },
-    [onFilters]
-  );
+  // const handleFilterPositionName = useCallback(
+  //   (event) => {
+  //     onFilters(
+  //       'positionName', event.target.value);
+  //   },
+  //   [onFilters]
+  // );
 
   return (
     <>
@@ -54,18 +55,18 @@ export default function PositionTableToolbar({
           pr: { xs: 2.5, md: 1 },
         }}
       >
-        <FormControl
+        {/* <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 200 },
           }}
-        >
-          <InputLabel>Position Name</InputLabel>
+        > */}
+          {/* <InputLabel>Position Name</InputLabel> */}
 
-          <Select
+          {/* <Select
             multiple
-            value={filters.positionName}
-            onChange={handleFilterPositionName}
+            value={filters.name}
+            // onChange={handleFilterPositionName}
             input={<OutlinedInput label="Position Name" />}
             renderValue={(selected) => selected.map((value) => value).join(', ')}
             MenuProps={{
@@ -73,15 +74,15 @@ export default function PositionTableToolbar({
                 sx: { maxHeight: 240 },
               },
             }}
-          >
-            {positionNameOptions.map((option) => (
+          > */}
+            {/* {positionNameOptions.map((option) => (
               <MenuItem key={option} value={option}>
                 <Checkbox disableRipple size="small" checked={filters.positionName.includes(option)} />
                 {option}
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            ))} */}
+          {/* </Select> */}
+        {/* </FormControl> */}
 
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
@@ -141,7 +142,7 @@ export default function PositionTableToolbar({
   );
 }
 
-PositionTableToolbar.propTypes = {
+AWSTableToolbar.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   positionNameOptions: PropTypes.array,

@@ -207,7 +207,7 @@ export default function AWSListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.csp) && 'filled') || 'soft'
+                      ((tab.value === 'all' ) && 'filled') || 'soft'
                     }
                     color={
                       (tab.value === 'aws' && 'success') ||
@@ -222,12 +222,12 @@ export default function AWSListView() {
             ))}
           </Tabs>
 
-          {/* <AWSTableToolbar
+          <AWSTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
             positionNameOptions={_AwsUserList.map((user) => user.Groups)}
-          /> */}
+          />
 
           {canReset && (
             <AWSTableFiltersResult
@@ -357,7 +357,7 @@ export default function AWSListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, csp, positionName } = filters;
+  const { name} = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -375,15 +375,15 @@ function applyFilter({ inputData, comparator, filters }) {
     );
   }
 
-  if (csp !== 'all') {
-    inputData = inputData.filter((user) => user.csp === csp);
-  }
+  // if (csp !== 'all') {
+  //   inputData = inputData.filter((user) => user.csp === csp);
+  // }
 
-  if (positionName && typeof positionName === 'string') {
-    inputData = inputData.filter(
-      (user) => user.positionName.toLowerCase().indexOf(positionName.toLowerCase()) !== -1
-    );
-  }
+  // if (positionName && typeof positionName === 'string') {
+  //   inputData = inputData.filter(
+  //     (user) => user.positionName.toLowerCase().indexOf(positionName.toLowerCase()) !== -1
+  //   );
+  // }
 
   return inputData;
 }
