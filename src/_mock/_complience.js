@@ -39,7 +39,7 @@ async function getAwsCheckList() {
         const response = await fetch(`${process.env.REACT_APP_MOCK_API}/compliance/aws/check/list`);
         const awsData = await response.json();
 
-        if (!awsData.aws_check_list) {
+        if (!awsData.aws_compliance_list) {
             console.warn('AWS check list is not available in the response:', awsData);
         } else { console.log('awsData',awsData)}
 
@@ -53,7 +53,7 @@ async function getAwsCheckList() {
 
 const awsCheckListData = await getAwsCheckList();
 
-const awsCheckList = awsCheckListData.aws_check_list || [];
+const awsCheckList = awsCheckListData.aws_compliance_list || [];
 if (awsCheckList.length === 0) {
     console.warn('AWS check list is empty.');
 }

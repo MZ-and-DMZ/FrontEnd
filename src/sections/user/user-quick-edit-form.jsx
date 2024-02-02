@@ -13,8 +13,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import StarIcon from '@mui/icons-material/Star';
 
-import { USER_CSP_OPTIONS } from 'src/_mock';
+import { USER_CSP_OPTIONS, _userList } from 'src/_mock';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form';
@@ -27,12 +28,12 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     awsAccount: Yup.string()
-      .required('Email is required')
-      .email('Email must be a valid email address'),
+      .required('awsAccount is required'),
+      // .email('Email must be a valid email address'),
     gcpAccount: Yup.string()
-      .required('Company is required')
-      .email('Email must be a valid email address'),
-    attachedPosition: Yup.string().required('City is required'),
+      .required('gcpAccount is required'),
+      // .email('Email must be a valid email address'),
+    attachedPosition: Yup.string().required('attached Postion is required'),
     role: Yup.string().required('Role is required'),
   });
 
@@ -45,13 +46,21 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
       attachedGroup: currentUser?.attachedGroup || '',
       attachedPosition: currentUser?.attachedPosition || '',
       company: currentUser?.company || '',
-      role: currentUser?.role || '',
+      description: currentUser?.description || '',
+      // role: currentUser?.role || '',
       updatetime: currentUser?.updatetime || '',
+      lastLoginTime: currentUser?.lastLoginTime || '',
       duty: currentUser?.duty || '',
       department: currentUser?.department || '',
+      isMfaEnabled: currentUser?.isMfaEnabled || '',
+      isImportantPerson: currentUser?.isImportantPerson || '',
+      device: currentUser?.device || '',
     }),
     [currentUser]
   );
+
+  console.log(currentUser);
+
 
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
@@ -90,9 +99,16 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
         <DialogTitle>사용자 상세 정보</DialogTitle>
 
         <DialogContent>
-          <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
-            Account is waiting for confirmation
-          </Alert>
+
+          {currentUser.isImportantPerson && ( // isImportantPerson이 true일 때만 표시
+            <Alert
+              variant="outlined"
+              severity="warning"
+              sx={{ mb: 3, display: 'flex', alignItems: 'center' }}
+            >
+            중요 계정입니다.
+            </Alert>
+          )}
 
           <Box
             rowGap={3}
@@ -110,29 +126,30 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
                 </MenuItem>
               ))}
             </RHFSelect>
+{/* 
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
 
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
-
-            <RHFTextField name="name" label="Full Name" />
-            <RHFTextField name="gcpAccount" label="AWS 계정 정보" />
-            <RHFTextField name="awsAccount" label="GCP 계정 정보" />
+            <RHFTextField name="name" label="이름" />
+            <RHFTextField name="awsAccount" label="AWS 계정 정보" />
+            <RHFTextField name="gcpAccount" label="GCP 계정 정보" />
             <RHFTextField name="department" label="부서" />
             <RHFTextField name="duty" label="직책" />
             <RHFTextField name="description" label="설명" />
-            <RHFTextField name="role" label="Role" />
+            {/* <RHFTextField name="role" label="부여된 역할" /> */}
             <RHFTextField name="attachedGroup" label="소속된 그룹" />
             <RHFTextField name="attachedPosition" label="부여된 직무" />
-            <RHFTextField name="updatetime" label="최종 수정 시각" />
+            <RHFTextField name="device" label="등록된 기기" />
+            <RHFTextField name="lastLoginTime" label="최근 접속 시각" />
           </Box>
         </DialogContent>
 
         <DialogActions>
           <Button variant="outlined" onClick={onClose}>
-            Cancel
+            취소
           </Button>
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Update
+            수정
           </LoadingButton>
         </DialogActions>
       </FormProvider>

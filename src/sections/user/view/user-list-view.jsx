@@ -20,7 +20,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _roles, _userList, USER_CSP_OPTIONS } from 'src/_mock';
+import { _roles, _userList, USER_CSP_OPTIONS, _userDetailList } from 'src/_mock';
 import { setAwsExceptionUser, setGcpExceptionUser } from 'src/_mock/_log';
 
 import Label from 'src/components/label';
@@ -340,11 +340,15 @@ export default function UserListView() {
                           department: row.department,
                           duty: row.duty,
                           csp: row.csp,
-                          group: row.attachedGroup,
-                          position: row.attachedPosition.join(', '),
+                          attachedGroup: row.attachedGroup,
+                          attachedPosition: row.attachedPosition.join(', '),
                           lastLoginTime: row.lastLoginTime,
                           isMfaEnabled: row.isMfaEnabled,
+                          isImportantPerson: row.isImportantPerson,
                           awsAccount: row.awsAccount,
+                          gcpAccount: row.gcpAccount,
+                          device: row.device,
+                          description: row.description,
                         }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
