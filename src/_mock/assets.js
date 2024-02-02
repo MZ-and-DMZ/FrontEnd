@@ -442,11 +442,11 @@ export const _tags = [
 // ----------------------------------------------------------------------
 
 export const _taskNames = [
-  'Complete Project Proposal',
-  'Conduct Market Research',
-  'Design User Interface Mockups',
-  'Develop Backend API',
-  'Implement Authentication System',
+  '최적화 주기 20일로 변경',
+  '사용자별 MFA 사용여부 확인',
+  '사세 확장으로인한 신규 직무 목록 확인',
+  '신입사원 계정 생성',
+  '메리 크리스마스입니다 사랑해요 멘토님들 ㅎㅎ',
   'Write Test Cases',
   'Perform Database Optimization',
   'Create Content Marketing Plan',

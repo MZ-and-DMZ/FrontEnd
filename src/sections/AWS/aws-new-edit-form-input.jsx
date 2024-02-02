@@ -113,7 +113,7 @@ export default function PositionNewEditForm({ currentPosition }) {
                 <RHFAutocomplete
                   name="csp"
                   label="Cloud"
-                  options={['AWS', 'GCP', 'AWS, GCP']}
+                  options={['AWS', 'GCP']}
                   getOptionLabel={(option) => option}
                   isOptionEqualToValue={(option, value) => option === value}
                 />

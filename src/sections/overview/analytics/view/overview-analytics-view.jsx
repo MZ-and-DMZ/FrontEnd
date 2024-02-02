@@ -82,7 +82,7 @@ export default function OverviewAnalyticsView() {
         <Grid xs={12} md={6} lg={12}>
           <AnalyticsWebsiteVisits
             title="권한 통계"
-            subheader="(+43%) than last year"
+            subheader=""
             chart={{
               labels: [
                 '01/01/2003',
@@ -144,8 +144,8 @@ export default function OverviewAnalyticsView() {
 
         <Grid xs={12} md={6} lg={12}>
           <AnalyticsPermissionTreeChart
-            title="Conversion Rates"
-            subheader="(+43%) than last year"
+            title="권한 계층화 구조"
+            subheader=""
             chart={{
               series: [
                 { label: 'Italy', value: 400 },
@@ -200,7 +200,7 @@ export default function OverviewAnalyticsView() {
         </Grid> */}
 
         <Grid xs={12} md={6} lg={4}>
-          <AnalyticsOrderTimeline title="Order Timeline" list={_analyticOrderTimeline} />
+          <AnalyticsOrderTimeline title="최적화 타임라인" list={_analyticOrderTimeline} />
         </Grid>
 
         {/* <Grid xs={12} md={6} lg={4}>
