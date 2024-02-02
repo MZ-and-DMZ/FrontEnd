@@ -102,9 +102,9 @@ export default function GCPTableRow({ row, selected, onEditRow, onSelectRow, onD
           <Iconify icon="eva:arrow-ios-downward-fill" />
         </IconButton>
 
-        <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+        {/* <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
           <Iconify icon="eva:more-vertical-fill" />
-        </IconButton>
+        </IconButton> */}
       </TableCell>
 
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
