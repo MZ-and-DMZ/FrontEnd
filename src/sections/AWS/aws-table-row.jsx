@@ -51,7 +51,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        {/* <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
           <ListItemText
             primary={name}
             // secondary={email}
@@ -61,7 +61,9 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
               color: 'text.disabled',
             }}
           />
-        </TableCell>
+        </TableCell> */}
+
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{name}</TableCell> 
 
         <TableCell sx={{whiteSpace: 'nowrap' }}>{groups}</TableCell>
 
