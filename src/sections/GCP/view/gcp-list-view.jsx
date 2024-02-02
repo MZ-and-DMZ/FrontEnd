@@ -44,7 +44,7 @@ import {
 import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 
 import GCPTableRow from '../gcp-table-row';
-// import PositionTableToolbar from '../gcp-table-toolbar';
+import GCPTableToolbar from '../gcp-table-toolbar';
 import GCPTableFiltersResult from '../gcp-table-filters-result';
 
 // ----------------------------------------------------------------------
@@ -219,12 +219,12 @@ export default function GCPListView() {
             ))}
           </Tabs>
 
-          {/* <PositionTableToolbar
+          <GCPTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
             positionNameOptions={_GcpUserList.map((position) => position.positionName)}
-          /> */}
+          />
 
           {canReset && (
             <GCPTableFiltersResult
