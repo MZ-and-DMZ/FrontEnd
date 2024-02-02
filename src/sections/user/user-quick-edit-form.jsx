@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,7 +15,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import StarIcon from '@mui/icons-material/Star';
 
-import { USER_CSP_OPTIONS, _userList } from 'src/_mock';
+import { USER_CSP_OPTIONS, _userList, _userDetailList } from 'src/_mock';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form';
@@ -24,6 +24,8 @@ import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form'
 
 export default function UserQuickEditForm({ currentUser, open, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
+  const [userDetail, setUserDetail] = useState(null);
+  const [selectedUserName, setSelectedUserName] = useState('');
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -36,6 +38,28 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
     attachedPosition: Yup.string().required('attached Postion is required'),
     role: Yup.string().required('Role is required'),
   });
+
+  useEffect(() => {
+    const fetchUserDetail = async () => {
+      try {
+        if (selectedUserName) {
+          const userDetailData = await _userDetailList(selectedUserName);
+          setUserDetail(userDetailData);
+        }
+      } catch (error) {
+        console.error('Error fetching user detail data:', error);
+      }
+    };
+    fetchUserDetail();
+  }, [selectedUserName]);
+
+  // Assuming currentUser includes userName field
+  useEffect(() => {
+    if (currentUser) {
+      setSelectedUserName(currentUser.userName);
+    }
+  }, [currentUser]);
+
 
   const defaultValues = useMemo(
     () => ({
@@ -55,11 +79,13 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
       isMfaEnabled: currentUser?.isMfaEnabled || '',
       isImportantPerson: currentUser?.isImportantPerson || '',
       device: currentUser?.device || '',
+      usedAwsKeys: userDetail?.usedAwsKeys || '',
+      awsKeys: userDetail?.awsKeys || '',
     }),
-    [currentUser]
+    [currentUser, userDetail]
   );
 
-  console.log(currentUser);
+  // console.log(currentUser.name);
 
 
   const methods = useForm({
@@ -118,20 +144,26 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
               xs: 'repeat(1, 1fr)',
               sm: 'repeat(2, 1fr)',
             }}
+            sx={{ padding: '10px' }}
           >
-            <RHFSelect name="csp" label="CSP">
+            <RHFTextField name="name" label="이름" />
+            <RHFSelect name="csp" label="CSP" >
               {USER_CSP_OPTIONS.map((csp) => (
                 <MenuItem key={csp.value} value={csp.value}>
                   {csp.label}
                 </MenuItem>
               ))}
             </RHFSelect>
-{/* 
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
-
-            <RHFTextField name="name" label="이름" />
+{/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
+            
             <RHFTextField name="awsAccount" label="AWS 계정 정보" />
+            <Box sx={{ padding: '10px' }}> </Box>
+            <RHFSelect name="awsKeys" label="AWS Managed Keys"/>
+            <RHFSelect name="usedAwsKeys" label="AWS Used Keys"/>
             <RHFTextField name="gcpAccount" label="GCP 계정 정보" />
+            <Box sx={{ padding: '10px' }}> </Box>
+            <RHFTextField name="gcpManagedKeys" label="GCP Managed Keys"/>
+            <RHFTextField name="gcpUsedKeys" label="GCP Used Keys" />    
             <RHFTextField name="department" label="부서" />
             <RHFTextField name="duty" label="직책" />
             <RHFTextField name="description" label="설명" />
