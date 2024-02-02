@@ -349,6 +349,8 @@ export default function UserListView() {
                           gcpAccount: row.gcpAccount,
                           device: row.device,
                           description: row.description,
+                          awsKeys: row.awsKeys,
+                          usedAwsKeys: row.usedAwsKeys
                         }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}

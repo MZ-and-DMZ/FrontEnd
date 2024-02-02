@@ -27,7 +27,7 @@ import UserQuickEditForm from './user-quick-edit-form';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, group, position, duty, department, isMfaEnabled, lastLoginTime, csp, awsAccount } = row;
+  const { name, group, attachedPosition, duty, department, isMfaEnabled, lastLoginTime, csp, awsKeys, usedAwsKeys } = row;
 
   const confirm = useBoolean();
 
@@ -77,7 +77,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{group}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{position}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{attachedPosition}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{lastLoginTime}</TableCell>
 

@@ -21,6 +21,7 @@ export const _userList = [...Array(userData.user_list.length)].map((_, index) =>
   id: `${index}`,
   // id: index,
   userName: userData.user_list[index].userName,
+  fullName: userData.user_list[index].fullName,
   description: userData.user_list[index].description,
   isMfaEnabled: userData.user_list[index].isMfaEnabled,
   isImportantPerson: userData.user_list[index].isImportantPerson,
