@@ -30,8 +30,9 @@ import PositionQuickEditForm from './gcp-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
-export default function PositionTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, csp, custom, policies } = row;
+export default function GCPTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+  const { name, type, roleList } = row;
+  console.log(row);
 
   const confirm = useBoolean();
 
@@ -41,9 +42,11 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
 
   const popover = usePopover();
 
-  const dispatch = useDispatch();
+  const handleTableRowClick = () => {
+    quickEdit.onTrue(); // TableRow를 클릭하면 UserQuickEditForm 열기
+  };
 
-  const renderPrimary = (
+  const renderUserListView = (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
@@ -67,7 +70,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell> */}
 
-      <TableCell>
+      {/* <TableCell>
         <Label
           variant="soft"
           color={
@@ -79,12 +82,11 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
         >
           {csp}
         </Label>
-      </TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{custom}</TableCell>
+      </TableCell> */}
+       <TableCell sx={{whiteSpace: 'nowrap' }}>{type}</TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {policies.split(',').slice(0, 3).join(', ')}
+        {roleList.split(',').join(', ')}
       </TableCell>
 
       <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
@@ -115,7 +117,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
     </TableRow>
   );
 
-  const renderSecondary = (
+  const renderUserDetailView = (
     <TableRow>
       <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
         <Collapse
@@ -125,7 +127,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
           sx={{ bgcolor: 'background.neutral' }}
         >
           <Stack component={Paper} sx={{ m: 1.5 }}>
-            {policies.split(',').map((policy, index) => (
+            {roleList.split(',').map((role, index) => (
               <Stack
                 key={index}
                 direction="row"
@@ -141,7 +143,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
                 }}
               >
                 <ListItemText
-                  primary={policy} // 현재 policy를 보여줍니다.
+                  primary={role} // 현재 role을 보여줍니다.
                   primaryTypographyProps={{
                     typography: 'body2',
                   }}
@@ -154,7 +156,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
               </Stack>
             ))}
 
-            <Stack
+            {/* <Stack
               direction="row"
               alignItems="center"
               sx={{
@@ -173,7 +175,7 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
                   typography: 'body2',
                 }}
               />
-            </Stack>
+            </Stack> */}
           </Stack>
         </Collapse>
       </TableCell>
@@ -202,12 +204,11 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
 
   return (
     <>
-      {renderPrimary}
+      {renderUserListView}
+      {renderUserDetailView}
+      {/* <PositionQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} /> */}
 
-      {renderSecondary}
-      <PositionQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
-
-      <CustomPopover
+      {/* <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
@@ -233,9 +234,9 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
           <Iconify icon="solar:pen-bold" />
           Edit
         </MenuItem>
-      </CustomPopover>
+      </CustomPopover> */}
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
@@ -245,12 +246,12 @@ export default function PositionTableRow({ row, selected, onEditRow, onSelectRow
             Delete
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }
 
-PositionTableRow.propTypes = {
+GCPTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,

@@ -23,7 +23,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _positionList, POSITION_CSP_OPTIONS } from 'src/_mock';
+import { _AwsUserList, POSITION_CSP_OPTIONS , AWS_OPTIONS} from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -43,31 +43,30 @@ import {
 } from 'src/components/table';
 import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 
-import PositionTableRow from '../aws-table-row';
-import PositionTableToolbar from '../aws-table-toolbar';
-import PositionTableFiltersResult from '../aws-table-filters-result';
+import AWSTableRow from '../aws-table-row';
+import AWSTableToolbar from '../aws-table-toolbar';
+import AWSTableFiltersResult from '../aws-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
+// const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
+// const AWS_OPTIONS = [{ value: 'aws', label: 'AWS' }, ...POSITION_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'positionName', label: '직무', width: 300 },
-  { id: 'csp', label: 'CSP', width: 300 },
-  { id: 'isCustom', label: '유형', width: 300 },
-  { id: 'policies', label: '정책/역할', width: 500 },
+  { id: 'name', label: '사용자', width: 300 },
+  { id: 'groups', label: '그룹', width: 500 },
+  { id: 'isMfaEnabled', label: 'MFA 여부', width: 300 },
+  { id: 'AttachedPolicies', label: '정책', width: 500 },
   { id: '', width: 88 },
 ];
 
 const defaultFilters = {
   name: '',
-  positionName: [],
-  csp: 'all',
 };
 
 // ----------------------------------------------------------------------
 
-export default function PositionListView() {
+export default function AWSListView() {
   const table = useTable();
 
   const dispatch = useDispatch();
@@ -78,7 +77,7 @@ export default function PositionListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_positionList);
+  const [tableData, setTableData] = useState(_AwsUserList);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -87,6 +86,7 @@ export default function PositionListView() {
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
+
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
@@ -138,12 +138,12 @@ export default function PositionListView() {
     [router]
   );
 
-  const handleFilterCSP = useCallback(
-    (event, newValue) => {
-      handleFilters('csp', newValue);
-    },
-    [handleFilters]
-  );
+  // const handleFilterCSP = useCallback(
+  //   (event, newValue) => {
+  //     handleFilters('csp', newValue);
+  //   },
+  //   [handleFilters]
+  // );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
@@ -157,30 +157,30 @@ export default function PositionListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="직무"
+          heading="사용자"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: '직무', href: paths.dashboard.position.root },
+            { name: 'AWS', href: paths.dashboard.aws.root },
             { name: '목록' },
           ]}
           action={
             <>
-              <Button
+              {/* <Button
                 component={RouterLink}
-                href={paths.dashboard.position.new}
+                href={paths.dashboard.aws.new}
                 variant="contained"
                 startIcon={<Iconify icon="ic:outline-change-circle" />}
                 sx={{ mr: 1 }}
               >
                 Convert
-              </Button>
+              </Button> */}
               <Button
                 component={RouterLink}
-                href={paths.dashboard.position.new}
+                href={paths.dashboard.aws.new} 
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
-                New Position
+                New AWS User
               </Button>
             </>
           }
@@ -192,13 +192,13 @@ export default function PositionListView() {
         <Card>
           <Tabs
             value={filters.csp}
-            onChange={handleFilterCSP}
+            // onChange={handleFilterCSP}
             sx={{
               px: 2.5,
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
-            {CSP_OPTIONS.map((tab) => (
+            {AWS_OPTIONS.map((tab) => (
               <Tab
                 key={tab.value}
                 iconPosition="end"
@@ -211,34 +211,26 @@ export default function PositionListView() {
                     }
                     color={
                       (tab.value === 'aws' && 'success') ||
-                      (tab.value === 'gcp' && 'warning') ||
-                      (tab.value === 'BOch' && 'info') ||
                       'default'
                     }
                   >
-                    {tab.value === 'all' && _positionList.length}
-                    {tab.value === 'aws' &&
-                      _positionList.filter((position) => position.csp === 'aws').length}
-
-                    {tab.value === 'gcp' &&
-                      _positionList.filter((position) => position.csp === 'gcp').length}
-                    {tab.value === 'BOch' &&
-                      _positionList.filter((position) => position.csp === 'BOch').length}
+                    {
+                      _AwsUserList.length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
 
-          <PositionTableToolbar
+          {/* <AWSTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
-            positionNameOptions={_positionList.map((position) => position.positionName)}
-          />
+            positionNameOptions={_AwsUserList.map((user) => user.Groups)}
+          /> */}
 
           {canReset && (
-            <PositionTableFiltersResult
+            <AWSTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               //
@@ -293,13 +285,14 @@ export default function PositionListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <PositionTableRow
+                      <AWSTableRow
                         key={row.id}
                         row={{
-                          name: row.positionName,
-                          csp: row.csp.toUpperCase(),
-                          custom: row.isCustom ? 'Custom' : 'Built-In',
-                          policies: row.policies.join(', '),
+                          // 테이블 컬럼들 순서대로 작성하면 됨
+                          name: row.UserName,
+                          groups: row.Groups.join(', '),
+                          isMfaEnabled: row.isMfaEnabled ? 'Yes' : 'No',
+                          AttachedPolicies: row.AttachedPolicies.join(', '),
                         }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => {

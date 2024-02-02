@@ -62,3 +62,13 @@ export async function getGcpUserList() {
     throw error;
   }
 }
+
+const GcpUserData = await getGcpUserList();
+
+export const _GcpUserList = [...Array(GcpUserData.length)].map((_, index) => ({
+  id: index,
+  userName: GcpUserData[index].userName,
+  // isCustom: positionData[index].isCustom,
+  type: GcpUserData[index].type,
+  roleList: GcpUserData[index].roleList,
+}));

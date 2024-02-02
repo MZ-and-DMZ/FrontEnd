@@ -96,24 +96,61 @@ export async function getAwsTreeData() {
 }
 
   
-// // CSP별 페이지 : AWS
-// export async function getAwsUserList() {
-//   try {
-//     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/userlist`, {
+// CSP별 페이지 : AWS
+async function getAwsUserList() {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/userlist`, {
       
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     });
-//     const data = await response.json();
-//     console.log('AWS User List:', data);
-//     return data;
-//   } catch (error) {
-//     console.error('Error fetching data from /aws/userlist:', error);
-//     throw error;
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    console.log('AWS User List:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching data from /aws/userlist:', error);
+    throw error;
        
-//   }
-// }
+  }
+}
 
- 
+const AwsUserData = await getAwsUserList();
+
+export const _AwsUserList = [...Array(AwsUserData.length)].map((_, index) => ({
+  id: index,
+  UserName: AwsUserData[index].UserName,
+  // isCustom: positionData[index].isCustom,
+  Groups: AwsUserData[index].Groups,
+  isMfaEnabled: AwsUserData[index].isMfaEnabled,
+  AttachedPolicies: AwsUserData[index].AttachedPolicies.map((policy) => Object.values(policy)[0]),
+}));
+
+
+export async function createAWSUser(data) {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/aws/user`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name : data.name,
+        // positionName: data.positionName,
+        // description: data.description,
+        // csp: data.csp.toLowerCase(),
+        // policies: data.policies,
+      }),
+    });
+
+    if (response.ok) {
+      const responseData = await response.json();
+      return responseData;
+    }
+    throw new Error('Failed to create position');
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

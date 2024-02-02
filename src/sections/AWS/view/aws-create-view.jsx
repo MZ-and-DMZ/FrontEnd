@@ -13,7 +13,7 @@ import { _positionList } from 'src/_mock';
 import { Button, Step, StepLabel, Stepper, Typography } from '@mui/material';
 
 import { MailView } from 'src/sections/mail/view';
-import PositionNewEditFormInput from '../aws-new-edit-form-input';
+import AWSNewEditForm from '../aws-new-edit-form-input';
 // import PositionNewEditFormTree from '../position-new-edit-form-tree';
 import PositionNewEditFormTable from '../aws-new-edit-form-table';
 import SecondCreateForm from '../aws-new-edit-form-tree';
@@ -66,13 +66,13 @@ export default function PositionCreateView() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const steps = ['CSP 선택 및 직무 기본 정보 기입', '기능별 정책 선택', '역할 및 권한 선택'];
+  const steps = ['AWS User 정보 기입'];
 
-  const [stepPage, setStepPage] = useState(<PositionNewEditFormInput />);
+  const [stepPage, setStepPage] = useState(<AWSNewEditForm />);
   useEffect(() => {
     switch (activeStep) {
       case 0:
-        setStepPage(<PositionNewEditFormInput />);
+        setStepPage(<AWSNewEditForm />);
         break;
       case 1:
         setStepPage(<SecondCreateForm />);
@@ -82,21 +82,21 @@ export default function PositionCreateView() {
         // setStepPage(<PositionNewEditFormTable currentPosition={currentPosition} />);
         break;
       default:
-        setStepPage(<PositionNewEditFormInput />);
+        setStepPage(<AWSNewEditForm />);
     }
   }, [activeStep]);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Create a new position"
+        heading="Create a new AWS User"
         links={[
           {
             name: 'Dashboard',
             href: paths.dashboard.root,
           },
           {
-            name: 'User',
+            name: 'AWS',
             href: paths.dashboard.user.root,
           },
           { name: 'New user' },
