@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Button from '@mui/material/Button';
@@ -8,6 +9,13 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -16,12 +24,21 @@ import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
+import { _departmentList } from 'src/_mock/_department';
+
 import GroupQuickEditForm from './group-quick-edit-form';
+
 
 // ----------------------------------------------------------------------
 
 export default function GroupTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, group, position, description, csp } = row;
+  const { departmentName, awsRole, gcpRole, adGpo, keyCloakRole } = row;
+
+  // const moveToUserList = () => {
+  //   // 브라우저의 현재 URL을 변경하여 사용자 목록으로 이동합니다.
+  //   // 예를 들어, /users/:departmentName 경로로 이동합니다.
+  //   history.push(`/users/${departmentName}`);
+  // };
 
   const confirm = useBoolean();
 
@@ -29,32 +46,21 @@ export default function GroupTableRow({ row, selected, onEditRow, onSelectRow, o
 
   const popover = usePopover();
 
-  const handleTableRowClick = () => {
-    quickEdit.onTrue(); // TableRow를 클릭하면 UserQuickEditForm 열기
-  };
+  const collapse = useBoolean();
 
-  return (
-    <>
-      <TableRow hover selected={selected} onClick={handleTableRowClick}>
+  // const handleTableRowClick = () => {
+  //   quickEdit.onTrue(); 
+  // };
+
+  const renderDepartmentListView = (
+    <TableRow hover selected={selected}>
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} /> */}
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{departmentName}</TableCell>
 
-          <ListItemText
-            primary={name}
-            // secondary={email}
-            primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled',
-            }}
-          />
-        </TableCell>
-
-        <TableCell>
+        {/* <TableCell>
           <Label
             variant="soft"
             color={
@@ -66,16 +72,43 @@ export default function GroupTableRow({ row, selected, onEditRow, onSelectRow, o
           >
             {csp}
           </Label>
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{group}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{awsRole}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{position}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{gcpRole}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{description}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{adGpo}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{keyCloakRole}</TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Quick Edit" placement="top" arrow>
+
+        <Tooltip title="상세 정보 더보기" placement="top" arrow>
+        <IconButton
+            color={collapse.value ? 'inherit' : 'default'}
+            onClick={collapse.onToggle}
+            sx={{
+              ...(collapse.value && {
+                bgcolor: 'action.hover',
+              }),
+            }}
+          >
+            <Iconify icon="eva:arrow-ios-downward-fill" />
+          </IconButton>
+          </Tooltip>
+
+          <Tooltip title="사용자 목록으로 이동" placement="top" arrow>
+        <IconButton
+            color={collapse.value ? 'inherit' : 'default'}
+            onClick={collapse.onToggle}
+          >
+          <Iconify icon="solar:eye-bold" />
+          </IconButton>
+          </Tooltip>
+
+
+          {/* <Tooltip title="Quick Edit" placement="top" arrow>
             <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
               <Iconify icon="solar:pen-bold" />
             </IconButton>
@@ -83,11 +116,60 @@ export default function GroupTableRow({ row, selected, onEditRow, onSelectRow, o
 
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          </IconButton> */}
         </TableCell>
       </TableRow>
+  );
 
-      <GroupQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
+  const renderDepartmentDetailView = (
+    <TableRow>
+      <TableCell colSpan={10}>
+        <Collapse in={collapse.value} timeout="auto" unmountOnExit>
+          <Stack spacing={2} direction="column" sx={{ mt: 1 }}>
+            <Stack direction="row" spacing={2}>
+              <Typography variant="subtitle1">AWS Role:</Typography>
+              <Stack direction="column" spacing={1}>
+                {row.awsRole.map((role, index) => (
+                  <Typography key={index} variant="body1">{role}</Typography>
+                ))}
+              </Stack>
+            </Stack>
+            <Stack direction="row" spacing={2}>
+              <Typography variant="subtitle1">GCP Role:</Typography>
+              <Stack direction="column" spacing={1}>
+                {row.gcpRole.map((role, index) => (
+                  <Typography key={index} variant="body1">{role}</Typography>
+                ))}
+              </Stack>
+            </Stack>
+            <Stack direction="row" spacing={2}>
+              <Typography variant="subtitle1">AD GPO:</Typography>
+              <Stack direction="column" spacing={1}>
+                {row.adGpo.map((gpo, index) => (
+                  <Typography key={index} variant="body1">{gpo}</Typography>
+                ))}
+              </Stack>
+            </Stack>
+            <Stack direction="row" spacing={2}>
+              <Typography variant="subtitle1">KeyCloak Role:</Typography>
+              <Stack direction="column" spacing={1}>
+                {row.keyCloakRole.map((role, index) => (
+                  <Typography key={index} variant="body1">{role}</Typography>
+                ))}
+              </Stack>
+            </Stack>
+          </Stack>
+        </Collapse>
+      </TableCell>
+    </TableRow>
+  );
+  
+
+  return (    
+    <>  
+  <GroupQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
+      {renderDepartmentListView}
+      {renderDepartmentDetailView}
 
       <CustomPopover
         open={popover.open}
@@ -130,7 +212,8 @@ export default function GroupTableRow({ row, selected, onEditRow, onSelectRow, o
       />
     </>
   );
-}
+      }
+      
 
 GroupTableRow.propTypes = {
   onDeleteRow: PropTypes.func,

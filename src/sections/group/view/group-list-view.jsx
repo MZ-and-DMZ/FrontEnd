@@ -1,5 +1,6 @@
+import sumBy from 'lodash/sumBy';
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -7,11 +8,13 @@ import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import { alpha } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -38,6 +41,10 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
+import InvoiceAnalytic from 'src/sections/optimize/invoice-analytic';
+
+import { _departmentList } from 'src/_mock/_department';
+
 import GroupTableRow from '../group-table-row';
 import GroupTableToolbar from '../group-table-toolbar';
 import GroupTableFiltersResult from '../group-table-filters-result';
@@ -47,11 +54,12 @@ import GroupTableFiltersResult from '../group-table-filters-result';
 const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
-  { id: 'csp', label: 'CSP', width: 180 },
-  { id: 'group', label: '그룹', width: 220 },
-  { id: 'position', label: '직무', width: 500 },
-  { id: 'description', label: '설명', width: 400 },
+  { id: 'departmentName', label: '부서명', width: 180 },
+  // { id: 'csp', label: 'CSP', width: 180 },
+  { id: 'awsRole', label: 'AWS 역할', width: 220 },
+  { id: 'gcpRole', label: 'GCP 역할', width: 500 },
+  { id: 'adGpo', label: 'AD 그룹 정책', width: 400 },
+  { id: 'keycloakRole', label: 'KeyCloak 역할', width: 400 },
   { id: '', width: 88 },
 ];
 
@@ -61,10 +69,41 @@ const defaultFilters = {
   csp: 'all',
 };
 
+
+const TABS = [
+  { value: 'all', label: 'All', color: 'default', },
+  {
+    value: 'paid',
+    label: '정상 권한',
+    color: 'success',
+    count: '29',
+  },
+  {
+    value: 'pending',
+    label: '갱신 대상',
+    color: 'warning',
+    count: '5',
+  },
+  {
+    value: 'overdue',
+    label: '초과 권한',
+    color: 'error',
+    count: '0',
+  },
+  // {
+  //   value: 'draft',
+  //   label: 'Draft',
+  //   color: 'default',
+  //   count: getInvoiceLength('draft'),
+  // },
+];
+
 // ----------------------------------------------------------------------
 
 export default function GroupListView() {
   const table = useTable();
+
+  const theme = useTheme();
 
   const settings = useSettingsContext();
 
@@ -72,7 +111,8 @@ export default function GroupListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState(_departmentList);
+
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -132,25 +172,27 @@ export default function GroupListView() {
     [router]
   );
 
-  const handleFilterStatus = useCallback(
-    (event, newValue) => {
-      handleFilters('csp', newValue);
-    },
-    [handleFilters]
-  );
+  // const handleFilterStatus = useCallback(
+  //   (event, newValue) => {
+  //     handleFilters('csp', newValue);
+  //   },
+  //   [handleFilters]
+  // );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
   }, []);
 
+
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="사용자"
+          heading="부서별 권한 정보"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: '사용자', href: paths.dashboard.user.root },
+            { name: 'home', href: paths.dashboard.root },
+            { name: '부서', href: paths.dashboard.user.root },
             { name: '목록' },
           ]}
           action={
@@ -160,7 +202,7 @@ export default function GroupListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              New User
+              새로운 부서 추가하기
             </Button>
           }
           sx={{
@@ -169,7 +211,65 @@ export default function GroupListView() {
         />
 
         <Card>
-          <Tabs
+        <Card
+          sx={{
+            mb: { xs: 3, md: 5 },
+          }}
+        >
+          <Scrollbar>
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+              sx={{ py: 2 }}
+            >
+              <InvoiceAnalytic
+                title="전체 사용자 수"
+                total='130'
+                percent={100}
+                // price='120'
+                icon="solar:bill-list-bold-duotone"
+                color={theme.palette.info.main}
+              />
+
+              <InvoiceAnalytic
+                title="적정 권한"
+                total='115'
+                percent='100'
+                // price='120'
+                icon="solar:file-check-bold-duotone"
+                color={theme.palette.success.main}
+              />
+
+              <InvoiceAnalytic
+                title="갱신 대상"
+                total='15'
+                percent='100'
+                // price='120'
+                icon="solar:sort-by-time-bold-duotone"
+                color={theme.palette.warning.main}
+              />
+
+              <InvoiceAnalytic
+                title="초과 권한"
+                total='0'
+                percent='100'
+                // price='120'
+                icon="solar:bell-bing-bold-duotone"
+                color={theme.palette.error.main}
+              />
+
+              {/* <InvoiceAnalytic
+                title="Draft"
+                total={getInvoiceLength('draft')}
+                percent={getPercentByStatus('draft')}
+                price={getTotalAmount('draft')}
+                icon="solar:file-corrupted-bold-duotone"
+                color={theme.palette.text.secondary}
+              /> */}
+            </Stack>
+          </Scrollbar>
+        </Card>
+          {/* <Tabs
             value={filters.csp}
             onChange={handleFilterStatus}
             sx={{
@@ -204,7 +304,7 @@ export default function GroupListView() {
                 }
               />
             ))}
-          </Tabs>
+          </Tabs> */}
 
           <GroupTableToolbar
             filters={filters}
@@ -272,11 +372,11 @@ export default function GroupListView() {
                       <GroupTableRow
                         key={row.id}
                         row={{
-                          name: row.userName,
-                          csp: row.csp,
-                          group: row.attachedGroup,
-                          position: row.attachedPosition.join(', '),
-                          description: row.description,
+                          departmentName: row.departmentName,
+                          awsRole: row.awsRole,
+                          gcpRole: row.gcpRole,
+                          adGpo: row.adGpo,
+                          keyCloakRole: row.keyCloakRole,
                         }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}

@@ -1,8 +1,18 @@
 import { current } from "@reduxjs/toolkit";
 
+// async function UserData() {
+//   try {
+//     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/users/list`);
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
 async function UserData() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/users/list`);
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/departments/userlist/Frontend`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -21,7 +31,11 @@ export const _userList = [...Array(userData.user_list.length)].map((_, index) =>
   id: `${index}`,
   // id: index,
   userName: userData.user_list[index].userName,
-  fullName: userData.user_list[index].fullName,
+  fullName: userData.user_list[index].full_name,
+  awsRole: userData.user_list[index].aws_role,
+  gcpRole: userData.user_list[index].gcp_role,
+  adGpo: userData.user_list[index].ad_gpo,
+  keyCloakRole: userData.user_list[index].keycloak_role,
   description: userData.user_list[index].description,
   isMfaEnabled: userData.user_list[index].isMfaEnabled,
   isImportantPerson: userData.user_list[index].isImportantPerson,
