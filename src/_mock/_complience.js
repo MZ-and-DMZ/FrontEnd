@@ -34,6 +34,41 @@ export const _gcpCheckList = gcpCheckList.map((item, index) => ({
     : item.law,
 }));
 
+async function getADCheckList() {
+    try {
+        const response = await fetch(`${process.env.REACT_APP_MOCK_API}/compliance/ad/check/list`);
+        const adData = await response.json();
+
+        if (!adData.ad_compliance_list) {
+            console.warn('GCP check list is not available in the response:', adData);
+        } else { console.log('gcpData',adData)}
+
+        return adData;
+    } catch (error) {
+        console.error('Error fetching GCP check list:', error);
+        throw error;
+    }
+}
+
+const adCheckListData = await getADCheckList();
+
+const adCheckList = adCheckListData.ad_compliance_list || [];
+if (adCheckList.length === 0) {
+    console.warn('GCP check list is empty.');
+}
+
+export const _adCheckList = adCheckList.map((item, index) => ({
+    id: item._id,
+    type: item.type,
+    csp: item.csp,
+    date: item.date,
+    description: item.description,
+    standard: item.standard,
+    laws: Array.isArray(item.law)
+    ? item.law.map((lawItem) => (typeof lawItem === 'string' ? lawItem : Object.keys(lawItem)[0])).join(', ')
+    : item.law,
+}));
+
 async function getAwsCheckList() {
     try {
         const response = await fetch(`${process.env.REACT_APP_MOCK_API}/compliance/aws/check/list`);

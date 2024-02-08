@@ -12,7 +12,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 // import { useGetMail, useGetMails, useGetLabels } from 'src/api/mail';
 
-import { _gcpCheckList } from 'src/_mock/_complience';
+import { _gcpCheckList, _adCheckList } from 'src/_mock/_complience';
 
 // import EmptyContent from 'src/components/empty-content';
 import { useSettingsContext } from 'src/components/settings';
@@ -39,6 +39,8 @@ export default function MailView() {
   const [selectedId, setSelectedId] = useState('');
   
   const [selectedType, setSelectedType] = useState('');
+
+  const [selectedCSP, setSelectedCSP] = useState('');
 
   const [selectedCompliance, selectedCompliances] = useState('');
 
@@ -75,12 +77,26 @@ export default function MailView() {
   //   openCompose.onToggle();
   // }, [openCompose, openNav]);
 
-  // const handleCSPChange = (csp) => {
-  //   setSelectedCSP(csp);
-  // }
+  const handleClickCSP = (csp) => {
+    const selectedTypeObj = _gcpCheckList.find((item) => item.csp === csp.target.value);
+    console.log('Selected CSP:', csp.target.value);
+    console.log(selectedTypeObj);
+
+    if (selectedTypeObj) {
+      setSelectedCSP(selectedTypeObj.csp);
+      console.log('Selected CSP:', selectedTypeObj.csp);
+      // console.log('Selected ID: ', selectedTypeObj.id);
+    }
+    // 전체를 선택한 경우
+    else {
+      setSelectedCSP('');
+      console.log('Selected CSP:', csp.target.value);
+    }
+  }
 
   const handleClickType = (type) => {
     const selectedTypeObj = _gcpCheckList.find((item) => item.type === type);
+    console.log('Selected type:', type);
 
     if (selectedTypeObj) {
       setSelectedType(selectedTypeObj.type);
@@ -91,8 +107,11 @@ export default function MailView() {
   };
 
   const handleClickId = (id) => {
+    const selectedTypeObj = _gcpCheckList.find((item) => item.csp === id);
     // setSelectedId(id);
-    console.log('Selected ID: ', id);
+    if (selectedTypeObj){
+      console.log('Selected ID: ', id);
+    }
   };
 
   const handleClickDescription = (description) => {
@@ -102,9 +121,9 @@ export default function MailView() {
 
 
 //   const handleClickLabel = (labelId) => {
-//     const selectedLabel = _gcpCheckList.find((item) => item.type === labelId);
+//     const selectedLabel = _gcpCheckList.find((item) => item.csp === labelId);
 //   if (selectedLabel) {
-//     console.log('Selected Label ID:', selectedLabel.type);
+//     console.log('Selected csp ID:', selectedLabel.type);
 //   }
 // };
 
@@ -198,16 +217,20 @@ export default function MailView() {
 
   const renderMailNav = (
     <MailNav
+      // types={[...new Set([..._gcpCheckList, ..._adCheckList].map(item => item.type))]}
       types={_gcpCheckList.map((item) => item.type)}  // Pass all types to MailNav
       openNav={openNav.value}
       onCloseNav={openNav.onFalse}
       handleClickType={handleClickType}
+      handleClickCSP={handleClickCSP}
       selectedType={selectedType}
+      selectedCSP={selectedCSP}
     />
   );
 
   const renderIdList = (
     <IdList
+      csp={_gcpCheckList.map((item) => item.csp)}
       openMail={openMail.value}
       onCloseMail={openMail.onFalse}
       handleClickId={handleClickId}
@@ -220,7 +243,19 @@ export default function MailView() {
     <>
      <MailDetails
       // laws={_gcpCheckList.map((item) => item.law)}
-      selectedCompliances={_gcpCheckList.filter((item) => item.id)}
+      selectedCompliances={_gcpCheckList.filter(item => {
+        if (selectedCSP === '' || selectedCSP === undefined) {
+          return true;
+        } if (selectedCSP === 'aws') {
+          return item.csp === 'aws';
+        } if (selectedCSP === 'gcp') {
+          return item.csp === 'gcp';
+        } if (selectedCSP === 'ad') {
+          return item.csp === 'ad';
+        }
+        return false; // 이외의 경우는 필터링하지 않음
+      })}
+    
       selectedDescription={selectedDescription}
       handleClickDescription={handleClickDescription}
       // compliances={{
@@ -228,6 +263,7 @@ export default function MailView() {
       //   standard: selectedCompliance?.standard, // 선택된 항목의 standard 데이터
       // }}
     />
+    {console.log("test", selectedCSP)}
       {/* {mailsEmpty ? (
         <EmptyContent
           imgUrl="/assets/icons/empty/ic_email_disabled.svg"
@@ -256,7 +292,7 @@ export default function MailView() {
             mb: { xs: 3, md: 5 },
           }}
         >
-          컴플라이언스
+          계정 관련 이슈 관리
         </Typography>
 
         <Stack
@@ -284,8 +320,10 @@ export default function MailView() {
               height: { xs: 800, md: '72vh' },
             }}
           >
+            {/* {console.log(_adCheckList)}
+            {console.log(_gcpCheckList)} */}
             {renderMailNav}
-            {renderIdList}
+            {/* {renderIdList} */}
             {renderMailDetails}
 
             {/* {mailsEmpty ? renderEmpty : renderMailList}

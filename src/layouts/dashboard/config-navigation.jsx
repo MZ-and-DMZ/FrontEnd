@@ -218,7 +218,7 @@ export function useNavData() {
 
           // MAIL
           {
-            title: t('컴플라이언스'),
+            title: t('계정 관련 이슈 관리'),
             path: paths.dashboard.mail,
             icon: ICONS.mail,
             // info: <Label color="error">+32</Label>,
@@ -336,7 +336,7 @@ export function useNavData() {
         ],
       }, */
       {
-        subheader: t('CSP별 관리'),
+        subheader: t('계정 연동'),
         items: [
           // AWS
           {
@@ -360,8 +360,57 @@ export function useNavData() {
               // { title: t('edit'), path: paths.dashboard.gcp.demo.edit },
             ],
           },
+          // IdP
+          {
+            title: t('IdP'),
+            path: paths.dashboard.idp.root,
+            icon: ICONS.user,
+            children: [
+              { title: t('list'), path: paths.dashboard.idp.list },
+              // { title: t('create'), path: paths.dashboard.idp.new },
+              // { title: t('edit'), path: paths.dashboard.aws.demo.edit },
+            ],
+          },
+          // AD
+          {
+            title: t('AD'),
+            path: paths.dashboard.ad.root,
+            icon: ICONS.user,
+            children: [
+              { title: t('list'), path: paths.dashboard.ad.list },
+              // { title: t('create'), path: paths.dashboard.ad.new },
+              // { title: t('edit'), path: paths.dashboard.gcp.demo.edit },
+            ],
+          },
         ],
       },
+      // {
+      //   subheader: t('계정 연동'),
+      //   items: [
+      //     // IdP
+      //     {
+      //       title: t('IdP'),
+      //       path: paths.dashboard.idp.root,
+      //       icon: ICONS.label,
+      //       children: [
+      //         { title: t('list'), path: paths.dashboard.idp.list },
+      //         // { title: t('create'), path: paths.dashboard.idp.new },
+      //         // { title: t('edit'), path: paths.dashboard.aws.demo.edit },
+      //       ],
+      //     },
+      //     // AD
+      //     {
+      //       title: t('AD'),
+      //       path: paths.dashboard.ad.root,
+      //       icon: ICONS.external,
+      //       children: [
+      //         { title: t('list'), path: paths.dashboard.ad.list },
+      //         // { title: t('create'), path: paths.dashboard.ad.new },
+      //         // { title: t('edit'), path: paths.dashboard.gcp.demo.edit },
+      //       ],
+      //     },
+      //   ],
+      // },
 
       {
         subheader: t('설정'),
