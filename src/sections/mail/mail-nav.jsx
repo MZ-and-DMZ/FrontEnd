@@ -12,7 +12,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import { _gcpCheckList, _awsCheckList } from 'src/_mock/_complience';
+import { _gcpCheckList } from 'src/_mock/_complience';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -31,7 +31,9 @@ export default function MailNav({
   //
   // labels,
   selectedType,
+  selectedCSP,
   handleClickType,
+  handleClickCSP,
   //
   // onToggleCompose,
 }) {
@@ -46,20 +48,36 @@ export default function MailNav({
   // );
 
 
-  const [selectedCSP, setSelectedCSP] = useState('');
+  // const [selectedCSP, setSelectedCSP] = useState('');
+  console.log(selectedCSP);
+
+  const filteredCheckList = _gcpCheckList.filter(item => selectedCSP === '' || item.csp === selectedCSP);
 
   const renderTypeList = (
     <>
-    {Array.from(new Set(_gcpCheckList.map(item => item.type))).map(type => (
-      <MailNavItem
-        key={type}
-        compliances={type} 
-        selected={selectedType === type}  // Check if selectedType matches the type
-        onClickNavItem={() => handleClickType(type)}
-      />
-    ))}
-  </>
+      {Array.from(new Set(filteredCheckList.map(item => item.type))).map(type => (
+        <MailNavItem
+          key={type}
+          compliances={type} 
+          selected={selectedType === type}
+          onClickNavItem={() => handleClickType(type)}
+        />
+      ))}
+    </>
   );
+
+  // const renderTypeList = (
+  //   <>
+  //   {Array.from(new Set(_gcpCheckList.map(item => item.type))).map(type => (
+  //     <MailNavItem
+  //       key={type}
+  //       compliances={type} 
+  //       selected={selectedType === type}  // Check if selectedType matches the type
+  //       onClickNavItem={() => handleClickType(type)}
+  //     />
+  //   ))}
+  // </>
+  // );
 
     // if (selectedCSP === 'AWS') {
     //   _awsCheckList.map((item) => (
@@ -98,6 +116,15 @@ export default function MailNav({
   //   </>
   // );
 
+  // const handleCSPChange = (event) => {
+  //   const selectedValue = event.target.value;
+    
+  //   // 변경: MenuItem이 선택되었을 때 console에 로그 생성
+  //   console.log(`Selected CSP: ${selectedValue}`);
+    
+  //   setSelectedCSP(selectedValue);
+  // };
+
   const renderContent = (
     <>
       <Stack
@@ -112,15 +139,17 @@ export default function MailNav({
 <Select
   fullWidth
   value={selectedCSP}
-  onChange={(event) => setSelectedCSP(event.target.value)}
+  // onChange={(event) => setSelectedCSP(event.target.value)}
+  onChange={handleClickCSP}
   displayEmpty
   inputProps={{ 'aria-label': 'CSP 선택' }}
 >
-  <MenuItem value="" disabled>
-    CSP 선택
+  <MenuItem value="">
+    전체
   </MenuItem>
-  <MenuItem value="AWS">AWS</MenuItem>
-  <MenuItem value="GCP">GCP</MenuItem>
+  <MenuItem value="aws">AWS</MenuItem>
+  <MenuItem value="gcp">GCP</MenuItem>
+  <MenuItem value="ad">AD</MenuItem>
 </Select>
 
 {/* <Typography variant="h6" sx={{ textTransform: 'capitalize' }}>
@@ -148,6 +177,7 @@ export default function MailNav({
       {/* {loading && renderSkeleton} */}
 
       {renderTypeList}
+      {console.log("to check", selectedCSP)}
 
       {/* {!!_gcpCheckList && _gcpCheckList.length > 0 && renderTypeList} */}
 
@@ -185,9 +215,10 @@ export default function MailNav({
 }
 
 MailNav.propTypes = {
-  // selectedCSP: PropTypes.string,
+  selectedCSP: PropTypes.string,
   // handleCSPChange: PropTypes.func,
   handleClickType: PropTypes.func,
+  handleClickCSP: PropTypes.func,
   selectedLabelId: PropTypes.string,
   openNav: PropTypes.bool,
   onCloseNav: PropTypes.func,

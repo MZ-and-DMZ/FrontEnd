@@ -204,6 +204,16 @@ export const paths = {
       //   edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       // },
     },
+    idp: {
+      root: `${ROOTS.DASHBOARD}/idp`,
+      // new: `${ROOTS.DASHBOARD}/idp/new`,
+      list: `${ROOTS.DASHBOARD}/idp/list`,
+    },
+    ad: {
+      root: `${ROOTS.DASHBOARD}/ad`,
+      // new: `${ROOTS.DASHBOARD}/ad/new`,
+      list: `${ROOTS.DASHBOARD}/ad/list`,
+    },
     setting: {
       root: `${ROOTS.DASHBOARD}/setting`,
       // new: `${ROOTS.DASHBOARD}/user/new`,
