@@ -62,7 +62,7 @@ export default function GroupTableToolbar({
             width: { xs: 1, md: 200 },
           }}
         >
-          <InputLabel>Role</InputLabel>
+          <InputLabel>부서</InputLabel>
 
           <Select
             multiple

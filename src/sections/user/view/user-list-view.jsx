@@ -49,7 +49,7 @@ import UserTableFiltersResult from '../user-table-filters-result';
 const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: '이름', width: 180 },
+  { id: 'fullName', label: '이름', width: 180 },
   { id: 'department', label: '부서', width: 200 },
   { id: 'duty', label: '직책', width: 200 },
   { id: 'csp', label: 'CSP', width: 180 },
@@ -201,9 +201,9 @@ export default function UserListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="사용자"
+          heading="Frontend 부서 내 사용자"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
+            { name: 'Frontend', href: paths.dashboard.root },
             { name: '사용자', href: paths.dashboard.user.root },
             { name: '목록' },
           ]}
@@ -336,7 +336,7 @@ export default function UserListView() {
                       <UserTableRow
                         key={row.id}
                         row={{
-                          name: row.userName,
+                          fullName: row.fullName,
                           department: row.department,
                           duty: row.duty,
                           csp: row.csp,
@@ -350,7 +350,11 @@ export default function UserListView() {
                           device: row.device,
                           description: row.description,
                           awsKeys: row.awsKeys,
-                          usedAwsKeys: row.usedAwsKeys
+                          usedAwsKeys: row.usedAwsKeys,
+                          awsRole: row.awsRole,
+                          gcpRole: row.gcpRole,
+                          adGpo: row.adGpo,
+                          keyCloakRole: row.keyCloakRole,
                         }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}

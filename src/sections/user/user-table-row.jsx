@@ -27,7 +27,7 @@ import UserQuickEditForm from './user-quick-edit-form';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, group, attachedPosition, duty, department, isMfaEnabled, lastLoginTime, csp, awsKeys, usedAwsKeys } = row;
+  const { fullName, group, attachedPosition, duty, department, isMfaEnabled, lastLoginTime, csp, awsKeys, usedAwsKeys, awsRole, gcpRole, adGpo, keyCloakRole } = row;
 
   const confirm = useBoolean();
 
@@ -44,18 +44,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
-
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <ListItemText
-            primary={name}
-            // secondary={email}
-            primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled',
-            }}
-          />
-        </TableCell>
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{fullName}</TableCell>
 
         <TableCell sx={{whiteSpace: 'nowrap' }}>{department}</TableCell>
 

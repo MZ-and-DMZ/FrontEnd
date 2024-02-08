@@ -63,7 +63,7 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
+      fullName: currentUser?.fullName || '',
       awsAccount: currentUser?.awsAccount || '',
       gcpAccount: currentUser?.gcpAccount || '',
       csp: currentUser?.csp,
@@ -81,6 +81,10 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
       device: currentUser?.device || '',
       usedAwsKeys: userDetail?.usedAwsKeys || '',
       awsKeys: userDetail?.awsKeys || '',
+      awsRole: currentUser?.awsRole || '',
+      gcpRole: currentUser?.gcpRole || '',
+      adGpo: currentUser?.adGpo || '',
+      keyCloakRole: currentUser?.keyCloakRole || '',
     }),
     [currentUser, userDetail]
   );
@@ -146,7 +150,7 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
             }}
             sx={{ padding: '10px' }}
           >
-            <RHFTextField name="name" label="이름" />
+            <RHFTextField name="fullName" label="이름" />
             <RHFSelect name="csp" label="CSP" >
               {USER_CSP_OPTIONS.map((csp) => (
                 <MenuItem key={csp.value} value={csp.value}>
@@ -162,12 +166,15 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
             <RHFSelect name="usedAwsKeys" label="AWS Used Keys"/>
             <RHFTextField name="gcpAccount" label="GCP 계정 정보" />
             <Box sx={{ padding: '10px' }}> </Box>
-            <RHFTextField name="gcpManagedKeys" label="GCP Managed Keys"/>
-            <RHFTextField name="gcpUsedKeys" label="GCP Used Keys" />    
+            <RHFSelect name="gcpManagedKeys" label="GCP Managed Keys"/>
+            <RHFSelect name="gcpUsedKeys" label="GCP Used Keys" />    
             <RHFTextField name="department" label="부서" />
             <RHFTextField name="duty" label="직책" />
             <RHFTextField name="description" label="설명" />
-            {/* <RHFTextField name="role" label="부여된 역할" /> */}
+            <RHFTextField name="awsRole" label="AWS 역할" />
+            <RHFTextField name="gcpRole" label="GCP 역할" />
+            <RHFTextField name="adGpo" label="AD 그룹 정책" />
+            <RHFTextField name="keyCloakRole" label="KeyCloak 역할" />
             <RHFTextField name="attachedGroup" label="소속된 그룹" />
             <RHFTextField name="attachedPosition" label="부여된 직무" />
             <RHFTextField name="device" label="등록된 기기" />
