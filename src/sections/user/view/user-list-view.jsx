@@ -294,7 +294,24 @@ export default function UserListView() {
               }
               action={
                 <Stack direction="row">
-                <Tooltip title="Delete">
+                <Tooltip title="임시 계정 생성">
+  <IconButton color="primary" onClick={confirm.onTrue}>
+    <Iconify icon="mdi:plus" />
+  </IconButton>
+</Tooltip>
+
+                <Tooltip title="출장">
+                  <IconButton color="primary" onClick={confirm.onTrue}>
+                    <Iconify icon="mdi:briefcase-outline" />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="휴직">
+  <IconButton color="primary" onClick={confirm.onTrue}>
+    <Iconify icon="mdi:pause-circle-outline" />
+  </IconButton>
+</Tooltip>
+ <Tooltip title="퇴사">
                   <IconButton color="primary" onClick={confirm.onTrue}>
                     <Iconify icon="solar:trash-bin-trash-bold" />
                   </IconButton>

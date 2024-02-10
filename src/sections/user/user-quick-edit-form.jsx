@@ -179,6 +179,7 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
             <RHFTextField name="attachedPosition" label="부여된 직무" />
             <RHFTextField name="device" label="등록된 기기" />
             <RHFTextField name="lastLoginTime" label="최근 접속 시각" />
+            <RHFTextField name="lastLoginIp" label="최근 접속 IP" />
           </Box>
         </DialogContent>
 
