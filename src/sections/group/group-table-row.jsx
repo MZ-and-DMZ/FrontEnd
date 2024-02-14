@@ -17,7 +17,9 @@ import TableBody from '@mui/material/TableBody';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 
+import { paths } from 'src/routes/paths';
 import { useBoolean } from 'src/hooks/use-boolean';
+import { RouterLink } from 'src/routes/components';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -100,6 +102,8 @@ export default function GroupTableRow({ row, selected, onEditRow, onSelectRow, o
 
           <Tooltip title="사용자 목록으로 이동" placement="top" arrow>
         <IconButton
+            component={RouterLink}
+            href={paths.dashboard.user.root}
             color={collapse.value ? 'inherit' : 'default'}
             onClick={collapse.onToggle}
           >
