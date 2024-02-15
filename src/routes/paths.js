@@ -215,6 +215,18 @@ export const paths = {
       // new: `${ROOTS.DASHBOARD}/ad/new`,
       list: `${ROOTS.DASHBOARD}/ad/list`,
     },
+    anomaly: {
+      root: `${ROOTS.DASHBOARD}/anomaly`,
+      // new: `${ROOTS.DASHBOARD}/anomaly/new`,
+      list: `${ROOTS.DASHBOARD}/anomaly/list`,
+      newTime: `${ROOTS.DASHBOARD}/anomaly/createTime`,
+      newIP: `${ROOTS.DASHBOARD}/anomaly/createIP`,
+    },
+    anomalyAlarm: {
+      root: `${ROOTS.DASHBOARD}/anomalyAlarm`,
+      // new: `${ROOTS.DASHBOARD}/anomalyAlarm/new`,
+      list: `${ROOTS.DASHBOARD}/anomalyAlarm/list`,
+    },
     setting: {
       root: `${ROOTS.DASHBOARD}/setting`,
       // new: `${ROOTS.DASHBOARD}/user/new`,

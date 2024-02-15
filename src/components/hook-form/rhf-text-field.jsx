@@ -13,6 +13,10 @@ import { INPUT_DESCRIPTION } from 'src/redux/reducer/user/create/descriptionSlic
 import { INPUT_DUTY } from 'src/redux/reducer/user/create/dutySlice';
 import { INPUT_DEPARTMENT } from 'src/redux/reducer/user/create/departmentSlice';
 import { INPUT_ATTACHEDGROUP } from 'src/redux/reducer/user/create/attachedGroupSlice';
+import { INPUT_GROUP } from 'src/redux/reducer/anomaly/create/timeGroupSlice';
+import { INPUT_STARTTIME } from 'src/redux/reducer/anomaly/create/timeStartTimeSlice';
+import { INPUT_ENDTIME } from 'src/redux/reducer/anomaly/create/timeEndTimeSlice';
+import { INPUT_IP } from 'src/redux/reducer/anomaly/create/ipSlice';
 // ----------------------------------------------------------------------
 
 export default function RHFTextField({ name, helperText, type, ...other }) {
@@ -44,6 +48,10 @@ export default function RHFTextField({ name, helperText, type, ...other }) {
             else if (name === 'duty') dispatch(INPUT_DUTY(event.target.value));
             else if (name === 'department') dispatch(INPUT_DEPARTMENT(event.target.value));
             else if (name === 'attachedGroup') dispatch(INPUT_ATTACHEDGROUP(event.target.value));
+            else if (name === 'groupName') dispatch(INPUT_GROUP(event.target.value));
+            else if (name === 'startTime') dispatch(INPUT_STARTTIME(event.target.value));
+            else if (name === 'endTime') dispatch(INPUT_ENDTIME(event.target.value));
+            else if (name === 'ip') dispatch(INPUT_IP(event.target.value));
           }}
           error={!!error}
           helperText={error ? error?.message : helperText}
