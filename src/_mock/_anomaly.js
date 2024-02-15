@@ -27,7 +27,7 @@ export const _anomalyTimeList = [...Array(anomalyTimeData.time_list.length)].map
 export async function createAnomalyTime(data) {
     try {
         console.log(data.groupName);
-      const response = fetch(`${process.env.REACT_APP_MOCK_API}/anomaly/detection/time/set`, {
+        const response = await fetch(`${process.env.REACT_APP_MOCK_API}/anomaly/detection/time/set`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
