@@ -1,24 +1,24 @@
 import { current } from "@reduxjs/toolkit";
 
-// async function UserData() {
-//   try {
-//     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/users/list`);
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
-
 async function UserData() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/departments/userlist/Frontend`);
+    const response = await fetch(`${process.env.REACT_APP_MOCK_API}/users/list`);
     const data = await response.json();
     return data;
   } catch (error) {
     console.log(error);
   }
 }
+
+// async function UserData(departmentName) {
+//   try {
+//     const response = await fetch(`${process.env.REACT_APP_MOCK_API}/departments/userlist/${departmentName}`);
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 const userData = await UserData();
 

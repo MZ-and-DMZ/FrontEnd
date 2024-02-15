@@ -1,29 +1,30 @@
-import sumBy from 'lodash/sumBy';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import { useState, useCallback, useEffect } from 'react';
 
+import { useParams } from 'react-router-dom';
+
+import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
-import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
-
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { _roles, _userList, USER_CSP_OPTIONS } from 'src/_mock';
+import { setAwsExceptionUser, setGcpExceptionUser } from 'src/_mock/_log';
+import { DepartmentDetailData } from 'src/_mock/_department';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -42,25 +43,25 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import InvoiceAnalytic from 'src/sections/optimize/invoice-analytic';
+import UserTableRow from '../group-user-table-row';
+import UserTableToolbar from '../group-table-toolbar';
+import UserTableFiltersResult from '../group-table-filters-result';
 
-import { _departmentList } from 'src/_mock/_department';
 
-import GroupTableRow from '../group-table-row';
-import GroupTableToolbar from '../group-table-toolbar';
-import GroupTableFiltersResult from '../group-table-filters-result';
 
 // ----------------------------------------------------------------------
 
 const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_CSP_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'departmentName', label: '부서명', width: 180 },
-  // { id: 'csp', label: 'CSP', width: 180 },
-  { id: 'awsRole', label: 'AWS 역할', width: 220 },
-  { id: 'gcpRole', label: 'GCP 역할', width: 500 },
-  { id: 'adGpo', label: 'AD 그룹 정책', width: 400 },
-  { id: 'keycloakRole', label: 'KeyCloak 역할', width: 400 },
+  { id: 'fullName', label: '이름', width: 180 },
+  { id: 'department', label: '부서', width: 200 },
+  { id: 'duty', label: '직책', width: 200 },
+  { id: 'csp', label: 'CSP', width: 180 },
+  { id: 'group', label: '그룹', width: 180 },
+  { id: 'position', label: '직무', width: 200 },
+  { id: 'lastLoginTime', label: '최근 접속', width: 200 },
+  { id: 'isMfaEnabled', label: 'MFA 연동 여부', width: 200 },
   { id: '', width: 88 },
 ];
 
@@ -70,41 +71,27 @@ const defaultFilters = {
   csp: 'all',
 };
 
-
-const TABS = [
-  { value: 'all', label: 'All', color: 'default', },
-  {
-    value: 'paid',
-    label: '정상 권한',
-    color: 'success',
-    count: '29',
-  },
-  {
-    value: 'pending',
-    label: '갱신 대상',
-    color: 'warning',
-    count: '5',
-  },
-  {
-    value: 'overdue',
-    label: '초과 권한',
-    color: 'error',
-    count: '0',
-  },
-  // {
-  //   value: 'draft',
-  //   label: 'Draft',
-  //   color: 'default',
-  //   count: getInvoiceLength('draft'),
-  // },
-];
-
 // ----------------------------------------------------------------------
 
-export default function GroupListView({departmentName}) {
-  const table = useTable();
+export default function GroupUserListView() {
 
-  const theme = useTheme();
+  const { departmentName } = useParams();
+  const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    const fetchDepartmentDetailData = async () => {
+      try {
+        const data = await DepartmentDetailData(departmentName);
+        setTableData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchDepartmentDetailData();
+  }, [departmentName]);
+
+  const table = useTable();
 
   const settings = useSettingsContext();
 
@@ -112,8 +99,7 @@ export default function GroupListView({departmentName}) {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_departmentList);
-
+  // const [tableData, setTableData] = useState(DepartmentDetailData);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -173,27 +159,74 @@ export default function GroupListView({departmentName}) {
     [router]
   );
 
-  // const handleFilterStatus = useCallback(
-  //   (event, newValue) => {
-  //     handleFilters('csp', newValue);
-  //   },
-  //   [handleFilters]
-  // );
+  const handleFilterStatus = useCallback(
+    (event, newValue) => {
+      handleFilters('csp', newValue);
+    },
+    [handleFilters]
+  );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
   }, []);
 
+  // Aws API 연결
+  const handleExcludeAwsUser = useCallback(() => {
+    // 최소한 하나의 사용자가 선택되었는지 확인
+    if (table.selected.length === 0) {
+      // 사용자가 선택되지 않은 경우 처리
+      return;
+    }
 
+    // 선택된 사용자의 사용자 이름 추출
+    const selectedAwsUserNames = table.selected.map((userId) => {
+      const awsUser = tableData.find((row) => row.id === userId);
+      return awsUser ? awsUser.userName : null;
+    });
+
+    // null 값 제거 (사용자를 찾을 수 없는 경우)
+    const validAwsUserNames = selectedAwsUserNames.filter((userName) => userName !== null);
+
+    // API 함수를 호출하여 사용자를 최적화에서 제외
+    setAwsExceptionUser(validAwsUserNames);
+
+    // 확인 대화 상자 닫기
+    confirm.onFalse();
+  }, [table.selected, tableData, confirm]);
+
+  // Gcp API 연결
+    const handleExcludeGcpUser = useCallback(() => {
+    // 최소한 하나의 사용자가 선택되었는지 확인
+    if (table.selected.length === 0) {
+      // 사용자가 선택되지 않은 경우 처리
+      return;
+    }
+
+    // 선택된 사용자의 사용자 이름 추출
+    const selectedGcpUserNames = table.selected.map((userId) => {
+      const gcpUser = tableData.find((row) => row.id === userId);
+      return gcpUser ? gcpUser.userName : null;
+    });
+
+    // null 값 제거 (사용자를 찾을 수 없는 경우)
+    const validGcpUserNames = selectedGcpUserNames.filter((userName) => userName !== null);
+
+    // API 함수를 호출하여 사용자를 최적화에서 제외
+    setGcpExceptionUser(validGcpUserNames);
+
+    // 확인 대화 상자 닫기
+    confirm.onFalse();
+  }, [table.selected, tableData, confirm]);
+  // const currentDepartment = _departmentList.find((department) => department.id === id);
 
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="부서별 권한 정보"
+          heading="부서 내 사용자"
           links={[
-            { name: 'home', href: paths.dashboard.root },
-            { name: '부서', href: paths.dashboard.user.root },
+            { name: 'Frontend', href: paths.dashboard.root },
+            { name: '사용자', href: paths.dashboard.user.root },
             { name: '목록' },
           ]}
           action={
@@ -203,7 +236,7 @@ export default function GroupListView({departmentName}) {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              새로운 부서 추가하기
+              New User
             </Button>
           }
           sx={{
@@ -212,65 +245,7 @@ export default function GroupListView({departmentName}) {
         />
 
         <Card>
-        <Card
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
-        >
-          <Scrollbar>
-            <Stack
-              direction="row"
-              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
-              sx={{ py: 2 }}
-            >
-              <InvoiceAnalytic
-                title="전체 사용자 수"
-                total='130'
-                percent={100}
-                // price='120'
-                icon="solar:bill-list-bold-duotone"
-                color={theme.palette.info.main}
-              />
-
-              <InvoiceAnalytic
-                title="적정 권한"
-                total='115'
-                percent='100'
-                // price='120'
-                icon="solar:file-check-bold-duotone"
-                color={theme.palette.success.main}
-              />
-
-              <InvoiceAnalytic
-                title="갱신 대상"
-                total='15'
-                percent='100'
-                // price='120'
-                icon="solar:sort-by-time-bold-duotone"
-                color={theme.palette.warning.main}
-              />
-
-              <InvoiceAnalytic
-                title="초과 권한"
-                total='0'
-                percent='100'
-                // price='120'
-                icon="solar:bell-bing-bold-duotone"
-                color={theme.palette.error.main}
-              />
-
-              {/* <InvoiceAnalytic
-                title="Draft"
-                total={getInvoiceLength('draft')}
-                percent={getPercentByStatus('draft')}
-                price={getTotalAmount('draft')}
-                icon="solar:file-corrupted-bold-duotone"
-                color={theme.palette.text.secondary}
-              /> */}
-            </Stack>
-          </Scrollbar>
-        </Card>
-          {/* <Tabs
+          <Tabs
             value={filters.csp}
             onChange={handleFilterStatus}
             sx={{
@@ -297,17 +272,19 @@ export default function GroupListView({departmentName}) {
                     }
                   >
                     {tab.value === 'all' && _userList.length}
-                    {tab.value === 'AWS' && _userList.filter((user) => user.csp === 'AWS').length}
-                    {tab.value === 'GCP' && _userList.filter((user) => user.csp === 'GCP').length}
+                    {tab.value === 'AWS' &&
+                      _userList.filter((user) => user.csp === 'AWS').length}
+                    {tab.value === 'GCP' &&
+                      _userList.filter((user) => user.csp === 'GCP').length}
                     {tab.value === 'AWS,GCP' &&
                       _userList.filter((user) => user.csp === 'AWS,GCP').length}
                   </Label>
                 }
               />
             ))}
-          </Tabs> */}
+          </Tabs>
 
-          <GroupTableToolbar
+          <UserTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
@@ -315,7 +292,7 @@ export default function GroupListView({departmentName}) {
           />
 
           {canReset && (
-            <GroupTableFiltersResult
+            <UserTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               //
@@ -338,11 +315,36 @@ export default function GroupListView({departmentName}) {
                 )
               }
               action={
-                <Tooltip title="Delete">
+                <Stack direction="row">
+                <Tooltip title="임시 계정 생성">
+  <IconButton color="primary" onClick={confirm.onTrue}>
+    <Iconify icon="mdi:plus" />
+  </IconButton>
+</Tooltip>
+
+                <Tooltip title="출장">
+                  <IconButton color="primary" onClick={confirm.onTrue}>
+                    <Iconify icon="mdi:briefcase-outline" />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="휴직">
+  <IconButton color="primary" onClick={confirm.onTrue}>
+    <Iconify icon="mdi:pause-circle-outline" />
+  </IconButton>
+</Tooltip>
+ <Tooltip title="퇴사">
                   <IconButton color="primary" onClick={confirm.onTrue}>
                     <Iconify icon="solar:trash-bin-trash-bold" />
                   </IconButton>
                 </Tooltip>
+
+                 <Tooltip title="최적화 대상에서 제외하기">
+                    <IconButton color="primary" onClick={confirm.onTrue}>
+                      <Iconify icon="icon-park-outline:attention" />
+                    </IconButton>
+                  </Tooltip>
+                  </Stack>
               }
             />
 
@@ -370,10 +372,24 @@ export default function GroupListView({departmentName}) {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <GroupTableRow
+                      <UserTableRow
                         key={row.id}
                         row={{
-                          departmentName: row.departmentName,
+                          fullName: row.fullName,
+                          department: row.department,
+                          duty: row.duty,
+                          csp: row.csp,
+                          attachedGroup: row.attachedGroup,
+                          attachedPosition: row.attachedPosition.join(', '),
+                          lastLoginTime: row.lastLoginTime,
+                          isMfaEnabled: row.isMfaEnabled,
+                          isImportantPerson: row.isImportantPerson,
+                          awsAccount: row.awsAccount,
+                          gcpAccount: row.gcpAccount,
+                          device: row.device,
+                          description: row.description,
+                          awsKeys: row.awsKeys,
+                          usedAwsKeys: row.usedAwsKeys,
                           awsRole: row.awsRole,
                           gcpRole: row.gcpRole,
                           adGpo: row.adGpo,
@@ -432,6 +448,48 @@ export default function GroupListView({departmentName}) {
           </Button>
         }
       />
+
+          <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="최적화 대상에서 제외하기"
+        content={
+          <>
+            <strong> {table.selected.length} </strong> 개의 계정이 최적화 대상에서 제외됩니다.
+          </>
+        }
+        action={
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => {
+        // AWS 사용자 여부 확인
+        const isAwsUser = table.selected.some(userId => {
+          const user = _userList.find(u => u.id === userId);
+          return user && user.csp === 'AWS';
+        });
+
+        // GCP 사용자 여부 확인
+        const isGcpUser = table.selected.some(userId => {
+          const user = _userList.find(u => u.id === userId);
+          return user && user.csp === 'GCP';
+        });
+
+        if (isAwsUser) {
+          handleExcludeAwsUser();
+        } else if (isGcpUser) {
+          handleExcludeGcpUser();
+        }
+
+        confirm.onFalse();
+        window.location.reload();
+      }}
+    >
+      확인
+    </Button>
+  }
+      />
+
     </>
   );
 }
@@ -468,6 +526,6 @@ function applyFilter({ inputData, comparator, filters }) {
   return inputData;
 }
 
-GroupListView.propTypes = {
-  departmentName: PropTypes.string,
-};
+// GroupUserListView.propTypes = {
+//   id: PropTypes.string,
+// };

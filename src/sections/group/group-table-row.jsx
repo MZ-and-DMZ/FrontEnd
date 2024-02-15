@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useCallback } from 'react';
 
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
@@ -29,6 +30,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { _departmentList } from 'src/_mock/_department';
 
 import GroupQuickEditForm from './group-quick-edit-form';
+
 
 
 // ----------------------------------------------------------------------
@@ -102,15 +104,15 @@ export default function GroupTableRow({ row, selected, onEditRow, onSelectRow, o
 
           <Tooltip title="사용자 목록으로 이동" placement="top" arrow>
         <IconButton
-            component={RouterLink}
-            href={paths.dashboard.user.root}
-            color={collapse.value ? 'inherit' : 'default'}
-            onClick={collapse.onToggle}
-          >
+    component={RouterLink}
+    // to={useCallback(() => paths.dashboard.group.detail(departmentName), [departmentName])}
+    href={paths.dashboard.group.detail(departmentName)}
+    color={collapse.value ? 'inherit' : 'default'}
+    // onClick={handleEyeIconClick}
+  >
           <Iconify icon="solar:eye-bold" />
           </IconButton>
           </Tooltip>
-
 
           {/* <Tooltip title="Quick Edit" placement="top" arrow>
             <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
