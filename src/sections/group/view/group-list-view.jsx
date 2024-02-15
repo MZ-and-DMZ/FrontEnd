@@ -1,4 +1,5 @@
 import sumBy from 'lodash/sumBy';
+import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import { useState, useCallback, useEffect } from 'react';
 
@@ -100,7 +101,7 @@ const TABS = [
 
 // ----------------------------------------------------------------------
 
-export default function GroupListView() {
+export default function GroupListView({departmentName}) {
   const table = useTable();
 
   const theme = useTheme();
@@ -466,3 +467,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return inputData;
 }
+
+GroupListView.propTypes = {
+  departmentName: PropTypes.string,
+};

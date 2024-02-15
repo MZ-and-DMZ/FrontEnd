@@ -129,6 +129,7 @@ export const paths = {
       // cards: `${ROOTS.DASHBOARD}/user/cards`,
       // profile: `${ROOTS.DASHBOARD}/user/profile`,
       // account: `${ROOTS.DASHBOARD}/user/account`,
+      detail: (departmentName) => `${ROOTS.DASHBOARD}/group/${departmentName}/detail`,
       edit: (id) => `${ROOTS.DASHBOARD}/group/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/group/${MOCK_ID}/edit`,

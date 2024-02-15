@@ -1,5 +1,8 @@
+import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+
+import { useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
@@ -17,11 +20,11 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
-
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _roles, _userList, USER_CSP_OPTIONS, _userDetailList } from 'src/_mock';
+import { _roles, _userList, USER_CSP_OPTIONS } from 'src/_mock';
 import { setAwsExceptionUser, setGcpExceptionUser } from 'src/_mock/_log';
+import { DepartmentDetailData } from 'src/_mock/_department';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -40,9 +43,11 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import UserTableRow from '../user-table-row';
-import UserTableToolbar from '../user-table-toolbar';
-import UserTableFiltersResult from '../user-table-filters-result';
+import UserTableRow from '../group-user-table-row';
+import UserTableToolbar from '../group-table-toolbar';
+import UserTableFiltersResult from '../group-table-filters-result';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +73,24 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function UserListView() {
+export default function GroupUserListView() {
+
+  const { departmentName } = useParams();
+  const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    const fetchDepartmentDetailData = async () => {
+      try {
+        const data = await DepartmentDetailData(departmentName);
+        setTableData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchDepartmentDetailData();
+  }, [departmentName]);
+
   const table = useTable();
 
   const settings = useSettingsContext();
@@ -77,7 +99,7 @@ export default function UserListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_userList);
+  // const [tableData, setTableData] = useState(DepartmentDetailData);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -195,13 +217,13 @@ export default function UserListView() {
     // 확인 대화 상자 닫기
     confirm.onFalse();
   }, [table.selected, tableData, confirm]);
-  
+  // const currentDepartment = _departmentList.find((department) => department.id === id);
 
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Frontend 부서 내 사용자"
+          heading="부서 내 사용자"
           links={[
             { name: 'Frontend', href: paths.dashboard.root },
             { name: '사용자', href: paths.dashboard.user.root },
@@ -503,3 +525,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return inputData;
 }
+
+// GroupUserListView.propTypes = {
+//   id: PropTypes.string,
+// };

@@ -20,7 +20,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _roles, _userList, USER_CSP_OPTIONS, _userDetailList } from 'src/_mock';
+import { _roles, _userList, USER_CSP_OPTIONS } from 'src/_mock';
 import { setAwsExceptionUser, setGcpExceptionUser } from 'src/_mock/_log';
 
 import Label from 'src/components/label';
@@ -40,9 +40,9 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import UserTableRow from '../user-table-row';
-import UserTableToolbar from '../user-table-toolbar';
-import UserTableFiltersResult from '../user-table-filters-result';
+import UserTableRow from '../group-user-table-row';
+import UserTableToolbar from '../group-table-toolbar';
+import UserTableFiltersResult from '../group-table-filters-result';
 
 // ----------------------------------------------------------------------
 

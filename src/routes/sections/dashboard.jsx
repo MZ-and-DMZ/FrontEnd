@@ -51,11 +51,12 @@ const UserListPage = lazy(() => import('src/pages/dashboard/user/list'));
 const UserCreatePage = lazy(() => import('src/pages/dashboard/user/new'));
 const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
 const UserGroupPage = lazy(() => import('src/pages/dashboard/group/list'));
-const DepartmentUserPage = lazy(() => import('src/pages/dashboard/department/list'))
+// const DepartmentUserPage = lazy(() => import('src/pages/dashboard/department/list'))
 const UserPositionPage= lazy(() => import('src/pages/dashboard/position/list'));
 
 // GROUP
 const GroupListPage = lazy(() => import('src/pages/dashboard/group/list'));
+const GroupUserListPage = lazy(() => import('src/pages/dashboard/group/detail'));
 const GroupCreatePage = lazy(() => import('src/pages/dashboard/group/new'));
 const GroupEditPage = lazy(() => import('src/pages/dashboard/group/edit'));
 
@@ -153,7 +154,7 @@ export const dashboardRoutes = [
           { path: 'list', element: <UserListPage /> },
           { path: 'new', element: <UserCreatePage /> },
           { path: 'group', element: <UserGroupPage /> },
-          {path: ':departmentName', element: <DepartmentUserPage/>},
+          // {path: ':departmentName', element: <DepartmentUserPage/>},
           { path: 'position', element: <UserPositionPage /> },
           { path: ':id/edit', element: <UserEditPage /> },
           // { path: 'account', element: <UserAccountPage /> },
@@ -167,6 +168,7 @@ export const dashboardRoutes = [
           // { path: 'cards', element: <UserCardsPage /> },
           { path: 'list', element: <GroupListPage /> },
           { path: 'new', element: <GroupCreatePage /> },
+          { path: ':departmentName/detail', element: <GroupUserListPage /> },
           { path: ':id/edit', element: <GroupEditPage /> },
           // { path: 'account', element: <UserAccountPage /> },
         ],
