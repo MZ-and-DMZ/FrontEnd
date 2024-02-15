@@ -37,6 +37,14 @@ import step3Reducer from '../reducer/position/create/step3Slice';
 // request create
 import requestPositionReducer from '../reducer/request/create/requestPositionSlice';
 
+// anomaly time create
+import groupSliceReducer from '../reducer/anomaly/create/timeGroupSlice';
+import startTimeSliceReducer from '../reducer/anomaly/create/timeStartTimeSlice';
+import endTimeSliceReducer from '../reducer/anomaly/create/timeEndTimeSlice';
+
+// anomaly ip create
+import ipSliceReducer from '../reducer/anomaly/create/ipSlice'
+
 const store = configureStore({
   reducer: {
     // user
@@ -65,6 +73,14 @@ const store = configureStore({
     // request list
     // request create
     requestPosition: requestPositionReducer,
+
+    // time create
+    groupName: groupSliceReducer,
+    startTime: startTimeSliceReducer,
+    endTime: endTimeSliceReducer,
+
+    // ip create
+    ip: ipSliceReducer,
   },
 });
 

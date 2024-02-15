@@ -336,6 +336,34 @@ export function useNavData() {
         ],
       }, */
       {
+        subheader: t('이상탐지'),
+        items: [
+          {
+            title: t('등록'),
+            path: paths.dashboard.anomaly.list,
+            icon: ICONS.blog,
+            // children: [
+            //   { title: t('목록'), path: paths.dashboard.anomaly.list },
+            //   // { title: t('시간 등록'), path: paths.dashboard.anomaly.newTime },
+            //   // { title: t('ip 등록'), path: paths.dashboard.anomaly.newIP },
+            //   // { title: t('create'), path: paths.dashboard.user.new },
+            //   // { title: t('edit'), path: paths.dashboard.user.demo.edit },
+            // ],
+          },
+          {
+            title: t('알림 확인'),
+            path: paths.dashboard.anomalyAlarm.list,
+            icon: ICONS.banking,
+            // children: [
+            //   { title: t('목록'), path: paths.dashboard.anomalyAlarm.list },
+            //   // { title: t('create'), path: paths.dashboard.user.new },
+            //   // { title: t('edit'), path: paths.dashboard.user.demo.edit },
+            // ],
+          },
+        ],
+      },
+
+      {
         subheader: t('계정 연동'),
         items: [
           // AWS

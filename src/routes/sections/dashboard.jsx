@@ -68,6 +68,14 @@ const PositionEditPage = lazy(() => import('src/pages/dashboard/position/edit'))
 const RequestListPage = lazy(() => import('src/pages/dashboard/request/list'));
 const RequestCreatePage = lazy(() => import('src/pages/dashboard/request/new'));
 
+// Anomaly
+const AnomalyListPage = lazy(() => import('src/pages/dashboard/anomaly/list'));
+const AnomalycreateTimePage = lazy(() => import('src/pages/dashboard/anomaly/createTime'));
+const AnomalycreateIPPage = lazy(() => import('src/pages/dashboard/anomaly/createIP'));
+
+// AnomalyAlarm
+const AnomalyAlarmListPage = lazy(() => import('src/pages/dashboard/anomalyAlarm/list'));
+
 /*
 // BLOG
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
@@ -229,6 +237,45 @@ export const dashboardRoutes = [
           { path: 'list', element: <GCPListPage /> },
           // { path: ':id', element: <GCPDetailsPage /> },
           { path: 'new', element: <GCPCreatePage /> },
+        ],
+      },
+
+      {
+        path: 'idp',
+        children: [
+          { element: <AWSListPage />, index: true },
+          { path: 'list', element: <AWSListPage /> },
+          // { path: ':id', element: <AWSDetailsPage /> },
+          { path: 'new', element: <AWSCreatePage /> },
+        ],
+      },
+      {
+        path: 'gcp',
+        children: [
+          { element: <GCPListPage />, index: true },
+          { path: 'list', element: <GCPListPage /> },
+          // { path: ':id', element: <GCPDetailsPage /> },
+          { path: 'new', element: <GCPCreatePage /> },
+        ],
+      },
+
+      {
+        path: 'anomaly',
+        children: [
+          { element: <AnomalyListPage />, index: true },
+          { path: 'list', element: <AnomalyListPage /> },
+          // { path: ':id', element: <AWSDetailsPage /> },
+          { path: 'createTime', element: <AnomalycreateTimePage /> },
+          { path: 'createIP', element: <AnomalycreateIPPage /> },
+        ],
+      },
+      {
+        path: 'anomalyAlarm',
+        children: [
+          { element: <AnomalyAlarmListPage />, index: true },
+          { path: 'list', element: <AnomalyAlarmListPage /> },
+          // { path: ':id', element: <AWSDetailsPage /> },
+          // { path: 'alarm', element: <AnomalyAlarmPage /> },
         ],
       },
 

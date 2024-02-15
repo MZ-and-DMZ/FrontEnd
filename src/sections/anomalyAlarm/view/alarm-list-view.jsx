@@ -43,9 +43,9 @@ import {
 } from 'src/components/table';
 import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 
-import AWSTableRow from '../aws-table-row';
-import AWSTableToolbar from '../aws-table-toolbar';
-import AWSTableFiltersResult from '../aws-table-filters-result';
+import AWSTableRow from '../anomaly-table-row';
+import AWSTableToolbar from '../anomaly-table-toolbar';
+import AWSTableFiltersResult from '../anomaly-table-filters-result';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function AWSListView() {
+export default function AnomalyAlarmListView() {
   const table = useTable();
 
   const dispatch = useDispatch();
