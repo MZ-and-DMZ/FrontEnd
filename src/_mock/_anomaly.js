@@ -23,21 +23,33 @@ export const _anomalyTimeList = [...Array(anomalyTimeData.time_list.length)].map
   endTime: anomalyTimeData.time_list[index].endTime,
 }));
 
+// IP 주소의 유효성을 검사하는 함수
+const isFilledTime = (group, start, end) => {
+  if (group === "" || start === "" || end === ""){
+    return false;
+  }
+  return true;
+}
+
 // 시간대 목록 생성
 export async function createAnomalyTime(data) {
     try {
-        console.log(data.groupName);
+      // 입력된 IP 주소의 유효성을 검사
+        if (!isFilledTime(data.groupName, data.startTime, data.endTime)) {
+          return false;
+        }
+
         const response = await fetch(`${process.env.REACT_APP_MOCK_API}/anomaly/detection/time/set`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          group: data.groupName,
-          startTime: data.startTime,
-          endTime: data.endTime,
-        }),
-      });
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            group: data.groupName,
+            startTime: data.startTime,
+            endTime: data.endTime,
+          }),
+        });
 
       return response.ok;
     } catch (error) {
