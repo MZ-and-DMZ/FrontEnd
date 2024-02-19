@@ -31,6 +31,25 @@ const isFilledTime = (group, start, end) => {
   return true;
 }
 
+// 선택된 IP 목록 삭제
+export const deleteAnomalyIP = async (ip) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/anomaly/detection/ip/delete?ip=${ip}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'Delete',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.ok;  
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};
+
 // 시간대 목록 생성
 export async function createAnomalyTime(data) {
     try {
@@ -112,3 +131,22 @@ export async function createAnomalyIP(data) {
         throw error;
     }
 }
+
+// 선택된 시간 목록 삭제
+export const deleteAnomalyTime = async (group) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/anomaly/detection/time/delete?group=${group}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'Delete',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+ 
+    return response.ok;
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};

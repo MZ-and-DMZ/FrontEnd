@@ -45,6 +45,8 @@ import endTimeSliceReducer from '../reducer/anomaly/create/timeEndTimeSlice';
 // anomaly ip create
 import ipSliceReducer from '../reducer/anomaly/create/ipSlice'
 
+import anomalySelectedReducer from '../reducer/anomaly/list/anomalySelectedSlice'
+
 const store = configureStore({
   reducer: {
     // user
@@ -81,6 +83,10 @@ const store = configureStore({
 
     // ip create
     ip: ipSliceReducer,
+
+    // anomaly
+    // anomaly list
+    anomalySelected: anomalySelectedReducer,
   },
 });
 
