@@ -8,7 +8,7 @@ export default function AnomalyListPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Invoice List</title>
+        <title> Dashboard: Anomaly List</title>
       </Helmet>
 
       <AnomalyListView />

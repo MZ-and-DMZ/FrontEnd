@@ -8,7 +8,7 @@ export default function AnomalycreateTimePage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Create a new invoice</title>
+        <title> Dashboard: Create a new Time</title>
       </Helmet>
 
       <AnomalycreateTimeView />

@@ -168,31 +168,22 @@ export default function AnomalyAlarmListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="사용자"
+          heading="이상탐지 알람"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'AWS', href: paths.dashboard.aws.root },
+            { name: '이상탐지 알람', href: paths.dashboard.anomalyAlarm.root },
             { name: '목록' },
           ]}
           action={
             <>
               {/* <Button
                 component={RouterLink}
-                href={paths.dashboard.aws.new}
-                variant="contained"
-                startIcon={<Iconify icon="ic:outline-change-circle" />}
-                sx={{ mr: 1 }}
-              >
-                Convert
-              </Button> */}
-              <Button
-                component={RouterLink}
                 href={paths.dashboard.aws.new} 
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
                 New AWS User
-              </Button>
+              </Button> */}
             </>
           }
           sx={{
@@ -201,7 +192,7 @@ export default function AnomalyAlarmListView() {
         />
 
         <Card>
-          <Tabs
+          {/* <Tabs
             // value={filters.csp}
             // onChange={handleFilterCSP}
             sx={{
@@ -230,12 +221,12 @@ export default function AnomalyAlarmListView() {
                 }
               />
             ))}
-          </Tabs>
+          </Tabs> */}
 
           <AWSTableToolbar
+          // 검색창임
             filters={filters}
             onFilters={handleFilters}
-            //
             positionNameOptions={_AwsUserList.map((user) => user.Groups)}
           />
 

@@ -18,7 +18,7 @@ import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 import Grid from '@mui/material/Grid';
 import CardHeader from '@mui/material/CardHeader';
-import DataGridHalf from 'src/components/custom/multi-table/data-grid-half';
+import DataGridHalf from 'src/components/custom/multi-table/data-grid-half-anomaly';
 import Typography from '@mui/material/Typography';
 
 
@@ -103,28 +103,8 @@ export default function AnomalyListView() {
   const canReset = !isEqual(defaultFilters, filters);
 
   const timecolumns = [
-    {
-      field: 'id',
-    },
     // {
-    //   field: 'csp',
-    //   type: 'singleSelect',
-    //   headerName: '',
-    //   valueOptions: ['aws', 'gcp', 'aws, gcp'],
-    //   align: 'center',
-    //   headerAlign: 'center',
-    //   width: 40,
-    //   renderCell: (params) => (
-    //     <Label
-    //       variant="soft"
-    //       color={
-    //         (params.row.csp === '' && 'error') || (params.row.csp === 'aws' && 'warning') || 'success'
-    //       }
-    //       sx={{ mx: 'auto' }}
-    //     >
-    //       {params.row.csp}
-    //     </Label>
-    //   ),
+    //   field: 'id',
     // },
     {
       field: 'group',
@@ -144,19 +124,11 @@ export default function AnomalyListView() {
       flex: 1,
       editable: true,
     },
-    // {
-    //   field: 'policies',
-    //   headerName: 'AWS권한/GCP역할',
-    //   align: 'left',
-    //   headerAlign: 'left',
-    //   width: 250,
-    // },
   ];
-
   const ipcolumns = [
-    {
-      field: 'id',
-    },
+    // {
+    //   field: 'id',
+    // },
     {
       field: 'ip',
       headerName: 'IP 목록',
@@ -177,7 +149,7 @@ export default function AnomalyListView() {
             { name: '목록' },
           ]}
         />
-<Grid container spacing={2}>
+    <Grid container spacing={2}>
       {/* <Grid item xs={12}></Grid> */}
       <Grid item xs={6}>
         <Card>
