@@ -201,9 +201,9 @@ export default function UserListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Frontend 부서 내 사용자"
+          heading="전체 사용자"
           links={[
-            { name: 'Frontend', href: paths.dashboard.root },
+            { name: 'All', href: paths.dashboard.root },
             { name: '사용자', href: paths.dashboard.user.root },
             { name: '목록' },
           ]}

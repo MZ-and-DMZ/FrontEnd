@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 
+import { useState } from 'react';
+
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -31,13 +33,26 @@ export default function GroupUserTableRow({ row, selected, onEditRow, onSelectRo
 
   const confirm = useBoolean();
 
+  const [confirmOpen, setConfirmOpen] = useState(false); // mfa 연동 다이얼로그 오픈 useState
+
   const quickEdit = useBoolean();
 
   const popover = usePopover();
 
-  // const handleTableRowClick = () => {
-  //   quickEdit.onTrue(); 
-  // };
+  const handleMfaRequestClick = () => { // MFA 연동 요청 핸들러 함수 추가
+    setConfirmOpen(true); // confirm 다이얼로그 열기
+  };
+
+  const handleConfirm = () => {
+    // 확인 버튼 클릭 시 처리 로직을 여기에 추가하세요.
+    // 예: MFA 연동 요청 로직 등
+    setConfirmOpen(false); // 다이얼로그 닫기
+  };
+
+  const handleCancel = () => {
+    // 취소 버튼 클릭 시 처리 로직을 여기에 추가하세요.
+    setConfirmOpen(false); // 다이얼로그 닫기
+  };
 
   const renderUserListView = (
           <TableRow hover selected={selected}>
@@ -79,6 +94,29 @@ export default function GroupUserTableRow({ row, selected, onEditRow, onSelectRo
           >
             {isMfaEnabled ? 'MFA 연동 완료' : 'MFA 연동 요청'}
           </Button>
+
+          <ConfirmDialog 
+        open={confirmOpen} // confirmOpen 상태로 변경
+        onClose={() => setConfirmOpen(false)} // confirmOpen 상태 변경 함수로 변경
+        title="MFA 연동 요청"
+        content={
+          <>
+            3일 뒤, MFA가 <strong> 강제 연동 </strong> 됩니다. <br />
+            MFA 연동 전까지 계정 사용이 원활하지 않을 수 있습니다.
+          </>
+        }
+        actions={ // 버튼 그룹을 actions prop으로 추가합니다.
+          <>
+            <Button onClick={handleCancel} color="secondary">
+              취소
+            </Button>
+            <Button onClick={handleConfirm} color="primary" autoFocus>
+              확인
+            </Button>
+          </>
+        }
+      />
+
         </TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
