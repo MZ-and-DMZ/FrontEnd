@@ -23,7 +23,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _AwsUserList, POSITION_CSP_OPTIONS , AWS_OPTIONS} from 'src/_mock';
+import { _AwsUserList, ANOMALY_OPTIONS, _AnomalyAlarmList} from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -43,25 +43,32 @@ import {
 } from 'src/components/table';
 import { SELECT_POSITION } from 'src/redux/reducer/position/list/positionSelectedSlice';
 
-import AWSTableRow from '../anomaly-table-row';
+import AnomalyTableRow from '../anomaly-table-row';
 import AWSTableToolbar from '../anomaly-table-toolbar';
 import AWSTableFiltersResult from '../anomaly-table-filters-result';
+// import { ConstructionOutlined } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
 // const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...POSITION_CSP_OPTIONS];
 // const AWS_OPTIONS = [{ value: 'aws', label: 'AWS' }, ...POSITION_CSP_OPTIONS];
+const CSP_OPTIONS = [{ value: 'all', label: 'All' }, ...ANOMALY_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: '사용자', width: 300 },
-  { id: 'groups', label: '그룹', width: 500 },
-  { id: 'isMfaEnabled', label: 'MFA 여부', width: 300 },
-  { id: 'AttachedPolicies', label: '정책', width: 500 },
-  { id: '', width: 88 },
+  { id: 'useridentity_username', label: '사용자', width: 300 },
+  { id: 'eventname', label: '사용한 api 권한', width: 500 },
+  { id: 'eventsource', label: '이벤트소스', width:700 },
+  { id: 'csp', label: 'csp', width: 500 },
+  { id: 'unique_sourceipaddress', label: 'ip', width: 500 },
+  { id: 'latest_time', label: '시간', width: 500 },
+  { count: 'count', label: '개수', width: 500 },
+  // { id: '', width: 88 },
 ];
 
 const defaultFilters = {
-  userName: '',
+  // userName: '',
+  detection: 'all',
+  inputeventname: '',
 };
 
 // ----------------------------------------------------------------------
@@ -77,7 +84,7 @@ export default function AnomalyAlarmListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_AwsUserList);
+  const [tableData, setTableData] = useState(_AnomalyAlarmList);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -101,13 +108,23 @@ export default function AnomalyAlarmListView() {
 
   const handleFilters = useCallback(
     (name, value) => {
+      // value가 입력한 값임
+      console.log(name, value);
       table.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
       }));
+      // console.log(filters);
     },
     [table]
+  );
+
+  const handleFilterStatus = useCallback(
+    (event, newValue) => {
+      handleFilters('detection', newValue);
+    },
+    [handleFilters]
   );
 
   // const handleSearch = (event) => {
@@ -118,7 +135,7 @@ export default function AnomalyAlarmListView() {
   //     service.actionCrudName.toLowerCase().includes(query)
   //   );
 
-  //   setFilteredServiceList(filteredServices);
+  //   // setFilteredServiceList(filteredServices);
   // };
 
   const handleDeleteRow = useCallback(
@@ -149,12 +166,12 @@ export default function AnomalyAlarmListView() {
   //   [router]
   // );
 
-  // const handleFilterCSP = useCallback(
-  //   (event, newValue) => {
-  //     handleFilters('csp', newValue);
-  //   },
-  //   [handleFilters]
-  // );
+  const handleFilterCSP = useCallback(
+    (event, newValue) => {
+      handleFilters('csp', newValue);
+    },
+    [handleFilters]
+  );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
@@ -192,15 +209,15 @@ export default function AnomalyAlarmListView() {
         />
 
         <Card>
-          {/* <Tabs
-            // value={filters.csp}
-            // onChange={handleFilterCSP}
+          <Tabs
+            value={filters.detection}
+            onChange={handleFilterStatus}
             sx={{
               px: 2.5,
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
-            {AWS_OPTIONS.map((tab) => (
+            {CSP_OPTIONS.map((tab) => (
               <Tab
                 key={tab.value}
                 iconPosition="end"
@@ -209,25 +226,33 @@ export default function AnomalyAlarmListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' ) && 'filled') || 'soft'
+                      ((tab.value === 'all' || tab.value === filters.csp) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'aws' && 'success') ||
+                      (tab.value === 'Time' && 'success') ||
+                      (tab.value === 'IP' && 'warning') ||
+                      (tab.value === 'Time,IP' && 'info') ||
                       'default'
                     }
                   >
-                    {_AwsUserList.length}
+                    {tab.value === 'all' && _AnomalyAlarmList.length}
+                    {tab.value === 'Time' &&
+                      _AnomalyAlarmList.filter((alarm) => alarm.detection === 'Time').length}
+                    {tab.value === 'IP' &&
+                      _AnomalyAlarmList.filter((alarm) => alarm.detection === 'IP').length}
+                    {tab.value === 'Time,IP' &&
+                      _AnomalyAlarmList.filter((alarm) => alarm.detection === 'Time,IP').length}
                   </Label>
                 }
               />
             ))}
-          </Tabs> */}
+          </Tabs>
 
           <AWSTableToolbar
           // 검색창임
             filters={filters}
             onFilters={handleFilters}
-            positionNameOptions={_AwsUserList.map((user) => user.Groups)}
+            // positionNameOptions={_AnomalyAlarmList.map((user) => user.Groups)}
           />
 
           {canReset && (
@@ -267,16 +292,21 @@ export default function AnomalyAlarmListView() {
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
+                  // headLabel={TABLE_HEAD}
+                  headLabel={TABLE_HEAD.map((head) => ({
+                    ...head,
+                    style: { whiteSpace: 'nowrap' } // 여기에 스타일 속성 추가
+                  }))}
                   rowCount={tableData.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
+                  // 이 부분이 테이블 head의 체크박스임
+                  // onSelectAllRows={(checked) =>
+                  //   table.onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row.id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>
@@ -286,14 +316,28 @@ export default function AnomalyAlarmListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <AWSTableRow
+                      <AnomalyTableRow
                         key={row.id}
                         row={{
                           // 테이블 컬럼들 순서대로 작성하면 됨
-                          name: row.UserName,
-                          groups: row.Groups.join(', '),
-                          isMfaEnabled: row.isMfaEnabled ? 'Yes' : 'No',
-                          AttachedPolicies: row.AttachedPolicies.join(', '),
+                          useridentity_username: row.useridentity_username,
+                          // groups: row.Groups.join(', '),
+                          // isMfaEnabled: row.isMfaEnabled ? 'Yes' : 'No',
+                          eventname: row.eventname,
+                          eventsource: row.eventsource.split('.')[0],
+                          csp: row.csp,
+                          // ip가 이상치인 경우만 뜨게 수정
+                          ip: row.unique_sourceipaddress.join(', '),
+                          // 시간이 00~00가 되도록 수정
+                          // time: row.hourly_eventtime,
+                          // time: `${row.hourly_eventtime} ~ ${row.latest_time}`,
+                          time: (
+                            <div style={{ textAlign: 'center' }}>
+                              {row.hourly_eventtime} <br /> ~ <br /> {row.latest_time.replace('T', ' ').replace('Z', '')}
+                            </div>
+                          ),
+                          count: row.count,
+                          // AttachedPolicies: row.AttachedPolicies.join(', '),
                         }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => {
@@ -358,36 +402,43 @@ export default function AnomalyAlarmListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name} = filters;
+  const { inputeventname, detection} = filters;
 
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  // const stabilizedThis = inputData.map((el, index) => [el, index]);
 
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
+  // stabilizedThis.sort((a, b) => {
+  //   const order = comparator(a[0], b[0]);
+  //   if (order !== 0) return order;
+  //   return a[1] - b[1];
+  // });
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  // inputData = stabilizedThis.map((el) => el[0]);
 
 
-  console.log(name)
-  if (name && name.userName !== undefined) {
-    console.log(name.userName);
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-    );
-  }
-  
-  if (name) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-    );
-  }
-
-  // if (csp !== 'all') {
-  //   inputData = inputData.filter((user) => user.csp === csp);
+  // console.log(name)
+  // if (name && name.userName !== undefined) {
+  //   console.log(name.userName);
+  //   inputData = inputData.filter(
+  //     (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+  //   );
   // }
+  
+  // if (name) {
+  //   inputData = inputData.filter(
+  //     (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+  //   );
+  // }
+
+  if (inputeventname) {
+    console.log(filters);
+    inputData = inputData.filter((alarm) =>
+      alarm.eventname.toLowerCase().includes(inputeventname.toLowerCase())
+    );
+  }
+
+  if (detection !== 'all') {
+    inputData = inputData.filter((user) => user.detection === detection);
+  }
 
   // if (positionName && typeof positionName === 'string') {
   //   inputData = inputData.filter(

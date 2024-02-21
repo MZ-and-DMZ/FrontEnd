@@ -23,3 +23,4 @@ export * from './_aws';
 export * from './_gcp';
 
 export * from './_anomaly';
+export * from './_anomalyAlarm';

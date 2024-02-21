@@ -28,7 +28,7 @@ export default function AWSTableToolbar({
 
   const handleFilterName = useCallback(
     (event) => {
-      onFilters('userName', event.target.value);
+      onFilters('inputeventname', event.target.value);
     },
     [onFilters]
   );
@@ -87,7 +87,7 @@ export default function AWSTableToolbar({
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
-            value={filters.userName}
+            value={filters.inputeventname}
             onChange={handleFilterName}
             placeholder="Search..."
             InputProps={{
