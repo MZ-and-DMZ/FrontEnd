@@ -24,8 +24,8 @@ export default function PositionTableFiltersResult({
   };
 
   const handleRemovePositionName = (inputValue) => {
-    const newValue = filters.userName.filter((item) => item !== inputValue);
-    onFilters('userName', newValue);
+    const newValue = filters.column.filter((item) => item !== inputValue);
+    onFilters('column', newValue);
   };
 
   return (
@@ -44,13 +44,11 @@ export default function PositionTableFiltersResult({
           </Block>
         )} */}
 
-        {/* {!!filters.userName.length && (
-          <Block label="Position Name:">
-            {filters.userName.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemovePositionName(item)} />
-            ))}
+        {!!filters.column && (
+          <Block label="필터 :">
+            <Chip key={filters.column} label={filters.column} size="small" />
           </Block>
-        )} */}
+        )}
 
         <Button
           color="error"

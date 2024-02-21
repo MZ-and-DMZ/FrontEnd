@@ -23,7 +23,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _AwsUserList, ANOMALY_OPTIONS, _AnomalyAlarmList} from 'src/_mock';
+import { _anomaly_cloumn, ANOMALY_OPTIONS, _AnomalyAlarmList} from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -69,6 +69,7 @@ const defaultFilters = {
   // userName: '',
   detection: 'all',
   inputeventname: '',
+  column: '',
 };
 
 // ----------------------------------------------------------------------
@@ -252,7 +253,7 @@ export default function AnomalyAlarmListView() {
           // 검색창임
             filters={filters}
             onFilters={handleFilters}
-            // positionNameOptions={_AnomalyAlarmList.map((user) => user.Groups)}
+            FilterOptions={_anomaly_cloumn}
           />
 
           {canReset && (
@@ -327,17 +328,15 @@ export default function AnomalyAlarmListView() {
                           eventsource: row.eventsource.split('.')[0],
                           csp: row.csp,
                           // ip가 이상치인 경우만 뜨게 수정
-                          ip: row.unique_sourceipaddress.join(', '),
+                          // ip: row.unique_sourceipaddress.join(', '),
+                          ip: row.detection.includes('IP') ? row.unique_sourceipaddress.join(', ') : '-',
                           // 시간이 00~00가 되도록 수정
-                          // time: row.hourly_eventtime,
-                          // time: `${row.hourly_eventtime} ~ ${row.latest_time}`,
-                          time: (
+                          time: row.detection.includes('Time') ? (
                             <div style={{ textAlign: 'center' }}>
                               {row.hourly_eventtime} <br /> ~ <br /> {row.latest_time.replace('T', ' ').replace('Z', '')}
                             </div>
-                          ),
+                          ) : '-',
                           count: row.count,
-                          // AttachedPolicies: row.AttachedPolicies.join(', '),
                         }}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => {
@@ -402,38 +401,44 @@ export default function AnomalyAlarmListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { inputeventname, detection} = filters;
-
-  // const stabilizedThis = inputData.map((el, index) => [el, index]);
-
-  // stabilizedThis.sort((a, b) => {
-  //   const order = comparator(a[0], b[0]);
-  //   if (order !== 0) return order;
-  //   return a[1] - b[1];
-  // });
-
-  // inputData = stabilizedThis.map((el) => el[0]);
-
-
-  // console.log(name)
-  // if (name && name.userName !== undefined) {
-  //   console.log(name.userName);
-  //   inputData = inputData.filter(
-  //     (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-  //   );
-  // }
-  
-  // if (name) {
-  //   inputData = inputData.filter(
-  //     (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-  //   );
-  // }
+  const { inputeventname, detection, column} = filters;
 
   if (inputeventname) {
+    if (column === "사용자") {
+      inputData = inputData.filter((alarm) =>
+      alarm.useridentity_username.toLowerCase().includes(inputeventname.toLowerCase()) 
+    );
+    } else if (column === "사용한 api 권한"){
+      inputData = inputData.filter((alarm) =>
+        alarm.eventname.toLowerCase().includes(inputeventname.toLowerCase())
+      );
+    } else if (column === "이벤트소스"){
+      inputData = inputData.filter((alarm) =>
+        alarm.eventsource.toLowerCase().includes(inputeventname.toLowerCase())
+      );
+    } else if (column === "csp"){
+      inputData = inputData.filter((alarm) =>
+        alarm.csp.toLowerCase().includes(inputeventname.toLowerCase())
+      );
+    } else if (column === "ip"){
+      inputData = inputData.filter((alarm) =>
+        alarm.unique_sourceipaddress.some((ip) => ip.toLowerCase().includes(inputeventname.toLowerCase()))
+      );
+    } else if (column === "개수"){
+      inputData = inputData.filter((alarm) =>
+        alarm.count.toLowerCase().includes(inputeventname.toLowerCase())
+      );
+    }
+    else{
     console.log(filters);
     inputData = inputData.filter((alarm) =>
-      alarm.eventname.toLowerCase().includes(inputeventname.toLowerCase())
+      alarm.eventname.toLowerCase().includes(inputeventname.toLowerCase()) ||
+      alarm.useridentity_username.toLowerCase().includes(inputeventname.toLowerCase()) ||
+      alarm.eventsource.toLowerCase().includes(inputeventname.toLowerCase()) ||
+      alarm.csp.toLowerCase().includes(inputeventname.toLowerCase()) ||
+      alarm.unique_sourceipaddress.some((ip) => ip.toLowerCase().includes(inputeventname.toLowerCase()))
     );
+  }
   }
 
   if (detection !== 'all') {

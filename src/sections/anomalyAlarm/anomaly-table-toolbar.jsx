@@ -21,7 +21,7 @@ export default function AWSTableToolbar({
   filters,
   onFilters,
   //
-  positionNameOptions,
+  FilterOptions,
 }) {
   // console.log(filters);
   const popover = usePopover();
@@ -33,13 +33,14 @@ export default function AWSTableToolbar({
     [onFilters]
   );
 
-  // const handleFilterPositionName = useCallback(
-  //   (event) => {
-  //     onFilters(
-  //       'positionName', event.target.value);
-  //   },
-  //   [onFilters]
-  // );
+  const handleFilterColumn = useCallback(
+    (event) => {
+      console.log(event);
+      onFilters(
+        'column', event.target.value);
+    },
+    [onFilters]
+  );
 
   return (
     <>
@@ -55,34 +56,34 @@ export default function AWSTableToolbar({
           pr: { xs: 2.5, md: 1 },
         }}
       >
-        {/* <FormControl
+        <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 200 },
           }}
-        > */}
-          {/* <InputLabel>Position Name</InputLabel> */}
+        >
+          <InputLabel>필터</InputLabel>
 
-          {/* <Select
-            multiple
-            value={filters.name}
-            // onChange={handleFilterPositionName}
-            input={<OutlinedInput label="Position Name" />}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
+          <Select
+            // multiple
+            value={filters.column}
+            onChange={handleFilterColumn}
+            input={<OutlinedInput label="필터" />}
+            // renderValue={(selected) => selected.map((value) => value).join(', ')}
             MenuProps={{
               PaperProps: {
                 sx: { maxHeight: 240 },
               },
             }}
-          > */}
-            {/* {positionNameOptions.map((option) => (
+          >
+            {FilterOptions.map((option) => (
               <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.positionName.includes(option)} />
+                {/* <Checkbox disableRipple size="small" checked={filters.column.includes(option)} /> */}
                 {option}
               </MenuItem>
-            ))} */}
-          {/* </Select> */}
-        {/* </FormControl> */}
+            ))}
+          </Select>
+        </FormControl>
 
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
@@ -145,5 +146,5 @@ export default function AWSTableToolbar({
 AWSTableToolbar.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
-  positionNameOptions: PropTypes.array,
+  FilterOptions: PropTypes.array,
 };

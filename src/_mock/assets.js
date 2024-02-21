@@ -267,6 +267,17 @@ export const _roles = [
 
 // ----------------------------------------------------------------------
 
+export const _anomaly_cloumn = [
+  '사용자',
+  '사용한 api 권한',
+  '이벤트소스',
+  'csp',
+  'ip',
+  '개수'
+];
+
+// ----------------------------------------------------------------------
+
 export const _postTitles = [
   '10 Essential Tips for Healthy Living',
   'The Ultimate Guide to Productivity Hacks',
