@@ -101,8 +101,8 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           </Button>
 
           <ConfirmDialog 
-        open={confirmOpen} // confirmOpen 상태로 변경
-        onClose={() => setConfirmOpen(false)} // confirmOpen 상태 변경 함수로 변경
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)} 
         title="MFA 연동 요청"
         content={
           <>

@@ -39,8 +39,8 @@ export default function GroupUserTableRow({ row, selected, onEditRow, onSelectRo
 
   const popover = usePopover();
 
-  const handleMfaRequestClick = () => { // MFA 연동 요청 핸들러 함수 추가
-    setConfirmOpen(true); // confirm 다이얼로그 열기
+  const handleMfaRequestClick = () => {
+    setConfirmOpen(true); // 확인 대화상자 열기
   };
 
   const handleConfirm = () => {
@@ -91,31 +91,27 @@ export default function GroupUserTableRow({ row, selected, onEditRow, onSelectRo
             variant="contained"
             color="primary"
             disabled={isMfaEnabled}  // isMfaEnabled가 true일 때 버튼 비활성화
+            onClick={handleMfaRequestClick}
           >
             {isMfaEnabled ? 'MFA 연동 완료' : 'MFA 연동 요청'}
           </Button>
 
           <ConfirmDialog 
-        open={confirmOpen} // confirmOpen 상태로 변경
-        onClose={() => setConfirmOpen(false)} // confirmOpen 상태 변경 함수로 변경
-        title="MFA 연동 요청"
-        content={
-          <>
-            3일 뒤, MFA 연동이 <strong> 강제 </strong> 됩니다. <br />
-            MFA 연동 전까지 일부 기능 사용이 제한됩니다.
-          </>
-        }
-        actions={ // 버튼 그룹을 actions prop으로 추가합니다.
-          <>
-            <Button onClick={handleCancel} color="secondary">
-              취소
-            </Button>
-            <Button onClick={handleConfirm} color="primary" autoFocus>
-              확인
-            </Button>
-          </>
-        }
-      />
+  open={confirmOpen} 
+  onClose={() => setConfirmOpen(false)} 
+  title="MFA 연동 요청"
+  content={
+    <>
+      3일 뒤, MFA 연동이 <strong> 강제 </strong> 됩니다. <br />
+      MFA 연동 전까지 일부 기능 사용이 제한됩니다.
+    </>
+  }
+  actions={ 
+      <Button variant="contained" onClick={handleConfirm} color="primary" autoFocus>
+        확인
+      </Button>
+  }
+/>
 
         </TableCell>
 

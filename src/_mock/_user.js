@@ -27,50 +27,105 @@ export const USER_CSP_OPTIONS = [
   { value: 'AWS', label: 'AWS' },
   { value: 'GCP', label: 'GCP' },
 ];
-export const _userList = [...Array(userData.user_list.length)].map((_, index) => ({
-  id: `${index}`,
-  // id: index,
-  userName: userData.user_list[index].userName,
-  fullName: userData.user_list[index].full_name,
-  awsRole: userData.user_list[index].aws_role,
-  gcpRole: userData.user_list[index].gcp_role,
-  adGpo: userData.user_list[index].ad_gpo,
-  keyCloakRole: userData.user_list[index].keycloak_role,
-  description: userData.user_list[index].description,
-  isMfaEnabled: userData.user_list[index].isMfaEnabled,
-  isImportantPerson: userData.user_list[index].isImportantPerson,
-  lastLoginTime: userData.user_list[index].lastLoginTime,
-  department: userData.user_list[index].department,
-  duty: userData.user_list[index].duty,
-  awsAccount: userData.user_list[index].awsAccount,
-  // awsAccount: Array.isArray(userData.user_list[index].awsAccount)
-  //   ? userData.user_list[index].awsAccount.map((awsAcc) => ({
-  //       id: awsAcc.id,
-  //       lastLoginTime: awsAcc.lastLoginTime?.$date,
-  //       isMfaEnabled: awsAcc.isMfaEnabled,
-  //       managedKeys: {
-  //         keyId: awsAcc.managedKeys?.keyId,
-  //         createDate: awsAcc.managedKeys?.createDate?.$date,
-  //         keyExpirationDate: awsAcc.managedKeys?.keyExpirationDate?.$date,
-  //       },
-  //       usedKeys: {
-  //         keyId: awsAcc.usedKeys?.keyId,
-  //         createDate: awsAcc.usedKeys?.createDate?.$date,
-  //         keyExpirationDate: awsAcc.usedKeys?.keyExpirationDate?.$date,
-  //       },
-  //     }))
-  //   : null,
-  gcpAccount: userData.user_list[index].gcpAccount,
-  attachedPosition: userData.user_list[index].attachedPosition,
-  attachedGroup: userData.user_list[index].attachedGroup,
-  updatetime: userData.user_list[index].updatetime,
-  device: userData.user_list[index].device,
-  csp:
-    (userData.user_list[index].awsAccount && userData.user_list[index].gcpAccount && 'AWS,GCP') ||
-    (userData.user_list[index].awsAccount && 'AWS') ||
-    (userData.user_list[index].gcpAccount && 'GCP') ||
-    'none',
-}));
+
+export const _userList = userData.user_list.map((user, index) => {
+  const awsAccount = user.awsAccount;
+
+  return {
+    id: `${index}`,
+    userName: user.userName,
+    fullName: user.full_name,
+    awsRole: user.aws_role,
+    gcpRole: user.gcp_role,
+    adGpo: user.ad_gpo,
+    keyCloakRole: user.keycloak_role,
+    description: user.description,
+    isMfaEnabled: user.isMfaEnabled,
+    isImportantPerson: user.isImportantPerson,
+    lastLoginTime: user.lastLoginTime,
+    department: user.department,
+    duty: user.duty,
+    awsAccount: awsAccount ? {
+      id: awsAccount._id,
+      attachedPolicies: awsAccount.AttachedPolicies.map(policy => ({
+        policyName: policy.PolicyName,
+        policyArn: policy.PolicyArn
+      })),
+      createDate: awsAccount.CreateDate?.$date,
+      groups: awsAccount.Groups,
+      userName: awsAccount.UserName,
+      isMfaEnabled: awsAccount.isMfaEnabled,
+      managedKeys: awsAccount.managedKeys.map(key => ({
+        keyId: key,
+        // createDate: key.createDate?.$date, // Change this to your preferred value
+        // keyExpirationDate: key.keyExpirationDate?.$date, // Change this to your preferred value
+      })),
+      usedKeys: awsAccount.usedKeys.map(key => ({
+        keyId: key,
+        // createDate: null, // Change this to your preferred value
+        // keyExpirationDate: null, // Change this to your preferred value
+      })),
+    } : null,
+    gcpAccount: user.gcpAccount,
+    attachedPosition: user.attachedPosition,
+    attachedGroup: user.attachedGroup,
+    updatetime: user.updatetime,
+    device: user.device,
+    csp:
+      (awsAccount && user.gcpAccount && 'AWS,GCP') ||
+      (awsAccount && 'AWS') ||
+      (user.gcpAccount && 'GCP') ||
+      'none',
+  };
+});
+
+
+// export const _userList = [...Array(userData.user_list.length)].map((_, index) => ({
+//   id: `${index}`,
+//   // id: index,
+//   userName: userData.user_list[index].userName,
+//   fullName: userData.user_list[index].full_name,
+//   awsRole: userData.user_list[index].aws_role,
+//   gcpRole: userData.user_list[index].gcp_role,
+//   adGpo: userData.user_list[index].ad_gpo,
+//   keyCloakRole: userData.user_list[index].keycloak_role,
+//   description: userData.user_list[index].description,
+//   isMfaEnabled: userData.user_list[index].isMfaEnabled,
+//   isImportantPerson: userData.user_list[index].isImportantPerson,
+//   lastLoginTime: userData.user_list[index].lastLoginTime,
+//   department: userData.user_list[index].department,
+//   duty: userData.user_list[index].duty,
+//   // awsAccount: userData.user_list[index].awsAccount,
+//   awsAccount: userData.user_list[index].awsAccount
+//     ? {
+//         id: userData.user_list[index].awsAccount.id,
+//         lastLoginTime: userData.user_list[index].awsAccount.lastLoginTime ? userData.user_list[index].awsAccount.lastLoginTime.$date : null,
+//         isMfaEnabled: userData.user_list[index].awsAccount.isMfaEnabled,
+//         managedKeys: userData.user_list[index].awsAccount.managedKeys.map((key) => ({
+//           keyId: key.keyId,
+//           createDate: key.createDate ? key.createDate.$date : null,
+//           keyExpirationDate: key.keyExpirationDate ? key.keyExpirationDate.$date : null,
+//         })),
+//         usedKeys: userData.user_list[index].awsAccount.usedKeys.map((key) => ({
+//           keyId: key.keyId,
+//           createDate: key.createDate ? key.createDate.$date : null,
+//           keyExpirationDate: key.keyExpirationDate ? key.keyExpirationDate.$date : null,
+//         })),
+//       }
+//     : null,
+//   gcpAccount: userData.user_list[index].gcpAccount,
+//   attachedPosition: userData.user_list[index].attachedPosition,
+//   attachedGroup: userData.user_list[index].attachedGroup,
+//   updatetime: userData.user_list[index].updatetime,
+//   device: userData.user_list[index].device,
+//   csp:
+//     (userData.user_list[index].awsAccount && userData.user_list[index].gcpAccount && 'AWS,GCP') ||
+//     (userData.user_list[index].awsAccount && 'AWS') ||
+//     (userData.user_list[index].gcpAccount && 'GCP') ||
+//     'none',
+// }));
+
+console.log(_userList);
 
 // _userList.forEach((user) => {
 //   console.log(user.lastLoginTime);
@@ -213,11 +268,11 @@ export async function _userDetailList(userName) {
 
 
 // _userDetailData 테스트용 코드
-const userNameToCheck = 'alice'; 
+// const userNameToCheck = 'alice'; 
 
-try {
-  const userDetailData = await _userDetailList(userNameToCheck);
-  console.log('Parsed User Detail Data:', userDetailData);
-} catch (error) {
-  console.error('Error occurred while fetching user detail data:', error);
-}
+// try {
+//   const userDetailData = await _userDetailList(userNameToCheck);
+//   console.log('Parsed User Detail Data:', userDetailData);
+// } catch (error) {
+//   console.error('Error occurred while fetching user detail data:', error);
+// }
