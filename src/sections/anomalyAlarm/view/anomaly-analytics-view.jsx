@@ -4,6 +4,10 @@ import Typography from '@mui/material/Typography';
 
 import Scrollbar from 'src/components/scrollbar';
 
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import { paths } from 'src/routes/paths';
+
+
 import {
   _analyticTasks,
   _analyticPosts,
@@ -63,6 +67,14 @@ export default function AnomalyAnalyticsView() {
     15, 4, 20, 24, 1, 5, 11, 12, 14, 14, 2];
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+      <CustomBreadcrumbs
+          heading="권한 통계"
+          links={[
+            { name: 'Dashboard', href: paths.dashboard.root },
+            { name: '이상탐지 알림', href: paths.dashboard.anomalyAlarm.root },
+            { name: '통계' }, 
+          ]}
+        />
       {/* <Typography
         // variant="h6"
         variant="body1"
@@ -111,13 +123,13 @@ export default function AnomalyAnalyticsView() {
         </Grid> */}
         <Grid xs={12} md={6} lg={12} style={{ overflowX: 'auto' }}>
           <AnalyticsWebsiteVisits
-            title="권한 통계"
+            // title="권한 통계"
             // subheader="(+43%) than last year"
             chart={{
               labels: time_label,
               series: [
                 {
-                  name: '남은 권한 -> 탐지된 이상행위 수(IP)',
+                  name: '탐지된 이상행위 수(IP)',
                   type: 'column',
                   fill: 'solid',
                   // data: [23, 11, 22, 27, 13, 22, 15, 21, 44, 22, 30],
@@ -125,14 +137,14 @@ export default function AnomalyAnalyticsView() {
                   data: ip_graph_data,
                 },
                 {
-                  name: '남은 권한 -> 탐지된 이상행위 수(시간)',
+                  name: '탐지된 이상행위 수(시간)',
                   type: 'column',
                   fill: 'solid',
                   // data: [23, 11, 22, 27, 13, 22, 15, 21, 44, 22, 30],
                   data: time_graph_data,
                 },
                 {
-                  name: '전체 권한 -> 전체 활동 수',
+                  name: '전체 활동 수',
                   // type: 'area',
                   type: 'area',
                   fill: 'gradient',
