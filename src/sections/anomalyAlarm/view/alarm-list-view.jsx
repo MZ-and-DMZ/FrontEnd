@@ -194,14 +194,14 @@ export default function AnomalyAlarmListView() {
           ]}
           action={
             <>
-              {/* <Button
+              <Button
                 component={RouterLink}
-                href={paths.dashboard.aws.new} 
+                href={paths.dashboard.anomalyAlarm.analytics} 
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
-                New AWS User
-              </Button> */}
+                통계 보러가기
+              </Button>
             </>
           }
           sx={{

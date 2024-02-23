@@ -5,6 +5,7 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 
 import { LoadingScreen } from 'src/components/loading-screen';
+import IdPListPage from 'src/pages/dashboard/idp/list';
 
 // ----------------------------------------------------------------------
 
@@ -76,6 +77,7 @@ const AnomalycreateIPPage = lazy(() => import('src/pages/dashboard/anomaly/creat
 
 // AnomalyAlarm
 const AnomalyAlarmListPage = lazy(() => import('src/pages/dashboard/anomalyAlarm/list'));
+const AnomalyAlarmAnalyticsPage = lazy(() => import('src/pages/dashboard/anomalyAlarm/analytics'));
 
 /*
 // BLOG
@@ -245,10 +247,10 @@ export const dashboardRoutes = [
       {
         path: 'idp',
         children: [
-          { element: <AWSListPage />, index: true },
-          { path: 'list', element: <AWSListPage /> },
+          { element: <IdPListPage />, index: true },
+          { path: 'list', element: <IdPListPage /> },
           // { path: ':id', element: <AWSDetailsPage /> },
-          { path: 'new', element: <AWSCreatePage /> },
+          // { path: 'new', element: <AWSCreatePage /> },
         ],
       },
       {
@@ -276,6 +278,7 @@ export const dashboardRoutes = [
         children: [
           { element: <AnomalyAlarmListPage />, index: true },
           { path: 'list', element: <AnomalyAlarmListPage /> },
+          { path: 'analytics', element: <AnomalyAlarmAnalyticsPage /> },
           // { path: ':id', element: <AWSDetailsPage /> },
           // { path: 'alarm', element: <AnomalyAlarmPage /> },
         ],
