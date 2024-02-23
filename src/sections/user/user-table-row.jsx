@@ -106,11 +106,11 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         title="MFA 연동 요청"
         content={
           <>
-            3일 뒤, MFA가 <strong> 강제 연동 </strong> 됩니다. <br />
-            MFA 연동 전까지 계정 사용이 원활하지 않을 수 있습니다.
+            3일 뒤, MFA 연동이 <strong> 강제 </strong> 됩니다. <br />
+            MFA 연동 전까지 일부 기능 사용이 제한됩니다.
           </>
         }
-        actions={ // 버튼 그룹을 actions prop으로 추가합니다.
+        actions={
           <>
             <Button onClick={handleCancel} color="secondary">
               취소
@@ -205,9 +205,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
     {renderUserListView}
     {/* {renderUserDetailView} */}
     <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} /> 
-
-
-      
 
       {/* <CustomPopover
         open={popover.open}
