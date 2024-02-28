@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -113,6 +113,16 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
     () => ({
       fullName: currentUser?.fullName || '',
       awsName: currentUser?.awsName || '',
+      // awsManagedKeys: (currentUser.awsAccount.managedKeys || []).map(key => ({
+      //   keyId: key.keyId || '',
+      //   createDate: key.createDate || '', // 여기에 createDate 추가
+      //   expirationDate: key.expirationDate || '', // 여기에 expirationDate 추가
+      // })),
+      // awsUsedKeys: (currentUser.awsAccount.usedKeys || []).map(key => ({
+      //   keyId: key.keyId || '',
+      //   createDate: key.createDate || '', // 여기에 createDate 추가
+      //   expirationDate: key.expirationDate || '', // 여기에 expirationDate 추가
+      // })),
       awsUsedKeys: currentUser?.awsUsedKeys || '',
       awsManagedKeys: currentUser?.awsManagedKeys || '',
       // awsAccount: currentUser?.awsAccount ? {
@@ -274,7 +284,11 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
             <RHFTextField name="awsName" label="AWS 계정 정보" />
             <Box sx={{ padding: '10px' }}> </Box>
             <RHFTextField name="awsManagedKeys" label="AWS Managed Keys" />
+            {/* <RHFTextField name="awsManagedKeysCreateDate" label="AWS Managed Keys 생성일" />
+            <RHFTextField name="awsManagedKeysExpirationDate" label="AWS Managed Keys 만료일" /> */}
             <RHFTextField name="awsUsedKeys" label="AWS Used Keys" />
+            {/* <RHFTextField name="awsUsedKeysCreateDate" label="AWS Used Keys 생성일" />
+            <RHFTextField name="awsUsedKeysExpirationDate" label="AWS Used Keys 만료일" /> */}
             <RHFTextField name="gcpAccount" label="GCP 계정 정보" />
             <Box sx={{ padding: '10px' }}> </Box>
             <RHFTextField name="gcpManagedKeys" label="GCP Managed Keys"/>

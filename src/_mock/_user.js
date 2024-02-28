@@ -30,6 +30,11 @@ export const USER_CSP_OPTIONS = [
 
 export const _userList = userData.user_list.map((user, index) => {
   const awsAccount = user.awsAccount;
+  const formatKeyInfo = (keys) => keys.map(key => ({
+    keyId: key.keyId,
+    createDate: key.createDate?.$date,
+    expirationDate: key.expirationDate?.$date,
+  }));
 
   return {
     id: `${index}`,
@@ -55,16 +60,18 @@ export const _userList = userData.user_list.map((user, index) => {
       groups: awsAccount.Groups,
       userName: awsAccount.UserName,
       isMfaEnabled: awsAccount.isMfaEnabled,
-      managedKeys: awsAccount.managedKeys.map(key => ({
-        keyId: key,
-        // createDate: key.createDate?.$date, // Change this to your preferred value
-        // keyExpirationDate: key.keyExpirationDate?.$date, // Change this to your preferred value
-      })),
-      usedKeys: awsAccount.usedKeys.map(key => ({
-        keyId: key,
-        // createDate: null, // Change this to your preferred value
-        // keyExpirationDate: null, // Change this to your preferred value
-      })),
+      managedKeys: awsAccount.managedKeys ? formatKeyInfo(awsAccount.managedKeys) : [],
+      usedKeys: awsAccount.usedKeys ? formatKeyInfo(awsAccount.usedKeys) : [],
+      // managedKeys: awsAccount.managedKeys.map(key => ({
+      //   keyId: key,
+      //   createDate: key.createDate?.$date, // Change this to your preferred value
+      //   keyExpirationDate: key.keyExpirationDate?.$date, // Change this to your preferred value
+      // })),
+      // usedKeys: awsAccount.usedKeys.map(key => ({
+      //   keyId: key,
+      //   createDate: null, // Change this to your preferred value
+      //   keyExpirationDate: null, // Change this to your preferred value
+      // })),
     } : null,
     gcpAccount: user.gcpAccount,
     attachedPosition: user.attachedPosition,
@@ -79,6 +86,7 @@ export const _userList = userData.user_list.map((user, index) => {
   };
 });
 
+console.log(_userList);
 
 // export const _userList = [...Array(userData.user_list.length)].map((_, index) => ({
 //   id: `${index}`,
@@ -125,7 +133,7 @@ export const _userList = userData.user_list.map((user, index) => {
 //     'none',
 // }));
 
-console.log(_userList);
+// console.log(_userList);
 
 // _userList.forEach((user) => {
 //   console.log(user.lastLoginTime);
