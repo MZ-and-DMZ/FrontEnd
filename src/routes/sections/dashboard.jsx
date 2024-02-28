@@ -5,7 +5,6 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 
 import { LoadingScreen } from 'src/components/loading-screen';
-import IdPListPage from 'src/pages/dashboard/idp/list';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +42,12 @@ const AWSCreatePage = lazy(() => import('src/pages/dashboard/aws/new'));
 const GCPListPage = lazy(() => import('src/pages/dashboard/gcp/list'));
 // const GCPDetailsPage = lazy(() => import('src/pages/dashboard/gcp/details'));
 const GCPCreatePage = lazy(() => import('src/pages/dashboard/gcp/new'));
+
+// IDP
+const IdPListPage = lazy(() => import('src/pages/dashboard/idp/list'));
+
+// AWS
+const WindowADListPage = lazy(() => import('src/pages/dashboard/ad/list'));
 
 // USER
 // const UserProfilePage = lazy(() => import('src/pages/dashboard/user/profile'));
@@ -243,7 +248,6 @@ export const dashboardRoutes = [
           { path: 'new', element: <GCPCreatePage /> },
         ],
       },
-
       {
         path: 'idp',
         children: [
@@ -251,6 +255,13 @@ export const dashboardRoutes = [
           { path: 'list', element: <IdPListPage /> },
           // { path: ':id', element: <AWSDetailsPage /> },
           // { path: 'new', element: <AWSCreatePage /> },
+        ],
+      },
+      {
+        path: 'ad',
+        children: [
+          { element: <WindowADListPage />, index: true },
+          { path: 'list', element: <WindowADListPage /> },
         ],
       },
       {
