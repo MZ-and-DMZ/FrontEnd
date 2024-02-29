@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 
+import { useState } from 'react';
+
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -31,13 +33,30 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
   const confirm = useBoolean();
 
+  const [confirmOpen, setConfirmOpen] = useState(false); // mfa 연동 다이얼로그 오픈 useState
+
   const quickEdit = useBoolean();
 
   const popover = usePopover();
 
+  const handleMfaRequestClick = () => { // MFA 연동 요청 핸들러 함수 추가
+    setConfirmOpen(true); // confirm 다이얼로그 열기
+  };
+
   // const handleTableRowClick = () => {
   //   quickEdit.onTrue(); 
   // };
+
+  const handleConfirm = () => {
+    // 확인 버튼 클릭 시 처리 로직을 여기에 추가하세요.
+    // 예: MFA 연동 요청 로직 등
+    setConfirmOpen(false); // 다이얼로그 닫기
+  };
+
+  const handleCancel = () => {
+    // 취소 버튼 클릭 시 처리 로직을 여기에 추가하세요.
+    setConfirmOpen(false); // 다이얼로그 닫기
+  };
 
   const renderUserListView = (
           <TableRow hover selected={selected}>
@@ -76,10 +95,33 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
             variant="contained"
             color="primary"
             disabled={isMfaEnabled}  // isMfaEnabled가 true일 때 버튼 비활성화
+            onClick={handleMfaRequestClick}
           >
             {isMfaEnabled ? 'MFA 연동 완료' : 'MFA 연동 요청'}
           </Button>
-        </TableCell>
+
+          <ConfirmDialog 
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)} 
+        title="MFA 연동 요청"
+        content={
+          <>
+            3일 뒤, MFA 연동이 <strong> 강제 </strong> 됩니다. <br />
+            MFA 연동 전까지 일부 기능 사용이 제한됩니다.
+          </>
+        }
+        actions={
+          <>
+            <Button onClick={handleCancel} color="secondary">
+              취소
+            </Button>
+            <Button onClick={handleConfirm} color="primary" autoFocus>
+              확인
+            </Button>
+          </>
+        }
+      />
+ </TableCell>       
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
@@ -164,9 +206,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
     {/* {renderUserDetailView} */}
     <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} /> 
 
-
-      
-
       {/* <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
@@ -206,6 +245,8 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           </Button>
         }
       /> */}
+
+
     </>
   );
 }

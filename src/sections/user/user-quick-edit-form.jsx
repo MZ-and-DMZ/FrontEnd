@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,7 +15,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import StarIcon from '@mui/icons-material/Star';
 
-import { USER_CSP_OPTIONS, _userList, _userDetailList } from 'src/_mock';
+import { USER_CSP_OPTIONS, _userList } from 'src/_mock';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form';
@@ -24,8 +24,8 @@ import FormProvider, { RHFSelect, RHFTextField } from 'src/components/hook-form'
 
 export default function UserQuickEditForm({ currentUser, open, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [userDetail, setUserDetail] = useState(null);
-  const [selectedUserName, setSelectedUserName] = useState('');
+  // const [userDetail, setUserDetail] = useState(null);
+  // const [selectedUserName, setSelectedUserName] = useState('');
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -39,32 +39,109 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
     role: Yup.string().required('Role is required'),
   });
 
-  useEffect(() => {
-    const fetchUserDetail = async () => {
-      try {
-        if (selectedUserName) {
-          const userDetailData = await _userDetailList(selectedUserName);
-          setUserDetail(userDetailData);
-        }
-      } catch (error) {
-        console.error('Error fetching user detail data:', error);
-      }
-    };
-    fetchUserDetail();
-  }, [selectedUserName]);
+  // useEffect(() => {
+  //   const fetchUserDetail = async () => {
+  //     try {
+  //       if (selectedUserName) {
+  //         const userDetailData = await _userDetailList(selectedUserName);
+  //         setUserDetail(userDetailData);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching user detail data:', error);
+  //     }
+  //   };
+  //   fetchUserDetail();
+  // }, [selectedUserName]);
 
   // Assuming currentUser includes userName field
-  useEffect(() => {
-    if (currentUser) {
-      setSelectedUserName(currentUser.userName);
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     setSelectedUserName(currentUser.userName);
+  //   }
+  // }, [currentUser]);
 
+  // const defaultValues = useMemo(() => {
+  //   const parsedAwsAccount = currentUser?.awsAccount ? {
+  //     id: currentUser.awsAccount._id || '',
+  //     attachedPolicies: (currentUser.awsAccount.AttachedPolicies || []).map(policy => ({
+  //       policyName: policy.PolicyName || '',
+  //       policyArn: policy.PolicyArn || ''
+  //     })),
+  //     createDate: currentUser.awsAccount.CreateDate?.$date || '',
+  //     groups: currentUser.awsAccount.Groups || [],
+  //     userName: currentUser.awsAccount.UserName || '',
+  //     isMfaEnabled: currentUser.awsAccount.isMfaEnabled || false,
+  //     managedKeys: (currentUser.awsAccount.managedKeys || []).map(key => ({
+  //       keyId: key || '',
+  //       createDate: '', // Modify this to your preferred value
+  //       keyExpirationDate: '', // Modify this to your preferred value
+  //     })),
+  //     usedKeys: (currentUser.awsAccount.usedKeys || []).map(key => ({
+  //       keyId: key || '',
+  //       createDate: '', // Modify this to your preferred value
+  //       keyExpirationDate: '', // Modify this to your preferred value
+  //     })),
+  //   } : null;
+  
+  //   return {
+  //     fullName: currentUser?.fullName || '',
+  //     awsAccount: parsedAwsAccount,
+  //     gcpAccount: currentUser?.gcpAccount || '',
+  //     csp: currentUser?.csp || '',
+  //     attachedGroup: currentUser?.attachedGroup || '',
+  //     attachedPosition: currentUser?.attachedPosition || '',
+  //     company: currentUser?.company || '',
+  //     description: currentUser?.description || '',
+  //     // role: currentUser?.role || '',
+  //     updatetime: currentUser?.updatetime || '',
+  //     lastLoginTime: currentUser?.lastLoginTime || '',
+  //     duty: currentUser?.duty || '',
+  //     department: currentUser?.department || '',
+  //     isMfaEnabled: currentUser?.isMfaEnabled || false,
+  //     isImportantPerson: currentUser?.isImportantPerson || false,
+  //     device: currentUser?.device || '',
+  //     // usedAwsKeys: currentUser?.usedAwsKeys || '',
+  //     // awsManagedKeys: currentUser?.awsManagedKeys || '',
+  //     awsRole: currentUser?.awsRole || '',
+  //     gcpRole: currentUser?.gcpRole || '',
+  //     adGpo: currentUser?.adGpo || '',
+  //     keyCloakRole: currentUser?.keyCloakRole || '',
+  //   };
+  // }, [currentUser]);
 
   const defaultValues = useMemo(
     () => ({
       fullName: currentUser?.fullName || '',
-      awsAccount: currentUser?.awsAccount || '',
+      awsName: currentUser?.awsName || '',
+      // awsManagedKeys: (currentUser.awsAccount.managedKeys || []).map(key => ({
+      //   keyId: key.keyId || '',
+      //   createDate: key.createDate || '', // 여기에 createDate 추가
+      //   expirationDate: key.expirationDate || '', // 여기에 expirationDate 추가
+      // })),
+      // awsUsedKeys: (currentUser.awsAccount.usedKeys || []).map(key => ({
+      //   keyId: key.keyId || '',
+      //   createDate: key.createDate || '', // 여기에 createDate 추가
+      //   expirationDate: key.expirationDate || '', // 여기에 expirationDate 추가
+      // })),
+      awsUsedKeys: currentUser?.awsUsedKeys || '',
+      awsManagedKeys: currentUser?.awsManagedKeys || '',
+      // awsAccount: currentUser?.awsAccount ? {
+      //   id: currentUser?.awsAccount._id || '',
+      //   attachedPolicies: (currentUser.awsAccount.AttachedPolicies || []).map(policy => ({
+      //     policyName: policy.PolicyName || '',
+      //     policyArn: policy.PolicyArn || ''
+      //   })),
+      //   createDate: currentUser.awsAccount.CreateDate?.$date || '',
+      //   groups: currentUser.awsAccount.Groups || [],
+      //   userName: currentUser.awsAccount.UserName || '',
+      //   isMfaEnabled: currentUser.awsAccount.isMfaEnabled || false,
+      //   managedKeys: (currentUser.awsAccount.managedKeys || []).map(key => ({
+      //     keyId: key || '',
+      //   })),
+      //   usedKeys: (currentUser.awsAccount.usedKeys || []).map(key => ({
+      //     keyId: key || '',
+      //   })),
+      // } : null,
       gcpAccount: currentUser?.gcpAccount || '',
       csp: currentUser?.csp,
       attachedGroup: currentUser?.attachedGroup || '',
@@ -79,17 +156,61 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
       isMfaEnabled: currentUser?.isMfaEnabled || '',
       isImportantPerson: currentUser?.isImportantPerson || '',
       device: currentUser?.device || '',
-      usedAwsKeys: userDetail?.usedAwsKeys || '',
-      awsKeys: userDetail?.awsKeys || '',
+      // usedAwsKeys: userDetail?.usedAwsKeys || '',
+      // awsKeys: userDetail?.awsKeys || '',
       awsRole: currentUser?.awsRole || '',
       gcpRole: currentUser?.gcpRole || '',
       adGpo: currentUser?.adGpo || '',
       keyCloakRole: currentUser?.keyCloakRole || '',
     }),
-    [currentUser, userDetail]
+    [currentUser]
   );
+  
+  // const defaultValues = useMemo(
+  //   () => ({
+  //     fullName: currentUser?.fullName || '',
+  //     awsAccount: currentUser?.awsAccount ? {
+  //       id: currentUser?.awsAccount._id || '',
+  //       attachedPolicies: (currentUser.awsAccount.AttachedPolicies || []).map(policy => ({
+  //         policyName: policy.PolicyName || '',
+  //         policyArn: policy.PolicyArn || ''
+  //       })),
+  //       createDate: currentUser.awsAccount.CreateDate?.$date || '',
+  //       groups: currentUser.awsAccount.Groups || [],
+  //       userName: currentUser.awsAccount.UserName || '',
+  //       isMfaEnabled: currentUser.awsAccount.isMfaEnabled || false,
+  //       managedKeys: (currentUser.awsAccount.managedKeys || []).map(key => ({
+  //         keyId: key || '',
+  //       })),
+  //       usedKeys: (currentUser.awsAccount.usedKeys || []).map(key => ({
+  //         keyId: key || '',
+  //       })),
+  //     } : null,
+  //     gcpAccount: currentUser?.gcpAccount || '',
+  //     csp: currentUser?.csp,
+  //     attachedGroup: currentUser?.attachedGroup || '',
+  //     attachedPosition: currentUser?.attachedPosition || '',
+  //     company: currentUser?.company || '',
+  //     description: currentUser?.description || '',
+  //     // role: currentUser?.role || '',
+  //     updatetime: currentUser?.updatetime || '',
+  //     lastLoginTime: currentUser?.lastLoginTime || '',
+  //     duty: currentUser?.duty || '',
+  //     department: currentUser?.department || '',
+  //     isMfaEnabled: currentUser?.isMfaEnabled || '',
+  //     isImportantPerson: currentUser?.isImportantPerson || '',
+  //     device: currentUser?.device || '',
+  //     // usedAwsKeys: userDetail?.usedAwsKeys || '',
+  //     // awsKeys: userDetail?.awsKeys || '',
+  //     awsRole: currentUser?.awsRole || '',
+  //     gcpRole: currentUser?.gcpRole || '',
+  //     adGpo: currentUser?.adGpo || '',
+  //     keyCloakRole: currentUser?.keyCloakRole || '',
+  //   }),
+  //   [currentUser]
+  // );
 
-  // console.log(currentUser.name);
+  // console.log(currentUser.fullName);
 
 
   const methods = useForm({
@@ -160,14 +281,18 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
             </RHFSelect>
 {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }} /> */}
             
-            <RHFTextField name="awsAccount" label="AWS 계정 정보" />
+            <RHFTextField name="awsName" label="AWS 계정 정보" />
             <Box sx={{ padding: '10px' }}> </Box>
-            <RHFSelect name="awsKeys" label="AWS Managed Keys"/>
-            <RHFSelect name="usedAwsKeys" label="AWS Used Keys"/>
+            <RHFTextField name="awsManagedKeys" label="AWS Managed Keys" />
+            {/* <RHFTextField name="awsManagedKeysCreateDate" label="AWS Managed Keys 생성일" />
+            <RHFTextField name="awsManagedKeysExpirationDate" label="AWS Managed Keys 만료일" /> */}
+            <RHFTextField name="awsUsedKeys" label="AWS Used Keys" />
+            {/* <RHFTextField name="awsUsedKeysCreateDate" label="AWS Used Keys 생성일" />
+            <RHFTextField name="awsUsedKeysExpirationDate" label="AWS Used Keys 만료일" /> */}
             <RHFTextField name="gcpAccount" label="GCP 계정 정보" />
             <Box sx={{ padding: '10px' }}> </Box>
-            <RHFSelect name="gcpManagedKeys" label="GCP Managed Keys"/>
-            <RHFSelect name="gcpUsedKeys" label="GCP Used Keys" />    
+            <RHFTextField name="gcpManagedKeys" label="GCP Managed Keys"/>
+            <RHFTextField name="gcpUsedKeys" label="GCP Used Keys" />    
             <RHFTextField name="department" label="부서" />
             <RHFTextField name="duty" label="직책" />
             <RHFTextField name="description" label="설명" />

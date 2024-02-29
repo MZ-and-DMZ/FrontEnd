@@ -201,7 +201,7 @@ export default function UserListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Frontend 부서 내 사용자"
+          heading="전체 사용자"
           links={[
             { name: 'Frontend', href: paths.dashboard.root },
             { name: '사용자', href: paths.dashboard.user.root },
@@ -362,12 +362,12 @@ export default function UserListView() {
                           lastLoginTime: row.lastLoginTime,
                           isMfaEnabled: row.isMfaEnabled,
                           isImportantPerson: row.isImportantPerson,
-                          awsAccount: row.awsAccount,
+                          awsName: row.awsAccount ? row.awsAccount.userName : '',
+                          awsUsedKeys: row.awsAccount && row.awsAccount.usedKeys ? row.awsAccount.usedKeys.map(key => `${key.keyId} (Created: ${key.createDate}, Expires: ${key.expirationDate})`).join(', ') : '',
+                          awsManagedKeys: row.awsAccount && row.awsAccount.managedKeys ? row.awsAccount.managedKeys.map(key => `${key.keyId} (Created: ${key.createDate}, Expires: ${key.expirationDate})`).join(', ') : '',
                           gcpAccount: row.gcpAccount,
                           device: row.device,
                           description: row.description,
-                          awsKeys: row.awsKeys,
-                          usedAwsKeys: row.usedAwsKeys,
                           awsRole: row.awsRole,
                           gcpRole: row.gcpRole,
                           adGpo: row.adGpo,
@@ -377,8 +377,9 @@ export default function UserListView() {
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
-                      />
+                      />               
                     ))}
+
 
                   <TableEmptyRows
                     height={denseHeight}
