@@ -307,9 +307,9 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (input) {
     inputData = inputData.filter((value) =>
-      value.name.toLowerCase().includes(input.toLowerCase()) ||
+      value.name.toLowerCase().includes(input.toLowerCase()) 
       // value.num ? String(value.num).includes(String(input).toLowerCase()) : '' ||
-      value.members ? value.members.some((member) =>member.toLowerCase().includes(input.toLowerCase())) : ''
+      // value.members ? value.members.some((member) =>member.toLowerCase().includes(input.toLowerCase())) : ''
       // value.groups.toLowerCase().includes(input.toLowerCase()) ||
       // value.roles.toLowerCase().includes(input.toLowerCase()) ||
       // value.rootUrl.toLowerCase().includes(input.toLowerCase()) ||
