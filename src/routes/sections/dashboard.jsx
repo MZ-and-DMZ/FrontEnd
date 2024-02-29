@@ -43,6 +43,12 @@ const GCPListPage = lazy(() => import('src/pages/dashboard/gcp/list'));
 // const GCPDetailsPage = lazy(() => import('src/pages/dashboard/gcp/details'));
 const GCPCreatePage = lazy(() => import('src/pages/dashboard/gcp/new'));
 
+// IDP
+const IdPListPage = lazy(() => import('src/pages/dashboard/idp/list'));
+
+// AWS
+const WindowADListPage = lazy(() => import('src/pages/dashboard/ad/list'));
+
 // USER
 // const UserProfilePage = lazy(() => import('src/pages/dashboard/user/profile'));
 // const UserCardsPage = lazy(() => import('src/pages/dashboard/user/cards'));
@@ -76,6 +82,7 @@ const AnomalycreateIPPage = lazy(() => import('src/pages/dashboard/anomaly/creat
 
 // AnomalyAlarm
 const AnomalyAlarmListPage = lazy(() => import('src/pages/dashboard/anomalyAlarm/list'));
+const AnomalyAlarmAnalyticsPage = lazy(() => import('src/pages/dashboard/anomalyAlarm/analytics'));
 
 /*
 // BLOG
@@ -241,14 +248,20 @@ export const dashboardRoutes = [
           { path: 'new', element: <GCPCreatePage /> },
         ],
       },
-
       {
         path: 'idp',
         children: [
-          { element: <AWSListPage />, index: true },
-          { path: 'list', element: <AWSListPage /> },
+          { element: <IdPListPage />, index: true },
+          { path: 'list', element: <IdPListPage /> },
           // { path: ':id', element: <AWSDetailsPage /> },
-          { path: 'new', element: <AWSCreatePage /> },
+          // { path: 'new', element: <AWSCreatePage /> },
+        ],
+      },
+      {
+        path: 'ad',
+        children: [
+          { element: <WindowADListPage />, index: true },
+          { path: 'list', element: <WindowADListPage /> },
         ],
       },
       {
@@ -276,6 +289,7 @@ export const dashboardRoutes = [
         children: [
           { element: <AnomalyAlarmListPage />, index: true },
           { path: 'list', element: <AnomalyAlarmListPage /> },
+          { path: 'analytics', element: <AnomalyAlarmAnalyticsPage /> },
           // { path: ':id', element: <AWSDetailsPage /> },
           // { path: 'alarm', element: <AnomalyAlarmPage /> },
         ],

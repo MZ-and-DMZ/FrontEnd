@@ -152,7 +152,7 @@ export default function AnomalyNewTimeForm({ currentTime }) {
                     // inputProps={{
                     //   step: 300, // 시간 간격을 5분 단위로 설정
                     // }}
-                    // required // 필수 입력 필드로 설정
+                    required // 필수 입력 필드로 설정
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -168,7 +168,7 @@ export default function AnomalyNewTimeForm({ currentTime }) {
                     // inputProps={{
                     //   step: 300, // 시간 간격을 5분 단위로 설정
                     // }}
-                    // required // 필수 입력 필드로 설정
+                    required // 필수 입력 필드로 설정
                     // onChange={handleChange}
                   />
                 </Grid>

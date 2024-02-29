@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { AnomalyListView } from 'src/sections/anomaly/view';
+import { IDPListView } from 'src/sections/IdP/view';
 
 // ----------------------------------------------------------------------
 
-export default function AnomalyListPage() {
+export default function IdPListPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Anomaly List</title>
+        <title> Dashboard: IdP List</title>
       </Helmet>
 
-      <AnomalyListView />
+      <IDPListView />
     </>
   );
 }

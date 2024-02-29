@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { AnomalyListView } from 'src/sections/anomaly/view';
+import { AWSCreateView } from 'src/sections/AWS/view';
 
 // ----------------------------------------------------------------------
 
-export default function AnomalyListPage() {
+export default function AWSCreatePage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Anomaly List</title>
+        <title> Dashboard: Create a new invoice</title>
       </Helmet>
 
-      <AnomalyListView />
+      <AWSCreateView />
     </>
   );
 }

@@ -8,7 +8,7 @@ export default function AnomalycreateIPPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Create a new invoice</title>
+        <title> Dashboard: Create a new IP</title>
       </Helmet>
 
       <AnomalycreateIPView />

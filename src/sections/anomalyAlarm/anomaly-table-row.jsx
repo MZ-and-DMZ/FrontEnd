@@ -31,7 +31,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, groups, isMfaEnabled, AttachedPolicies } = row;
+  const { useridentity_username, eventname, eventsource, csp, ip, time, count } = row;
 
   const confirm = useBoolean();
 
@@ -47,9 +47,9 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
   const renderUserListView = (
           <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
+        </TableCell> */}
 
         {/* <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
           <ListItemText
@@ -63,15 +63,19 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           />
         </TableCell> */}
 
-        <TableCell sx={{whiteSpace: 'nowrap' }}>{name}</TableCell> 
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{useridentity_username}</TableCell> 
 
-        <TableCell sx={{whiteSpace: 'nowrap' }}>{groups}</TableCell>
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{eventname}</TableCell>
 
-        <TableCell sx={{whiteSpace: 'nowrap' }}>{isMfaEnabled}</TableCell>
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{eventsource}</TableCell>
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{csp}</TableCell>
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{ip}</TableCell>
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{time}</TableCell>
+        <TableCell sx={{whiteSpace: 'nowrap' }}>{count}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+        {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>
         {AttachedPolicies.split(',').slice(0, 3).join(', ')}
-      </TableCell>
+      </TableCell> */}
 
         {/* <TableCell>
           <Label
@@ -104,7 +108,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           </Button>
         </TableCell> */}
 
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        {/* <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <IconButton
             color={collapse.value ? 'inherit' : 'default'}
             onClick={collapse.onToggle}
@@ -115,7 +119,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
             }}
           >
             <Iconify icon="eva:arrow-ios-downward-fill" />
-          </IconButton>
+          </IconButton> */}
 
           {/* <Tooltip title="Quick Edit" placement="top" arrow>
             <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
@@ -126,79 +130,79 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton> */}
-        </TableCell>
+        {/* </TableCell> */}
       </TableRow>
   );
 
-const renderUserDetailView = (
-    <TableRow>
-      <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
-        <Collapse
-          in={collapse.value}
-          timeout="auto"
-          unmountOnExit
-          sx={{ bgcolor: 'background.neutral' }}
-        >
-          <Stack component={Paper} sx={{ m: 1.5 }}>
-            {AttachedPolicies.split(',').map((policy, index) => (
-              <Stack
-                key={index}
-                direction="row"
-                alignItems="center"
-                sx={{
-                  p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
-                  '&:not(:last-of-type)': {
-                    borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
-                  },
-                  '&:hover': {
-                    background: 'rgba(0, 0, 0, 0.1)',
-                  },
-                }}
-              >
-                <ListItemText
-                  primary={policy} // 현재 policy를 보여줍니다.
-                  primaryTypographyProps={{
-                    typography: 'body2',
-                  }}
-                  secondaryTypographyProps={{
-                    component: 'span',
-                    color: 'text.disabled',
-                    mt: 0.5,
-                  }}
-                />
-              </Stack>
-            ))}
+// const renderUserDetailView = (
+//     <TableRow>
+//       <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
+//         <Collapse
+//           in={collapse.value}
+//           timeout="auto"
+//           unmountOnExit
+//           sx={{ bgcolor: 'background.neutral' }}
+//         >
+//           <Stack component={Paper} sx={{ m: 1.5 }}>
+//             {AttachedPolicies.split(',').map((policy, index) => (
+//               <Stack
+//                 key={index}
+//                 direction="row"
+//                 alignItems="center"
+//                 sx={{
+//                   p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
+//                   '&:not(:last-of-type)': {
+//                     borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
+//                   },
+//                   '&:hover': {
+//                     background: 'rgba(0, 0, 0, 0.1)',
+//                   },
+//                 }}
+//               >
+//                 <ListItemText
+//                   primary={policy} // 현재 policy를 보여줍니다.
+//                   primaryTypographyProps={{
+//                     typography: 'body2',
+//                   }}
+//                   secondaryTypographyProps={{
+//                     component: 'span',
+//                     color: 'text.disabled',
+//                     mt: 0.5,
+//                   }}
+//                 />
+//               </Stack>
+//             ))}
 
-            {/* <Stack
-              direction="row"
-              alignItems="center"
-              sx={{
-                p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
-                '&:not(:last-of-type)': {
-                  borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
-                },
-                background: 'rgba(0, 0, 0, 0.1)', // 마지막 스택을 강조하는 스타일
-                borderRadius: (theme) => theme.shape.borderRadius,
-                textAlign: 'center',
-              }}
-            >
-              { <ListItemText
-                primary={`${name} 직무에 할당된 정책 수: ${policies.split(',').length}개`}
-                primaryTypographyProps={{
-                  typography: 'body2',
-                }}
-              /> }
-            </Stack> */}
-          </Stack>
-        </Collapse>
-      </TableCell>
-    </TableRow>
-  );
+//             {/* <Stack
+//               direction="row"
+//               alignItems="center"
+//               sx={{
+//                 p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
+//                 '&:not(:last-of-type)': {
+//                   borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`,
+//                 },
+//                 background: 'rgba(0, 0, 0, 0.1)', // 마지막 스택을 강조하는 스타일
+//                 borderRadius: (theme) => theme.shape.borderRadius,
+//                 textAlign: 'center',
+//               }}
+//             >
+//               { <ListItemText
+//                 primary={`${name} 직무에 할당된 정책 수: ${policies.split(',').length}개`}
+//                 primaryTypographyProps={{
+//                   typography: 'body2',
+//                 }}
+//               /> }
+//             </Stack> */}
+//           </Stack>
+//         </Collapse>
+//       </TableCell>
+//     </TableRow>
+//   );
 
   return (
     <>
     {renderUserListView}
-    {renderUserDetailView}
+    {/* {renderUserDetailView} */}
     {/* <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />  */}
 
 

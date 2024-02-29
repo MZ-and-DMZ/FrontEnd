@@ -23,3 +23,7 @@ export * from './_aws';
 export * from './_gcp';
 
 export * from './_anomaly';
+export * from './_anomalyAlarm';
+
+export * from './_idp';
+export * from './_windowAD';

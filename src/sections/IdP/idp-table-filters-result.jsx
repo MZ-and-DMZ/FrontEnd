@@ -10,7 +10,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function PositionTableFiltersResult({
+export default function IDPTableFiltersResult({
   filters,
   onFilters,
   //
@@ -24,8 +24,8 @@ export default function PositionTableFiltersResult({
   };
 
   const handleRemovePositionName = (inputValue) => {
-    const newValue = filters.column.filter((item) => item !== inputValue);
-    onFilters('column', newValue);
+    const newValue = filters.tab.filter((item) => item !== inputValue);
+    onFilters('tab', newValue);
   };
 
   return (
@@ -42,13 +42,15 @@ export default function PositionTableFiltersResult({
           <Block label="Status:">
             <Chip size="small" label={filters.status} onDelete={handleRemoveStatus} />
           </Block>
-        )} */}
-
-        {!!filters.column && (
-          <Block label="필터 :">
-            <Chip key={filters.column} label={filters.column} size="small" />
-          </Block>
         )}
+
+        {!!filters.positionName.length && (
+          <Block label="Position Name:">
+            {filters.positionName.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemovePositionName(item)} />
+            ))}
+          </Block>
+        )} */}
 
         <Button
           color="error"
@@ -62,7 +64,7 @@ export default function PositionTableFiltersResult({
   );
 }
 
-PositionTableFiltersResult.propTypes = {
+IDPTableFiltersResult.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   onResetFilters: PropTypes.func,

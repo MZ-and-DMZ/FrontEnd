@@ -23,21 +23,52 @@ export const _anomalyTimeList = [...Array(anomalyTimeData.time_list.length)].map
   endTime: anomalyTimeData.time_list[index].endTime,
 }));
 
+// IP 주소의 유효성을 검사하는 함수
+const isFilledTime = (group, start, end) => {
+  if (group === "" || start === "" || end === ""){
+    return false;
+  }
+  return true;
+}
+
+// 선택된 IP 목록 삭제
+export const deleteAnomalyIP = async (ip) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/anomaly/detection/ip/delete?ip=${ip}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'Delete',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.ok;  
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};
+
 // 시간대 목록 생성
 export async function createAnomalyTime(data) {
     try {
-        console.log(data.groupName);
+      // 입력된 IP 주소의 유효성을 검사
+        if (!isFilledTime(data.groupName, data.startTime, data.endTime)) {
+          return false;
+        }
+
         const response = await fetch(`${process.env.REACT_APP_MOCK_API}/anomaly/detection/time/set`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          group: data.groupName,
-          startTime: data.startTime,
-          endTime: data.endTime,
-        }),
-      });
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            group: data.groupName,
+            startTime: data.startTime,
+            endTime: data.endTime,
+          }),
+        });
 
       return response.ok;
     } catch (error) {
@@ -100,3 +131,22 @@ export async function createAnomalyIP(data) {
         throw error;
     }
 }
+
+// 선택된 시간 목록 삭제
+export const deleteAnomalyTime = async (group) => {
+  try {
+    const apiUrl = `${process.env.REACT_APP_MOCK_API}/anomaly/detection/time/delete?group=${group}`;
+
+    const response = await fetch(apiUrl, {
+      method: 'Delete',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+ 
+    return response.ok;
+  } catch (error) {
+    console.error(error);
+    throw error;  
+  }
+};

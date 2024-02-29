@@ -226,6 +226,7 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/anomalyAlarm`,
       // new: `${ROOTS.DASHBOARD}/anomalyAlarm/new`,
       list: `${ROOTS.DASHBOARD}/anomalyAlarm/list`,
+      analytics: `${ROOTS.DASHBOARD}/anomalyAlarm/analytics`,
     },
     setting: {
       root: `${ROOTS.DASHBOARD}/setting`,
